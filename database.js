@@ -24,7 +24,7 @@ const database = {
 
     checkLogin({ userName, password }) {
         let dbUsers = dbConn.use(settings.dbNames.users);
-        console.log('database', userName, password);
+        // console.log('database', userName, password);
 
         return dbUsers.find({
             selector: {
@@ -50,6 +50,15 @@ const database = {
         ).catch(
             console.warn
         )
+    },
+
+    addMedia(payload){
+        let dbPosts = dbConn.use(settings.dbNames.posts);
+
+        return dbPosts.insert(payload).then(
+            console.log            
+        )
+        
     },
 }
 

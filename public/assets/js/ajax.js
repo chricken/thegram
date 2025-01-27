@@ -40,7 +40,17 @@ const ajax = {
 
     loadTimeline() {
 
-    }
+    },
+
+    uploadMedia(payload){
+        
+        return fetch('/uploadMedia', {
+            method: 'post',
+            body:payload
+        }).then(
+            res => res.json()
+        )
+    },
 }
 
 export default ajax;

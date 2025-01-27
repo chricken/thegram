@@ -14,7 +14,7 @@ const modal = () => {
             }
         }
     })
-    
+
     const container = dom.create({
         parent: bgModal,
         cssClassName: 'modal',
@@ -35,7 +35,10 @@ const modal = () => {
     })
     btnClose.classList.add('btn', 'btnClose');
 
-    return container;
+    return {
+        modal: container,
+        bg: bgModal
+    };
 }
 
 export default modal;
