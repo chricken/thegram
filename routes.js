@@ -79,7 +79,11 @@ router.post('/uploadMedia', (request, response) => {
             ).then(
                 () => {
                     // Zur Datenbank hinzufügen
-                    database.addMedia(data)
+                   return database.addMedia(data)
+                }
+            ).then(
+                res => {
+                    database.addMediaToUser(res, data);
                 }
             ).then(
                 () => response.json({

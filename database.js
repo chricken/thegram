@@ -52,14 +52,28 @@ const database = {
         )
     },
 
-    addMedia(payload){
+    addMedia(payload) {
         let dbPosts = dbConn.use(settings.dbNames.posts);
 
-        return dbPosts.insert(payload).then(
-            console.log            
-        )
-        
+        return dbPosts.insert(payload)
+
     },
+
+    addMediaToUser(media, payload) {
+        let dbUsers = dbConn.use(settings.dbNames.users);
+        let id = payload.userID;
+        dbUsers.get(id).then(
+            payload => {
+                console.log(payload);
+                payload.posts.push(media._id);
+                return payload;
+            }
+        ).then(
+            payload => {
+                dbUsers.insert(payload);
+            }
+        )
+    }
 }
 
 export default database;
