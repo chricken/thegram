@@ -22,13 +22,13 @@ const database = {
         )
     },
 
-    checkLogin({ userName, password }) {
+    checkLogin({ username, password }) {
         let dbUsers = dbConn.use(settings.dbNames.users);
-        // console.log('database', userName, password);
+        // console.log('database', username, password);
 
         return dbUsers.find({
             selector: {
-                username: userName
+                username: username
             }
         }).then(
             res => {
@@ -59,13 +59,12 @@ const database = {
 
     },
 
-    addMediaToUser(media, payload) {
+    addMediaToUser(payload) {
         let dbUsers = dbConn.use(settings.dbNames.users);
-        let id = payload.userID;
-        dbUsers.get(id).then(
+        dbUsers.get(payload.userID).then(
             payload => {
                 console.log(payload);
-                payload.posts.push(media._id);
+                payload.posts.push(payload);
                 return payload;
             }
         ).then(

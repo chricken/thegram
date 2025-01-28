@@ -11,6 +11,7 @@ const settings = {
         tags: 'tg_tags',
     },
     uploadPath: './data/img/',
+    wsSockets: {},
 }
 
 export default settings;

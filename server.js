@@ -3,6 +3,8 @@
 import express from 'express';
 import routes from './routes.js';
 import database from './database.js';
+import websocket from './websocket.js';
+
 const server = express();
 
 server.use(express.static('public', {
