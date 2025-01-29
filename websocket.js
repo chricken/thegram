@@ -24,12 +24,41 @@ wsServer.on('connection', socket => {
         console.log(msg);
 
         if (msg.type == 'uploadMedia') {
-            media.handleUploaded(msg.payload);
+            media.handleUploaded(msg.payload)
+                .then(
+                    res => {
+                        res.status = 'done',
+                            socket.send(JSON.stringify({
+                                type: 'uploadStatus',
+                                payload: res
+                            }))
+                    }
+                ).catch(
+                    err => {
+                        socket.send(JSON.stringify({
+                            type: 'uploadStatus',
+                            payload: {
+                                status: 'err',
+                                err
+                            }
+                        }))
+                    }
+                )
         } if (msg.type == 'login') {
             database.checkLogin(msg.payload).then(
                 res => {
                     socket.send(JSON.stringify({
                         type: 'loginStatus',
+                        payload: res
+                    }))
+                }
+            )
+        } if (msg.type == 'getTimeline') {
+            console.log(msg.payload.userID);
+            database.getTimeline(msg.payload.userID, 0).then(
+                res => {
+                    socket.send(JSON.stringify({
+                        type: 'getTimeline',
                         payload: res
                     }))
                 }

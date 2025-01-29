@@ -3,10 +3,10 @@
 import dom from '../dom.js';
 import modal from '../components/modal.js';
 import button from '../components/button.js';
-import ajax from '../ajax.js';
 import ws from '../ws.js';
 import elements from '../elements.js';
 import settings from '../settings.js';
+import timeline from './timeline.js';
 
 const addMedia = () => {
 
@@ -23,6 +23,15 @@ const addMedia = () => {
     const elImagePreview = dom.create({
         cssClassName: 'parentImagePreview',
         parent: parent.modal,
+    })
+
+    const elInpTitle = dom.create({
+        parent: parent.modal,
+        content: 'Title',
+        type:'h3',
+        attr: {
+            'contenteditable': true
+        }
     })
 
     const elInpText = dom.create({
@@ -42,7 +51,8 @@ const addMedia = () => {
                 // const payload = new FormData(formAddMedia);
                 // payload.append('text', elInpText.innerHTML);
                 // payload.append('userID', settings.user._id);
-                payload.text= elInpText.innerHTML;
+                payload.text = elInpText.innerHTML;
+                payload.title = elInpTitle.innerHTML;
 
                 console.log(payload);
 
@@ -52,16 +62,8 @@ const addMedia = () => {
                     content: 'Uploading',
                 })
 
-                /*
-                ajax.uploadMedia(payload).then(
-                    console.log                    
-                ).catch(
-                    console.warn                    
-                )
-                */
-
                 ws.uploadMedia(payload).then(
-                    console.log
+                    timeline.init
                 ).catch(
                     console.warn
                 )
@@ -78,32 +80,35 @@ const addMedia = () => {
         attr: {
             type: 'file',
             name: 'upload',
+            multiple: true,
         },
         listeners: {
             change() {
-                let file = elInpImage.files[0];
-                if (file) {
-                    
-                    const reader = new FileReader();
-                    reader.onload = evt => {
-                        // Bild an Daten anhängen
-                        payload.imgs[0] = evt.target.result;
+                let files = [...elInpImage.files];
+                console.log(elInpImage.files);
+                
+                files.forEach(file => {
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = evt => {
+                            // Bild an Daten anhängen
+                            payload.imgs.push(evt.target.result);
 
-                        console.log(payload);
-                        
+                            console.log(payload);
 
-                        // Bild in FE anzeigen
-                        const imagePreview = dom.create({
-                            type: 'img',
-                            parent: elImagePreview,
-                            cssClassName: 'imagePreview',
-                            attr: {
-                                src: evt.target.result,
-                            },
-                        })
+                            // Bild in FE anzeigen
+                            const imagePreview = dom.create({
+                                type: 'img',
+                                parent: elImagePreview,
+                                cssClassName: 'imagePreview',
+                                attr: {
+                                    src: evt.target.result,
+                                },
+                            })
+                        }
+                        reader.readAsDataURL(file); // Bild als Data URL lesen
                     }
-                    reader.readAsDataURL(file); // Bild als Data URL lesen
-                }
+                })
             }
         }
     })

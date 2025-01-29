@@ -54,17 +54,16 @@ const database = {
 
     addMedia(payload) {
         let dbPosts = dbConn.use(settings.dbNames.posts);
-
         return dbPosts.insert(payload)
-
     },
 
-    addMediaToUser(payload) {
+    addMediaToUser(userID, mediaID) {
         let dbUsers = dbConn.use(settings.dbNames.users);
-        dbUsers.get(payload.userID).then(
+
+        return dbUsers.get(userID).then(
             payload => {
-                console.log(payload);
-                payload.posts.push(payload);
+                console.log('addMediaToUser', payload);
+                payload.posts.push(mediaID);
                 return payload;
             }
         ).then(
@@ -72,6 +71,20 @@ const database = {
                 dbUsers.insert(payload);
             }
         )
+    },
+
+    getTimeline(userID, offset) {
+        let dbUsers = dbConn.use(settings.dbNames.users);
+        let dbPosts = dbConn.use(settings.dbNames.posts);
+
+        return dbUsers.get(userID).then(
+            res => dbPosts.fetch({
+                keys: res.posts
+            })
+        ).then(
+            res => res.rows.map(row => row.doc)            
+        )
+
     }
 }
 

@@ -59,6 +59,7 @@ const dom = {
     mapping(){
         elements.main = dom.$('main');
         elements.messages = dom.$('messages');
+        elements.timeline = dom.$('timeline');
     }
 }
 

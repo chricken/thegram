@@ -2,6 +2,7 @@
 
 import settings from './settings.js';
 import app from './views/app.js';
+import timeline from './views/timeline.js';
 
 const socket = new WebSocket(settings.wsAddress);
 
@@ -32,7 +33,15 @@ socket.addEventListener('message', msg => {
         socket.id = msg.payload.socketID;
         // console.log(settings);
     } else if (msg.type == 'loginStatus') {
-        handleLogin(msg.payload)        
+        console.log('loginStatus');
+        handleLogin(msg.payload)
+    } else if (msg.type == 'uploadStatus') {
+        console.log('uploadStatus');
+        console.log(msg.payload);
+    } else if (msg.type == 'getTimeline') {
+        console.log('getPayload');
+        console.log(msg.payload);
+        timeline.render(msg.payload);
     }
 
 })
@@ -54,6 +63,14 @@ const ws = {
             }))
             resolve();
         })
+    },
+    getTimeline() {
+        socket.send(JSON.stringify({
+            type: 'getTimeline',
+            payload: {
+                userID: settings.user._id
+            }
+        }))
     }
 }
 
