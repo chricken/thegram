@@ -38,8 +38,9 @@ socket.addEventListener('message', msg => {
     } else if (msg.type == 'uploadStatus') {
         console.log('uploadStatus');
         console.log(msg.payload);
+        ws.getTimeline()
     } else if (msg.type == 'getTimeline') {
-        console.log('getPayload');
+        console.log('getTimeline');
         console.log(msg.payload);
         timeline.render(msg.payload);
     }

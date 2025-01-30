@@ -32,6 +32,7 @@ const dom = {
         if (cssClassName) neu.className = cssClassName;
         if (cssClasses.length) neu.classList.add(...cssClasses);
     
+        
         Object.entries(attr).forEach(el => neu.setAttribute(...el));
         Object.entries(listeners).forEach(el => neu.addEventListener(...el));
         Object.entries(styles).forEach(style => neu.style[style[0]] = style[1]);

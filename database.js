@@ -62,14 +62,12 @@ const database = {
 
         return dbUsers.get(userID).then(
             payload => {
-                console.log('addMediaToUser', payload);
+                // console.log('addMediaToUser', payload);
                 payload.posts.push(mediaID);
                 return payload;
             }
         ).then(
-            payload => {
-                dbUsers.insert(payload);
-            }
+            payload =>  dbUsers.insert(payload)
         )
     },
 
@@ -78,11 +76,17 @@ const database = {
         let dbPosts = dbConn.use(settings.dbNames.posts);
 
         return dbUsers.get(userID).then(
-            res => dbPosts.fetch({
-                keys: res.posts
-            })
+            res => {
+                if (res.posts.length) {
+                    return dbPosts.fetch({
+                        keys: res.posts
+                    })
+                } else {
+                    return { rows: [] }
+                }
+            }
         ).then(
-            res => res.rows.map(row => row.doc)            
+            res => res.rows.map(row => row.doc)
         )
 
     }

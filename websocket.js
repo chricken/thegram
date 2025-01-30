@@ -21,17 +21,17 @@ wsServer.on('connection', socket => {
 
     socket.on('message', msg => {
         msg = JSON.parse(msg.toString());
-        console.log(msg);
+        // console.log(msg);
 
         if (msg.type == 'uploadMedia') {
             media.handleUploaded(msg.payload)
                 .then(
                     res => {
-                        res.status = 'done',
-                            socket.send(JSON.stringify({
-                                type: 'uploadStatus',
-                                payload: res
-                            }))
+                        res.status = 'done';
+                        socket.send(JSON.stringify({
+                            type: 'uploadStatus',
+                            payload: {}
+                        }))
                     }
                 ).catch(
                     err => {
@@ -54,7 +54,7 @@ wsServer.on('connection', socket => {
                 }
             )
         } if (msg.type == 'getTimeline') {
-            console.log(msg.payload.userID);
+            console.log('websocket, L57', );
             database.getTimeline(msg.payload.userID, 0).then(
                 res => {
                     socket.send(JSON.stringify({

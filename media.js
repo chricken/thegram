@@ -28,10 +28,10 @@ const media = {
                             // Der Uploadpath ist mit der UserID identisch, daher redundant
                             let fileName = (Math.random() * 1e17).toString(36) + '.png'
                             let filePath = payload.userID + '/' + fileName
-                            
+
                             // Entferne den Header
                             const base64Data = file.replace(/^data:image\/png;base64,/, "");
-                            
+
                             // Schreibe Dateien
                             fs.writeFile(
                                 settings.uploadPath + filePath,
@@ -53,8 +53,12 @@ const media = {
             }
         ).then(
             (res) => {
+
                 // Bilder entfernen
                 delete payload.imgs;
+
+                console.log('media, L60', payload);
+
 
                 // Zur Datenbank hinzufügen
                 return database.addMedia(payload)

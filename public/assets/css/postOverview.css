@@ -1,0 +1,11 @@
+.postOverview {
+
+    .img {
+        position: relative;
+        display: inline-block;
+        width: 140px;
+        height: 140px;
+        background-size: cover;
+        margin-right: 10px;
+    }
+}

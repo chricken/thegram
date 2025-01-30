@@ -28,7 +28,7 @@ const addMedia = () => {
     const elInpTitle = dom.create({
         parent: parent.modal,
         content: 'Title',
-        type:'h3',
+        type: 'h3',
         attr: {
             'contenteditable': true
         }
@@ -63,7 +63,11 @@ const addMedia = () => {
                 })
 
                 ws.uploadMedia(payload).then(
-                    timeline.init
+                    () => {
+                        console.log('addmedia, 67');
+                        
+                        // timeline.init();
+                    }
                 ).catch(
                     console.warn
                 )
@@ -86,15 +90,13 @@ const addMedia = () => {
             change() {
                 let files = [...elInpImage.files];
                 console.log(elInpImage.files);
-                
+
                 files.forEach(file => {
                     if (file) {
                         const reader = new FileReader();
                         reader.onload = evt => {
                             // Bild an Daten anhängen
                             payload.imgs.push(evt.target.result);
-
-                            console.log(payload);
 
                             // Bild in FE anzeigen
                             const imagePreview = dom.create({

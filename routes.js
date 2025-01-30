@@ -6,6 +6,8 @@ import database from './database.js';
 import formidable from 'formidable';
 import settings from './settings.js';
 import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 const fsp = fs.promises;
 
 router.post('/login', (request, response) => {
@@ -26,7 +28,19 @@ router.post('/login', (request, response) => {
         })
     )
 })
+router.get('/getImg/:userID/:filename', (request, response) => {
+    console.log('userID', request.params.userID);
+    console.log('filename', request.params.filename);
+    
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
 
+    let filepath = path.join(__dirname, `data/img/${request.params.userID}/${request.params.filename}`);
+    // `data/img/${request.params.userID}/${request.params.filename}`;
+
+    response.sendFile(filepath)
+
+})
 router.post('/uploadMedia', (request, response) => {
     const myForm = formidable({
         uploadDir: settings.uploadPath,
@@ -79,7 +93,7 @@ router.post('/uploadMedia', (request, response) => {
             ).then(
                 () => {
                     // Zur Datenbank hinzufügen
-                   return database.addMedia(data)
+                    return database.addMedia(data)
                 }
             ).then(
                 res => {
