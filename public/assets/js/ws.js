@@ -14,7 +14,7 @@ const handleLogin = msg => {
             'credentials',
             JSON.stringify(msg.payload)
         );
-        app.handleLogin()
+        app.handleLogin();
 
     } else {
         console.log('Nicht erfolgreich');
@@ -31,36 +31,23 @@ socket.addEventListener('message', msg => {
     if (msg.type == 'updateSocketID') {
         settings.socketID = msg.payload.socketID;
         socket.id = msg.payload.socketID;
-        // console.log(settings);
+
     } else if (msg.type == 'loginStatus') {
-        // console.log('loginStatus', msg.payload);
         // Zweimal payload, weil das Objekt auf dem Server zweimal verpackt wird
         settings.user = msg.payload.payload;
         settings.user.posts = settings.user.posts.toSorted((a, b) => b.crDate - a.crDate);
-        // console.log('posts loaded on login', settings.user.posts);
-
         handleLogin(msg.payload)
+
     } else if (msg.type == 'uploadStatus') {
-        // console.log('uploadStatus', msg.payload);
-        // console.log(msg.payload);
-        // ws.getTimeline()
-        let posts = msg.payload.posts.toSorted((a, b) => b.crDate - a.crDate);
-        // console.log('posts loaded', posts);
+        settings.user.posts = msg.payload.posts.toSorted((a, b) => b.crDate - a.crDate);
+        timeline.reset();
 
-        settings.user.posts = posts;
-
-        // settings.posts = [];
-        settings.firstLoad = true;
-        settings.offset = 0;
-
-        timeline.init();
     } else if (msg.type == 'getTimeline') {
-        // console.log('getTimeline');
-        // console.log(msg.payload);
         if (settings.firstLoad)
             timeline.render(msg.payload);
         else
             timeline.append(msg.payload);
+
     }
 
 })

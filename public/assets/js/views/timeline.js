@@ -13,6 +13,12 @@ let numPostsToShow = 3;
 */
 
 const timeline = {
+    reset(){
+        // settings.user.posts = [];
+        settings.firstLoad = true;
+        settings.offset = 0;
+        timeline.init();
+    },
     init() {
         if (settings.user) {
             // settings.posts = settings.user.posts;
@@ -35,7 +41,7 @@ const timeline = {
         }
     },
     render(payload) {
-        const parent = elements.timeline;
+        const parent = elements.content;
         console.log('render');
         
 
@@ -57,7 +63,7 @@ const timeline = {
     append(payload) {
         console.log('append');
         
-        const parent = elements.timeline;
+        const parent = elements.content;
 
         payload.forEach(post => {
             postOverview(parent, post)

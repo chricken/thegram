@@ -12,6 +12,7 @@ const settings = {
     },
     uploadPath: './data/img/',
     wsSockets: {},
+    viewMode:null
 }
 
 export default settings;

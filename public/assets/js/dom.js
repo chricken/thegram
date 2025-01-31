@@ -61,8 +61,9 @@ const dom = {
     mapping(){
         elements.main = dom.$('main');
         elements.messages = dom.$('messages');
-        elements.timeline = dom.$('timeline');
+        elements.content = dom.$('content');
         elements.loadTrigger = dom.$('loadTrigger');
+        elements.nav = dom.$('nav');
     },
     appendEventListeners(){
     },

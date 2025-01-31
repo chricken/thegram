@@ -9,6 +9,7 @@ const settings = {
     posts: [],
     offset: 0,
     numPostsToShow: 3,
+    viewMode: null,
 }
 
 export default settings;
