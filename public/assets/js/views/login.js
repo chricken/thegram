@@ -22,11 +22,6 @@ const login = ({
         type: 'h3',
         content: 'Login',
         parent: container,
-        listeners:{
-            click(){
-                console.log('Clicked');                
-            }
-        }
     })
 
     compInput({
@@ -40,7 +35,7 @@ const login = ({
 
     compInput({
         parent: container,
-        value: password ,
+        value: password,
         type: 'password',
         legend: 'Password',
         onInput(value) {
@@ -53,14 +48,9 @@ const login = ({
         parent: container,
         onClick() {
             ws.login(userName, password);
-            /*
-            ajax.login({
-                userName, password
-            })
-            */
         }
     })
-    
+
 }
 
 export default login;

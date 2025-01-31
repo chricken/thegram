@@ -6,6 +6,8 @@ import elements from './elements.js';
 
 const init = () => {
     dom.mapping();
+    dom.appendEventListeners();
+    dom.appendObservers();
     
     viewLogin({
         parent: elements.main

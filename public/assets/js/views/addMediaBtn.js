@@ -1,6 +1,5 @@
 'use strict';
 
-import dom from '../dom.js';
 import addMedia from './addMedia.js';
 import btn from '../components/button.js';
 

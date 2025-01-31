@@ -12,8 +12,6 @@ const app = {
 
         viewAddMediaBtn({ parent: elements.main });
         viewTimeline.init();
-
-
     }
 }
 

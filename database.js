@@ -63,14 +63,36 @@ const database = {
         return dbUsers.get(userID).then(
             payload => {
                 // console.log('addMediaToUser', payload);
-                payload.posts.push(mediaID);
+                payload.posts.push({
+                    media: mediaID,
+                    crDate: Date.now(),
+                    crDateClear: new Date().toLocaleTimeString(),
+                });
                 return payload;
             }
         ).then(
-            payload =>  dbUsers.insert(payload)
+            payload => dbUsers.insert(payload)
+        ).then(
+            () => dbUsers.get(userID)
+        ).then(
+            res => res.posts
         )
     },
-
+    getMedia(mediaToLoad) {
+        let dbPosts = dbConn.use(settings.dbNames.posts);
+        // console.log('getMedia', mediaToLoad);
+        if (mediaToLoad.length) {
+            return dbPosts.fetch({
+                keys: mediaToLoad
+            }).then(
+                res => res.rows.map(row => row.doc)
+            )
+        } else {
+            return new Promise(resolve => {
+                resolve([])
+            })
+        }
+    },
     getTimeline(userID, offset) {
         let dbUsers = dbConn.use(settings.dbNames.users);
         let dbPosts = dbConn.use(settings.dbNames.posts);
@@ -79,7 +101,7 @@ const database = {
             res => {
                 if (res.posts.length) {
                     return dbPosts.fetch({
-                        keys: res.posts
+                        keys: res.posts.map(post => post.media)
                     })
                 } else {
                     return { rows: [] }

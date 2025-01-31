@@ -10,8 +10,8 @@ const media = {
     handleUploaded(payload) {
         // console.log(payload);
         let path = settings.uploadPath + payload.userID + '/';
-
-        // Pfad existenz checken
+        payload.timestamp = Date.now();
+        // Pfad Existenz checken
         return fsp.access(path).then(
             () => { }
         ).catch(
@@ -57,20 +57,20 @@ const media = {
                 // Bilder entfernen
                 delete payload.imgs;
 
-                console.log('media, L60', payload);
-
-
                 // Zur Datenbank hinzufügen
                 return database.addMedia(payload)
             }
         ).then(
             res => {
                 payload.mediaID = res.id;
-                database.addMediaToUser(payload.userID, res.id);
+                return database.addMediaToUser(payload.userID, res.id);
             }
         ).then(
             res => {
-                return payload;
+                return {
+                    media: payload,
+                    posts: res
+                }
             }
         )
     }

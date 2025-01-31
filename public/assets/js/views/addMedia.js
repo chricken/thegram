@@ -4,22 +4,23 @@ import dom from '../dom.js';
 import modal from '../components/modal.js';
 import button from '../components/button.js';
 import ws from '../ws.js';
+import helpers from '../helpers.js';
 import elements from '../elements.js';
 import settings from '../settings.js';
 import timeline from './timeline.js';
+import randomTexts from '../randomTexts.js';
 
 const addMedia = () => {
 
     const parent = modal();
     const payload = {
-        text: '',
+        title: randomTexts[helpers.createNumber(0, randomTexts.length - 1)].substring(0, 20),
+        text: randomTexts[helpers.createNumber(0, randomTexts.length - 1)],
         userID: settings.user._id,
         imgs: []
     }
 
-
     // Objekt, das die Daten des Content-Elementes enthält
-
     const elImagePreview = dom.create({
         cssClassName: 'parentImagePreview',
         parent: parent.modal,
@@ -27,7 +28,7 @@ const addMedia = () => {
 
     const elInpTitle = dom.create({
         parent: parent.modal,
-        content: 'Title',
+        content: payload.title,
         type: 'h3',
         attr: {
             'contenteditable': true
@@ -36,7 +37,7 @@ const addMedia = () => {
 
     const elInpText = dom.create({
         parent: parent.modal,
-        content: 'Dummy Inhalt',
+        content: payload.text,
         attr: {
             'contenteditable': true
         }
@@ -48,26 +49,19 @@ const addMedia = () => {
         listeners: {
             submit(evt) {
                 evt.preventDefault();
-                // const payload = new FormData(formAddMedia);
-                // payload.append('text', elInpText.innerHTML);
-                // payload.append('userID', settings.user._id);
                 payload.text = elInpText.innerHTML;
                 payload.title = elInpTitle.innerHTML;
 
                 console.log(payload);
 
-                const elMsg = dom.create({
+                dom.create({
                     parent: elements.messages,
                     cssClassName: 'singleMessage',
                     content: 'Uploading',
                 })
 
                 ws.uploadMedia(payload).then(
-                    () => {
-                        console.log('addmedia, 67');
-                        
-                        // timeline.init();
-                    }
+                   console.log                   
                 ).catch(
                     console.warn
                 )
@@ -89,7 +83,7 @@ const addMedia = () => {
         listeners: {
             change() {
                 let files = [...elInpImage.files];
-                console.log(elInpImage.files);
+                // console.log(elInpImage.files);
 
                 files.forEach(file => {
                     if (file) {

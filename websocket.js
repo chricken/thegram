@@ -30,7 +30,7 @@ wsServer.on('connection', socket => {
                         res.status = 'done';
                         socket.send(JSON.stringify({
                             type: 'uploadStatus',
-                            payload: {}
+                            payload: res
                         }))
                     }
                 ).catch(
@@ -54,7 +54,19 @@ wsServer.on('connection', socket => {
                 }
             )
         } if (msg.type == 'getTimeline') {
-            console.log('websocket, L57', );
+            // console.log('websocket, L57',);
+            // console.log(msg.payload);
+
+            database.getMedia(msg.payload.mediaToLoad).then(
+                res => {
+                    socket.send(JSON.stringify({
+                        type: 'getTimeline',
+                        payload: res
+                    }))
+                }
+            )
+
+            /* 
             database.getTimeline(msg.payload.userID, 0).then(
                 res => {
                     socket.send(JSON.stringify({
@@ -63,6 +75,7 @@ wsServer.on('connection', socket => {
                     }))
                 }
             )
+             */
         }
     })
 

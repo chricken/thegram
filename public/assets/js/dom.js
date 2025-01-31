@@ -1,6 +1,7 @@
 'use strict';
 
 import elements from './elements.js';
+import observerHandlers from './observerHandlers.js';
 
 const dom = {
     create({
@@ -61,6 +62,13 @@ const dom = {
         elements.main = dom.$('main');
         elements.messages = dom.$('messages');
         elements.timeline = dom.$('timeline');
+        elements.loadTrigger = dom.$('loadTrigger');
+    },
+    appendEventListeners(){
+    },
+    appendObservers(){
+        const obsLoadTrigger = new IntersectionObserver(observerHandlers.intersectLoadTrigger);
+        obsLoadTrigger.observe(elements.loadTrigger);
     }
 }
 

@@ -1,4 +1,10 @@
 .postOverview {
+    
+    border: 1px solid #aaa;
+    background-color: #eee;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    padding:5px;
 
     .img {
         position: relative;
