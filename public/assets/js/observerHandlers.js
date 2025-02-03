@@ -5,13 +5,13 @@ import settings from './settings.js';
 
 const observerHandlers = {
     intersectLoadTrigger(entries) {
-        console.log(entries);
+        // console.log(entries);
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 if (settings.viewMode)
                     settings.viewMode.init()
             }
-        })
+        }) 
     }
 }
 

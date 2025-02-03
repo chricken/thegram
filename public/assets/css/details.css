@@ -1,4 +1,4 @@
-.postDetailsBG {
+.detailsBG {
     position: fixed;
     left: 0;
     right: 0;
@@ -8,7 +8,7 @@
     backdrop-filter: blur(3px);
 }
 
-.postDetails {
+.details {
     position: fixed;
     left: 10px;
     right: 10px;

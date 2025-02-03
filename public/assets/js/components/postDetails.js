@@ -2,7 +2,7 @@
 
 import dom from '../dom.js';
 import settings from '../settings.js';
-import btnClose from '../components/buttonClose.js';
+import btnClose from './buttonClose.js';
 
 const postDetails = (post) => {
 
@@ -10,11 +10,12 @@ const postDetails = (post) => {
 
     const bg = dom.create({
         parent: document.body,
-        cssClassName: 'postDetailsBG'
+        cssClassName: 'detailsBG'
     })
+
     const container = dom.create({
         parent: bg,
-        cssClassName: 'postDetails'
+        cssClassName: 'details'
     })
 
     dom.create({
@@ -24,20 +25,21 @@ const postDetails = (post) => {
     })
 
     // Detailbild
-    let path = `/getImg/${settings.user._id}/${post.imgNames[currentIndex]}`;
+    if (post.imgNames.length > 0) {
+        let path = `/getImg/${settings.user._id}/${post.imgNames[currentIndex]}`;
 
-    const imgDetail = dom.create({
-        type: 'img',
-        cssClassName: 'imgDetail',
-        parent: container,
-        attr: {
-            src: path
-        }
-    })
-
+        dom.create({
+            type: 'img',
+            cssClassName: 'imgDetail',
+            parent: container,
+            attr: {
+                src: path
+            }
+        })
+    }
     // Alle Bilder
-    if (post.imgNames.length > 1) {
 
+    if (post.imgNames.length > 1) {
         const parent = dom.create({
             parent: container,
             cssClassName: 'allImgs'
@@ -70,8 +72,8 @@ const postDetails = (post) => {
 
     // Close-Button
     btnClose({
-        parent:container,
-        onClick(){
+        parent: container,
+        onClick() {
             bg.remove();
         }
     })

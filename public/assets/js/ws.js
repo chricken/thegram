@@ -3,6 +3,7 @@
 import settings from './settings.js';
 import app from './views/app.js';
 import timeline from './views/timeline.js';
+import findUsers from './views/findUsers.js';
 
 const socket = new WebSocket(settings.wsAddress);
 
@@ -47,7 +48,12 @@ socket.addEventListener('message', msg => {
             timeline.render(msg.payload);
         else
             timeline.append(msg.payload);
-
+    } else if (msg.type == 'getSubbedUsers') {
+        findUsers.renderSubbedUsers(msg.payload)
+    } else if (msg.type == 'getNewUsers') {
+        findUsers.renderNewUsers(msg.payload)
+    } else if (msg.type == 'updateUserSave') {
+        settings.user = msg.payload.result;
     }
 
 })
@@ -78,7 +84,59 @@ const ws = {
                 mediaToLoad
             }
         }))
+    },
+    getSubbedUsers() {
+        socket.send(JSON.stringify({
+            type: 'getSubbedUsers',
+            payload: {
+                userID: settings.user._id,
+            }
+        }))
+    },
+    getNewUsers(numUsers) {
+        socket.send(JSON.stringify({
+            type: 'getNewUsers',
+            payload: {
+                userID: settings.user._id,
+                numUsers
+            }
+        }))
+    },
+    saveCurrentUser() {
+        /*
+        socket.send(JSON.stringify({
+            type: 'saveCurrentUser',
+            payload: settings.user
+        }))
+        */
+        return new Promise((resolve, reject) => {
+
+            // Versuch, einer Kommunikation mit Callback
+            let callbackType = (Math.random() * 1e17).toString(36) + Date.now();
+
+            const callback = evt => {
+                let msg = JSON.parse(evt.data);
+
+                if (msg.type == callbackType) {
+                    // Eventlistener wieder entfernen
+                    socket.removeEventListener('message', callback);
+                    // console.log('Callback im websocket-Ablauf', msg.payload);
+                    settings.user = msg.payload.result;
+                    resolve()
+                }
+            }
+
+            socket.addEventListener('message', callback)
+
+            socket.send(JSON.stringify({
+                type: 'saveCurrentUser',
+                payload: settings.user,
+                callbackType,
+            }))
+
+        })
     }
+
 }
 
 export default ws;

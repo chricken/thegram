@@ -112,4 +112,13 @@ router.post('/uploadMedia', (request, response) => {
     })
 })
 
+// Eine Route, um ein alle Posts eines Users zu lesen und eine Antwort senden zu können
+router.post('/getPosts', (request, response)=>{
+    let media = request.body;
+
+    database.getMedia(media).then(
+        res => response.json(res)
+    )
+})
+
 export default router;

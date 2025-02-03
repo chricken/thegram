@@ -2,17 +2,17 @@
 
 import dom from '../dom.js';
 import settings from '../settings.js';
-import postDetails from './postDetails.js';
+// import userDetails from './userDetails.js';
 
-const postOverview = (parent, post) => {
+const postOverview = (parent, user, post) => {
     // console.log('post overview 8', post);
 
     const container = dom.create({
-        cssClassName: 'postOverview',
+        cssClassName: 'overview postOverview',
         parent,
         listeners: {
             click() {
-                postDetails(post)
+                // userDetails(post)
             }
         }
     })
@@ -32,25 +32,14 @@ const postOverview = (parent, post) => {
         })
     }
     
-    /* 
-    if (post.title) {
-        dom.create({
-            type: 'h5',
-            content: post._id,
-            parent: container
-        })
-    }
-    */
    
     if (post.imgNames.length) {
-        // console.log(`/getImg/${settings.user._id}/${post.imgNames[0]}`);
         post.imgNames.forEach((imgName, index) => {
-
             let imgPreview = dom.create({
                 cssClassName: `img img_${index}`,
                 parent: container,
                 styles: {
-                    backgroundImage: `url(/getImg/${settings.user._id}/${imgName})`
+                    backgroundImage: `url(/getImg/${user._id}/${imgName})`
                 }
             })
 
@@ -63,7 +52,7 @@ const postOverview = (parent, post) => {
                     }
                 },
                 attr: {
-                    src: `/getImg/${settings.user._id}/${imgName}`
+                    src: `/getImg/${user._id}/${imgName}`
                 }
             })
         })

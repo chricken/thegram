@@ -78,6 +78,7 @@ const database = {
             res => res.posts
         )
     },
+
     getMedia(mediaToLoad) {
         let dbPosts = dbConn.use(settings.dbNames.posts);
         // console.log('getMedia', mediaToLoad);
@@ -93,6 +94,7 @@ const database = {
             })
         }
     },
+
     getTimeline(userID, offset) {
         let dbUsers = dbConn.use(settings.dbNames.users);
         let dbPosts = dbConn.use(settings.dbNames.posts);
@@ -111,6 +113,51 @@ const database = {
             res => res.rows.map(row => row.doc)
         )
 
+    },
+
+    getSubbedUsers(userID) {
+        let dbUsers = dbConn.use(settings.dbNames.users);
+
+        return dbUsers.get(userID).then(
+            res => res.subbedUsers
+        ).then(
+            res => {
+                return Promise.all(
+                    res.map(user =>
+                        dbUsers.get(user.userID)
+                    )
+                )
+            }
+        ).then(
+            res => res.map(user => {
+                delete user.password;
+                return user;
+            })
+        ).then(
+            res => res.toSorted((a, b) => b.chDate - a.chDate)
+        )
+    },
+
+    getNewUsers(payload) {
+        let dbUsers = dbConn.use(settings.dbNames.users);
+
+        return dbUsers.view(
+            'dd_sort', 'byCrDate',
+            {
+                descending: true,
+                limit: payload.numUsers
+            }
+        ).then(
+            res => res.rows.map(row => row.value)
+        )
+    },
+
+    saveUser(payload){
+        let dbUsers = dbConn.use(settings.dbNames.users);
+
+        return dbUsers.insert(payload).then(
+            res => dbUsers.get(res.id)
+        );
     }
 }
 

@@ -54,9 +54,6 @@ wsServer.on('connection', socket => {
                 }
             )
         } if (msg.type == 'getTimeline') {
-            // console.log('websocket, L57',);
-            // console.log(msg.payload);
-
             database.getMedia(msg.payload.mediaToLoad).then(
                 res => {
                     socket.send(JSON.stringify({
@@ -65,18 +62,41 @@ wsServer.on('connection', socket => {
                     }))
                 }
             )
-
-            /* 
-            database.getTimeline(msg.payload.userID, 0).then(
+        } if (msg.type == 'getSubbedUsers') {
+            database.getSubbedUsers(msg.payload.userID).then(
                 res => {
                     socket.send(JSON.stringify({
-                        type: 'getTimeline',
+                        type: 'getSubbedUsers',
                         payload: res
                     }))
                 }
             )
-             */
+        } if (msg.type == 'getNewUsers') {
+            database.getNewUsers(msg.payload).then(
+                res => {
+                    socket.send(JSON.stringify({
+                        type: 'getNewUsers',
+                        payload: res
+                    }))
+                }
+            )
+        } if (msg.type == 'saveCurrentUser') {
+            // Nachricht enthält den Namen, der als Antwort zurück gesendet werden soll
+            // als "callbackType" 
+            // So kann im Client auf die Antwort direkt reagiert werden
+            database.saveUser(msg.payload).then(
+                res => {
+                    socket.send(JSON.stringify({
+                        type: msg.callbackType,
+                        payload: {
+                            status: 'done',
+                            result: res
+                        }
+                    }))
+                }
+            )
         }
+
     })
 
     socket.send(JSON.stringify({
