@@ -45,8 +45,12 @@ wsServer.on('connection', socket => {
                     }
                 )
         } if (msg.type == 'login') {
+            console.log('Login Data', msg.payload);
+            
             database.checkLogin(msg.payload).then(
                 res => {
+                    console.log('login', res);
+                    
                     socket.send(JSON.stringify({
                         type: 'loginStatus',
                         payload: res

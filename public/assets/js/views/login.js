@@ -5,52 +5,64 @@ import compInput from '../components/input.js';
 import compButton from '../components/button.js';
 import ws from '../ws.js';
 
-let userName = 'chricken';
+let username = 'chricken';
 let password = 'abc';
 
 const login = ({
     parent = null,
 }) => {
+    return new Promise((resolve, reject) => {
+        // Erstmal Autologin versuchen
+        let storedLogin = localStorage.getItem('credentials');
 
-    const container = dom.create({
-        type: 'div',
-        parent,
-        cssClassName: 'view viewLogin'
-    })
+        if (storedLogin) {
+            storedLogin = JSON.parse(storedLogin);
+            resolve({
+                username: storedLogin.username,
+                password: storedLogin.password
+            })
+        } else {
+            const container = dom.create({
+                type: 'div',
+                parent,
+                cssClassName: 'view viewLogin'
+            })
 
-    dom.create({
-        type: 'h3',
-        content: 'Login',
-        parent: container,
-    })
+            dom.create({
+                type: 'h3',
+                content: 'Login',
+                parent: container,
+            })
 
-    compInput({
-        parent: container,
-        value: userName,
-        legend: 'Username',
-        onInput(value) {
-            userName = value;
+            compInput({
+                parent: container,
+                value: username,
+                legend: 'Username',
+                onInput(value) {
+                    username = value;
+                }
+            })
+
+            compInput({
+                parent: container,
+                value: password,
+                type: 'password',
+                legend: 'Password',
+                onInput(value) {
+                    password = value;
+                }
+            })
+
+            compButton({
+                legend: 'Login',
+                parent: container,
+                onClick() {
+                    resolve({ username, password })
+                }
+            })
+
         }
     })
-
-    compInput({
-        parent: container,
-        value: password,
-        type: 'password',
-        legend: 'Password',
-        onInput(value) {
-            password = value;
-        }
-    })
-
-    compButton({
-        legend: 'Login',
-        parent: container,
-        onClick() {
-            ws.login(userName, password);
-        }
-    })
-
 }
 
 export default login;

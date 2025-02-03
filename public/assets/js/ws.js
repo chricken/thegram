@@ -5,7 +5,7 @@ import app from './views/app.js';
 import timeline from './views/timeline.js';
 import findUsers from './views/findUsers.js';
 
-const socket = new WebSocket(settings.wsAddress);
+let socket;
 
 // functions 
 const handleLogin = msg => {
@@ -22,44 +22,58 @@ const handleLogin = msg => {
     }
 }
 
-socket.addEventListener('open', evt => {
-    console.log('Websocket ist verbunden.');
-})
-
-socket.addEventListener('message', msg => {
-    msg = JSON.parse(msg.data);
-
-    if (msg.type == 'updateSocketID') {
-        settings.socketID = msg.payload.socketID;
-        socket.id = msg.payload.socketID;
-
-    } else if (msg.type == 'loginStatus') {
-        // Zweimal payload, weil das Objekt auf dem Server zweimal verpackt wird
-        settings.user = msg.payload.payload;
-        settings.user.posts = settings.user.posts.toSorted((a, b) => b.crDate - a.crDate);
-        handleLogin(msg.payload)
-
-    } else if (msg.type == 'uploadStatus') {
-        settings.user.posts = msg.payload.posts.toSorted((a, b) => b.crDate - a.crDate);
-        timeline.reset();
-
-    } else if (msg.type == 'getTimeline') {
-        if (settings.firstLoad)
-            timeline.render(msg.payload);
-        else
-            timeline.append(msg.payload);
-    } else if (msg.type == 'getSubbedUsers') {
-        findUsers.renderSubbedUsers(msg.payload)
-    } else if (msg.type == 'getNewUsers') {
-        findUsers.renderNewUsers(msg.payload)
-    } else if (msg.type == 'updateUserSave') {
-        settings.user = msg.payload.result;
-    }
-
-})
 
 const ws = {
-    login(username, password) {
+    init() {
+        return new Promise((resolve, reject) => {
+            socket = new WebSocket(settings.wsAddress);
+            socket.addEventListener('open', () => {
+                resolve()
+            })
+        })
+    },
+    appendEventListeners() {
+        return new Promise(resolve => {
+            socket.addEventListener('open', evt => {
+                console.log('Websocket ist verbunden.');
+            })
+
+            socket.addEventListener('message', msg => {
+                msg = JSON.parse(msg.data);
+
+                if (msg.type == 'updateSocketID') {
+                    settings.socketID = msg.payload.socketID;
+                    socket.id = msg.payload.socketID;
+
+                } else if (msg.type == 'loginStatus') {
+                    // Zweimal payload, weil das Objekt auf dem Server zweimal verpackt wird
+                    settings.user = msg.payload.payload;
+                    settings.user.posts = settings.user.posts.toSorted((a, b) => b.crDate - a.crDate);
+                    handleLogin(msg.payload)
+
+                } else if (msg.type == 'uploadStatus') {
+                    settings.user.posts = msg.payload.posts.toSorted((a, b) => b.crDate - a.crDate);
+                    timeline.reset();
+
+                } else if (msg.type == 'getTimeline') {
+                    if (settings.firstLoad)
+                        timeline.render(msg.payload);
+                    else
+                        timeline.append(msg.payload);
+                } else if (msg.type == 'getSubbedUsers') {
+                    findUsers.renderSubbedUsers(msg.payload)
+                } else if (msg.type == 'getNewUsers') {
+                    findUsers.renderNewUsers(msg.payload)
+                } else if (msg.type == 'updateUserSave') {
+                    settings.user = msg.payload.result;
+                }
+            })
+            resolve();
+        })
+    },
+    login({ username, password }) {
+        console.log('login', username, password);
+
         socket.send(JSON.stringify({
             type: 'login',
             payload: {

@@ -117,11 +117,15 @@ const database = {
 
     getSubbedUsers(userID) {
         let dbUsers = dbConn.use(settings.dbNames.users);
+        
+        console.log('subbed Users', userID);
 
         return dbUsers.get(userID).then(
             res => res.subbedUsers
         ).then(
             res => {
+                console.log(res);
+
                 return Promise.all(
                     res.map(user =>
                         dbUsers.get(user.userID)
@@ -152,7 +156,7 @@ const database = {
         )
     },
 
-    saveUser(payload){
+    saveUser(payload) {
         let dbUsers = dbConn.use(settings.dbNames.users);
 
         return dbUsers.insert(payload).then(
