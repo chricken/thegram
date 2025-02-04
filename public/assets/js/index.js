@@ -1,9 +1,10 @@
 'use strict';
 
 import dom from './dom.js';
-import viewLogin from './views/login.js';
+import viewLogin from './views/maskLogin.js';
 import elements from './elements.js';
 import ws from './ws.js';
+import prefill from './prefill.js';
 
 const init = () => {
     dom.mapping();
@@ -13,15 +14,11 @@ const init = () => {
     ws.init().then(
         () => ws.appendEventListeners()
     ).then(
+        prefill
+    ).then(
         () => viewLogin({
             parent: elements.main
         })
-    ).then(
-        credentials => {
-            console.log(credentials);
-            
-            ws.login(credentials);
-        }
     ).catch(
         console.warn        
     )

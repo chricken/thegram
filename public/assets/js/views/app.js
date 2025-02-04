@@ -4,7 +4,8 @@ import settings from '../settings.js';
 import elements from '../elements.js';
 
 // Views
-import viewAddMediaBtn from './addMediaBtn.js';
+import compAddMediaBtn from '../components/addMediaBtn.js';
+import compLogoutBtn from '../components/logoutBtn.js';
 import viewTimeline from './timeline.js';
 import compNav from '../components/nav.js';
 
@@ -14,8 +15,10 @@ const app = {
         settings.viewMode = viewTimeline;
 
         compNav();
-        viewAddMediaBtn({ parent: elements.main });
+        compAddMediaBtn({ parent: elements.nav });
         settings.viewMode.init();
+
+        compLogoutBtn({parent:elements.navAdditional})
     }
 }
 

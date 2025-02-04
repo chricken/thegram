@@ -64,6 +64,7 @@ const dom = {
         elements.content = dom.$('content');
         elements.loadTrigger = dom.$('loadTrigger');
         elements.nav = dom.$('nav');
+        elements.navAdditional = dom.$('navAdditional');
     },
     appendEventListeners(){
     },

@@ -1,4 +1,4 @@
-nav {
+nav, navAdditional {
     position: fixed;
     left: 0;
     top: 0;
@@ -8,12 +8,23 @@ nav {
     padding:10px;
     text-align: center;
 
-    .link {
+    .link, .navLink {
         position: relative;
         display: inline-block;
         margin-left:5px;
         margin-right:5px;
         cursor: pointer;
     }
+/*
+    .navLink.addMedia::before {
+        width: 20px;
+        height: 100%;
+        background-color: #f00;
+        content: '➕';
+    }
+*/
 }
-
+navAdditional {
+    top: auto;
+    bottom:0;
+}

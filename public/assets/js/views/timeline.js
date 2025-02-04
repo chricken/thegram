@@ -7,16 +7,9 @@ import postOverview from '../components/postOverview.js';
 import settings from '../settings.js';
 import languages from '../languages/all.js';
 
-/*
-let posts = [];
-let offset = 0;
-let numPostsToShow = 3;
-*/
-
 const timeline = {
     reset() {
         // Setzt alle lokalen Einstellungen zurück
-        // settings.user.posts = [];
         settings.firstLoad = true;
         settings.offset = 0;
         timeline.init();
@@ -24,8 +17,6 @@ const timeline = {
     init() {
         // Bereitet den Render-Prozess vor
         if (settings.user) {
-            // settings.posts = settings.user.posts;
-
             let postsToLoad = settings.user.posts.filter((post, index) => {
                 return (
                     index >= settings.offset
@@ -35,7 +26,14 @@ const timeline = {
                 post => post.media
             )
 
-            ws.getTimeline(postsToLoad);
+            ws.getTimeline(postsToLoad).then(
+                payload => {
+                    if (settings.firstLoad)
+                        timeline.render(payload);
+                    else
+                        timeline.append(payload);
+                }
+            )
 
             settings.offset += settings.numPostsToShow;
             settings.offset = Math.min(settings.offset, settings.user.posts.length);

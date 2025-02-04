@@ -24,67 +24,62 @@ wsServer.on('connection', socket => {
         // console.log(msg);
 
         if (msg.type == 'uploadMedia') {
-            media.handleUploaded(msg.payload)
-                .then(
-                    res => {
-                        res.status = 'done';
-                        socket.send(JSON.stringify({
-                            type: 'uploadStatus',
-                            payload: res
-                        }))
-                    }
-                ).catch(
-                    err => {
-                        socket.send(JSON.stringify({
-                            type: 'uploadStatus',
-                            payload: {
-                                status: 'err',
-                                err
-                            }
-                        }))
-                    }
-                )
-        } if (msg.type == 'login') {
-            console.log('Login Data', msg.payload);
-            
+            media.handleUploaded(msg.payload).then(
+                res => {
+                    res.status = 'done';
+                    socket.send(JSON.stringify({
+                        type: msg.callbackType,
+                        payload: res
+                    }))
+                }
+            ).catch(
+                err => {
+                    socket.send(JSON.stringify({
+                        type: 'uploadStatus',
+                        payload: {
+                            status: 'err',
+                            err
+                        }
+                    }))
+                }
+            )
+        } else if (msg.type == 'login') {
             database.checkLogin(msg.payload).then(
                 res => {
-                    console.log('login', res);
-                    
                     socket.send(JSON.stringify({
-                        type: 'loginStatus',
+                        type: msg.callbackType,
                         payload: res
                     }))
                 }
             )
-        } if (msg.type == 'getTimeline') {
+        } else if (msg.type == 'getTimeline') {
             database.getMedia(msg.payload.mediaToLoad).then(
                 res => {
                     socket.send(JSON.stringify({
-                        type: 'getTimeline',
+                        type: msg.callbackType,
                         payload: res
                     }))
                 }
             )
-        } if (msg.type == 'getSubbedUsers') {
+        } else if (msg.type == 'getSubbedUsers') {
             database.getSubbedUsers(msg.payload.userID).then(
                 res => {
                     socket.send(JSON.stringify({
-                        type: 'getSubbedUsers',
+                        type: msg.callbackType,
                         payload: res
                     }))
                 }
             )
-        } if (msg.type == 'getNewUsers') {
+        } else if (msg.type == 'getNewUsers') {
             database.getNewUsers(msg.payload).then(
                 res => {
                     socket.send(JSON.stringify({
-                        type: 'getNewUsers',
+                        type: msg.callbackType,
                         payload: res
                     }))
                 }
             )
-        } if (msg.type == 'saveCurrentUser') {
+        } else if (msg.type == 'saveCurrentUser') {
             // Nachricht enthält den Namen, der als Antwort zurück gesendet werden soll
             // als "callbackType" 
             // So kann im Client auf die Antwort direkt reagiert werden

@@ -52,7 +52,7 @@ const addMedia = () => {
                 payload.text = elInpText.innerHTML;
                 payload.title = elInpTitle.innerHTML;
 
-                console.log(payload);
+                // console.log(payload);
 
                 dom.create({
                     parent: elements.messages,

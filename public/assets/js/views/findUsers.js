@@ -28,8 +28,12 @@ const findUsers = {
     },
     init() {
         // Bereitet den Render-Prozess vor
-        ws.getSubbedUsers();
-        ws.getNewUsers(settings.numNewUsersToShow);
+        ws.getSubbedUsers().then(
+            findUsers.renderSubbedUsers
+        );
+        ws.getNewUsers(settings.numNewUsersToShow).then(
+            findUsers.renderNewUsers
+        );
 
     },
     renderSubbedUsers(payload) {

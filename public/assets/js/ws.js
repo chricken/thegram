@@ -12,7 +12,7 @@ const handleLogin = msg => {
     if (msg.status == 'success') {
         // settings.user = msg.payload;
         localStorage.setItem(
-            'credentials',
+            settings.nameItemCredential,
             JSON.stringify(msg.payload)
         );
         app.handleLogin();
@@ -20,6 +20,36 @@ const handleLogin = msg => {
     } else {
         console.log('Nicht erfolgreich');
     }
+}
+
+const createWSCall = ({
+    type = '',
+    payload = {}
+} = {}) => {
+    return new Promise((resolve, reject) => {
+        // Versuch, einer Kommunikation mit Callback
+        let callbackType = (Math.random() * 1e17).toString(36) + Date.now();
+
+        const callback = evt => {
+            let msg = JSON.parse(evt.data);
+
+            if (msg.type == callbackType) {
+                // Eventlistener wieder entfernen
+                socket.removeEventListener('message', callback);
+                // onResponse()
+                resolve(msg.payload)
+            }
+        }
+
+        socket.addEventListener('message', callback)
+
+        socket.send(JSON.stringify({
+            type,
+            payload,
+            callbackType,
+        }))
+
+    })
 }
 
 
@@ -44,113 +74,75 @@ const ws = {
                 if (msg.type == 'updateSocketID') {
                     settings.socketID = msg.payload.socketID;
                     socket.id = msg.payload.socketID;
-
-                } else if (msg.type == 'loginStatus') {
-                    // Zweimal payload, weil das Objekt auf dem Server zweimal verpackt wird
-                    settings.user = msg.payload.payload;
-                    settings.user.posts = settings.user.posts.toSorted((a, b) => b.crDate - a.crDate);
-                    handleLogin(msg.payload)
-
-                } else if (msg.type == 'uploadStatus') {
-                    settings.user.posts = msg.payload.posts.toSorted((a, b) => b.crDate - a.crDate);
-                    timeline.reset();
-
-                } else if (msg.type == 'getTimeline') {
-                    if (settings.firstLoad)
-                        timeline.render(msg.payload);
-                    else
-                        timeline.append(msg.payload);
-                } else if (msg.type == 'getSubbedUsers') {
-                    findUsers.renderSubbedUsers(msg.payload)
-                } else if (msg.type == 'getNewUsers') {
-                    findUsers.renderNewUsers(msg.payload)
-                } else if (msg.type == 'updateUserSave') {
-                    settings.user = msg.payload.result;
-                }
+                } 
             })
             resolve();
         })
     },
     login({ username, password }) {
-        console.log('login', username, password);
-
-        socket.send(JSON.stringify({
+        return createWSCall({
             type: 'login',
             payload: {
                 username, password
             }
-        }))
+        }).then(
+            msg => {
+                settings.user = msg.payload;
+                settings.user.posts = settings.user.posts.toSorted((a, b) => b.crDate - a.crDate);
+                handleLogin(msg);
+                return 'Login abgeschlossen';
+            }
+        )
     },
     uploadMedia(payload) {
-        return new Promise(resolve => {
-            socket.send(JSON.stringify({
-                type: 'uploadMedia',
-                payload
-            }))
-            resolve();
-        })
+        return createWSCall({
+            type: 'uploadMedia',
+            payload
+        }).then(
+            payload => {
+                settings.user.posts = payload.posts.toSorted((a, b) => b.crDate - a.crDate);
+                timeline.reset();
+                return 'Beitrag wurde gespeichert'
+            }
+        )
     },
     getTimeline(mediaToLoad) {
-        socket.send(JSON.stringify({
+        // Return to call
+        return createWSCall({
             type: 'getTimeline',
             payload: {
                 userID: settings.user._id,
                 mediaToLoad
             }
-        }))
+        })
     },
     getSubbedUsers() {
-        socket.send(JSON.stringify({
+        return createWSCall({
             type: 'getSubbedUsers',
             payload: {
                 userID: settings.user._id,
             }
-        }))
+        })
     },
     getNewUsers(numUsers) {
-        socket.send(JSON.stringify({
+        return createWSCall({
             type: 'getNewUsers',
             payload: {
                 userID: settings.user._id,
                 numUsers
             }
-        }))
+        })
     },
     saveCurrentUser() {
-        /*
-        socket.send(JSON.stringify({
+        createWSCall({
             type: 'saveCurrentUser',
             payload: settings.user
-        }))
-        */
-        return new Promise((resolve, reject) => {
-
-            // Versuch, einer Kommunikation mit Callback
-            let callbackType = (Math.random() * 1e17).toString(36) + Date.now();
-
-            const callback = evt => {
-                let msg = JSON.parse(evt.data);
-
-                if (msg.type == callbackType) {
-                    // Eventlistener wieder entfernen
-                    socket.removeEventListener('message', callback);
-                    // console.log('Callback im websocket-Ablauf', msg.payload);
-                    settings.user = msg.payload.result;
-                    resolve()
-                }
+        }).then(
+            payload => {
+                settings.user = payload.result;
             }
-
-            socket.addEventListener('message', callback)
-
-            socket.send(JSON.stringify({
-                type: 'saveCurrentUser',
-                payload: settings.user,
-                callbackType,
-            }))
-
-        })
+        )
     }
-
 }
 
 export default ws;

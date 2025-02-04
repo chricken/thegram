@@ -1,4 +1,9 @@
-h1 {
+main {
     position: relative;
     margin-top: 50px;
+}
+
+footer {
+    position: relative;
+    margin-bottom: 50px;
 }
