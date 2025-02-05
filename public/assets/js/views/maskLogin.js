@@ -3,20 +3,22 @@
 import dom from '../dom.js';
 import compInput from '../components/input.js';
 import compButton from '../components/button.js';
+import maskRegister from './maskRegister.js';
 import loginout from '../loginout.js';
 import settings from '../settings.js';
 import lang from '../languages/all.js';
+import elements from '../elements.js';
 
 let username = 'chricken';
 let password = 'abc';
 
-const maskLogin = ({
-    parent = null,
-}) => {
+const maskLogin = () => {
     // Erstmal Autologin versuchen
     let storedLogin = localStorage.getItem(settings.nameItemCredential);
 
     let ln = lang[settings.lang];
+
+    elements.content.innerHTML = '';
 
     if (storedLogin) {
         storedLogin = JSON.parse(storedLogin);
@@ -24,7 +26,7 @@ const maskLogin = ({
     } else {
         const container = dom.create({
             type: 'div',
-            parent,
+            parent: elements.content,
             cssClassName: 'view viewLogin'
         })
 
@@ -53,9 +55,11 @@ const maskLogin = ({
             }
         })
 
+        // Anmelden
         compButton({
             legend: ln.login,
             parent: container,
+            isEncapsuled:false,
             onClick() {
                 loginout.login({
                     username,
@@ -64,14 +68,13 @@ const maskLogin = ({
             }
         })
 
+        // Registrieren
         compButton({
             legend: ln.register,
             parent: container,
+            isEncapsuled:false,
             onClick() {
-                loginout.login({
-                    username,
-                    password
-                })
+                maskRegister();
             }
         })
 

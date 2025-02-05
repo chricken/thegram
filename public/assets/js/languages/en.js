@@ -16,6 +16,10 @@ const en = {
     register: 'Register',
     username: 'Username',
     password: 'Password',
+    email: 'Email',
+    subbedUsers:'Fan of',
+    subbedMe:'My Fans',
+    newestUsers:'Newest Users',
 }
 
 export default en

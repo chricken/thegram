@@ -5,6 +5,7 @@ import settings from './settings.js';
 import helpers from './helpers.js';
 import database from './database.js';
 import media from './media.js';
+import handleUsers from './handleUsers.js'
 
 const wsServer = new WebSocketServer({ port: 8080 });
 
@@ -94,6 +95,34 @@ wsServer.on('connection', socket => {
                     }))
                 }
             )
+        } else if (msg.type == 'register') {
+            console.log(msg.payload);
+            handleUsers.register(msg.payload).then(
+                res => {
+                    console.log('websocket 102', res);
+
+                    socket.send(JSON.stringify({
+                        type: msg.callbackType,
+                        payload: {
+                            status: 'done',
+                            res
+                        }
+                    }))
+                }
+            ).catch(
+                err => {
+                    console.log('websocket 114', err);
+
+                    socket.send(JSON.stringify({
+                        type: msg.callbackType,
+                        payload: {
+                            status: 'err',
+                            err
+                        }
+                    }))
+                }
+            );
+
         }
 
     })

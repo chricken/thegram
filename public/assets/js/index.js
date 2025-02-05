@@ -16,11 +16,9 @@ const init = () => {
     ).then(
         prefill
     ).then(
-        () => viewLogin({
-            parent: elements.main
-        })
+        viewLogin
     ).catch(
-        console.warn        
+        console.warn
     )
 }
 

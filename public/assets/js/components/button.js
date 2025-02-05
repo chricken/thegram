@@ -17,7 +17,7 @@ const button = ({
         })
     }
 
-   let btn = dom.create({
+    let btn = dom.create({
         parent: container,
         type: 'button',
         content: legend,

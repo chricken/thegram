@@ -5,6 +5,8 @@ import elements from '../elements.js';
 import ws from '../ws.js';
 import settings from '../settings.js';
 import userOverview from '../components/userOverview.js';
+import lang from '../languages/all.js';
+
 
 const findUsers = {
     reset() {
@@ -42,8 +44,10 @@ const findUsers = {
 
         parent.innerHTML = '';
 
+        let ln = lang[settings.lang];
+
         dom.create({
-            content: 'Subbed Users',
+            content:ln.subbedUsers,
             parent,
             type: 'h2'
         })

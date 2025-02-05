@@ -74,7 +74,7 @@ const ws = {
                 if (msg.type == 'updateSocketID') {
                     settings.socketID = msg.payload.socketID;
                     socket.id = msg.payload.socketID;
-                } 
+                }
             })
             resolve();
         })
@@ -87,12 +87,23 @@ const ws = {
             }
         }).then(
             msg => {
-                settings.user = msg.payload;
-                settings.user.posts = settings.user.posts.toSorted((a, b) => b.crDate - a.crDate);
-                handleLogin(msg);
-                return 'Login abgeschlossen';
+                console.log(msg);
+                if (msg.status == 'success') {
+                    settings.user = msg.payload;
+                    settings.user.posts = settings.user.posts.toSorted((a, b) => b.crDate - a.crDate);
+                    handleLogin(msg);
+                    return 'Login abgeschlossen';
+                } else if (msg.status == 'err') {
+                    return msg.err;
+                }
             }
         )
+    },
+    register(credentials) {
+        return createWSCall({
+            type: 'register',
+            payload: credentials
+        })
     },
     uploadMedia(payload) {
         return createWSCall({

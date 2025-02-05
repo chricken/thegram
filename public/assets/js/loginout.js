@@ -9,6 +9,9 @@ const loginout = {
     logout() {
         localStorage.removeItem('credentials');
         location.reload();
+    },
+    register(credentials) {
+        return ws.register(credentials);
     }
 }
 

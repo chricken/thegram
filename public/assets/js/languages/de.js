@@ -16,6 +16,10 @@ const de = {
     register: 'Registrieren',
     username: 'Benutzername',
     password: 'Passwort',
+    email: 'E-Mail',
+    subbedUsers: 'Bin Fan von',
+    subbedMe: 'Meine Fans',
+    newestUsers: 'Neueste Benutzer',
 }
 
 export default de;

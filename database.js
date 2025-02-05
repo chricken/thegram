@@ -12,9 +12,10 @@ const database = {
             // Datenbanken anlegen
             res => {
                 return Promise.all(
-                    settings.neededDBs
+                    Object.values(settings.dbNames)
                         .filter(dbName => !res.includes(dbName))
                         .map(dbName => dbConn.create(dbName))
+                    // settings.neededDBs
                 )
             }
         ).then(
@@ -117,14 +118,14 @@ const database = {
 
     getSubbedUsers(userID) {
         let dbUsers = dbConn.use(settings.dbNames.users);
-        
-        console.log('subbed Users', userID);
+
+        // console.log('subbed Users', userID);
 
         return dbUsers.get(userID).then(
             res => res.subbedUsers
         ).then(
             res => {
-                console.log(res);
+                // console.log(res);
 
                 return Promise.all(
                     res.map(user =>
@@ -162,6 +163,35 @@ const database = {
         return dbUsers.insert(payload).then(
             res => dbUsers.get(res.id)
         );
+    },
+
+    addUser(payload) {
+        if (!payload._id) {
+            let dbUsers = dbConn.use(settings.dbNames.users);
+            return dbUsers.find({
+                selector: {
+                    username: payload.username
+                }
+            }).then(
+                res => res.docs 
+            ).then(
+                res => {
+                    console.log('addUser 178', payload);
+
+                    if (res.length) throw ('Username already exists')
+                    return dbUsers.insert(payload)
+                }
+            ).then(
+                res => {
+                    console.log('get', res);
+
+                    return dbUsers.get(res.id)
+                }
+            )
+        } else {
+            // wenn eine ID vorliegt, dann gibt es den Benutzer schon
+            return new Promise((resolve, reject) => reject('ID already inserted'))
+        }
     }
 }
 
