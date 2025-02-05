@@ -12,7 +12,10 @@ import randomTexts from '../randomTexts.js';
 
 const addMedia = () => {
 
-    const parent = modal();
+    // const parent = modal();
+    const parent = elements.content;
+    parent.innerHTML = '';
+
     const payload = {
         title: randomTexts[helpers.createNumber(0, randomTexts.length - 1)].substring(0, 20),
         text: randomTexts[helpers.createNumber(0, randomTexts.length - 1)],
@@ -23,11 +26,13 @@ const addMedia = () => {
     // Objekt, das die Daten des Content-Elementes enthält
     const elImagePreview = dom.create({
         cssClassName: 'parentImagePreview',
-        parent: parent.modal,
+        // parent: parent.modal,
+        parent,
     })
 
     const elInpTitle = dom.create({
-        parent: parent.modal,
+        // parent: parent.modal,
+        parent,
         content: payload.title,
         type: 'h3',
         attr: {
@@ -36,7 +41,8 @@ const addMedia = () => {
     })
 
     const elInpText = dom.create({
-        parent: parent.modal,
+        // parent: parent.modal,
+        parent,
         content: payload.text,
         attr: {
             'contenteditable': true
@@ -45,7 +51,8 @@ const addMedia = () => {
 
     const formAddMedia = dom.create({
         type: 'form',
-        parent: parent.modal,
+        // parent: parent.modal,
+        parent,
         listeners: {
             submit(evt) {
                 evt.preventDefault();
@@ -61,12 +68,12 @@ const addMedia = () => {
                 })
 
                 ws.uploadMedia(payload).then(
-                   console.log                   
+                    console.log
                 ).catch(
                     console.warn
                 )
 
-                parent.bg.remove();
+                // parent.bg.remove();
 
             }
         }
@@ -83,14 +90,16 @@ const addMedia = () => {
         listeners: {
             change() {
                 let files = [...elInpImage.files];
-                // console.log(elInpImage.files);
 
                 files.forEach(file => {
                     if (file) {
                         const reader = new FileReader();
                         reader.onload = evt => {
                             // Bild an Daten anhängen
-                            payload.imgs.push(evt.target.result);
+                            payload.imgs.push({
+                                mime: file.type,
+                                data: evt.target.result
+                            });
 
                             // Bild in FE anzeigen
                             const imagePreview = dom.create({

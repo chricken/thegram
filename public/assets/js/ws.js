@@ -145,6 +145,8 @@ const ws = {
         })
     },
     saveCurrentUser() {
+        console.log('Save current User');
+        
         createWSCall({
             type: 'saveCurrentUser',
             payload: settings.user
@@ -153,6 +155,22 @@ const ws = {
                 settings.user = payload.result;
             }
         )
+    },
+    removePost(postToRemove) {
+        // Post aus der DB entfernen
+        return createWSCall({
+            type: 'removePost',
+            payload: postToRemove
+        }).then(
+            result => {
+                console.log('Post entfernt?', result);
+                if(result.res.ok){
+                    settings.user.posts = settings.user.posts.filter ( p=>p.media != postToRemove._id)
+                    return ws.saveCurrentUser()
+                }
+            }
+        )
+
     }
 }
 

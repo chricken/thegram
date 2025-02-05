@@ -1,7 +1,6 @@
 'use strict';
 
 import elements from './elements.js';
-import observerHandlers from './observerHandlers.js';
 
 const dom = {
     create({
@@ -62,15 +61,15 @@ const dom = {
         elements.main = dom.$('main');
         elements.messages = dom.$('messages');
         elements.content = dom.$('content');
-        elements.loadTrigger = dom.$('loadTrigger');
+        // elements.loadTrigger = dom.$('loadTrigger');
         elements.nav = dom.$('nav');
         elements.navAdditional = dom.$('navAdditional');
     },
     appendEventListeners(){
     },
     appendObservers(){
-        const obsLoadTrigger = new IntersectionObserver(observerHandlers.intersectLoadTrigger);
-        obsLoadTrigger.observe(elements.loadTrigger);
+        // const obsLoadTrigger = new IntersectionObserver(observerHandlers.intersectLoadTrigger);
+        // obsLoadTrigger.observe(elements.loadTrigger);
     }
 }
 

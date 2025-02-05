@@ -123,6 +123,18 @@ wsServer.on('connection', socket => {
                 }
             );
 
+        } else if (msg.type == 'removePost') {
+            database.removePost(msg.payload).then(
+                res => {
+                    socket.send(JSON.stringify({
+                        type: msg.callbackType,
+                        payload: {
+                            status: 'done',
+                            res
+                        }
+                    }))
+                }
+            )
         }
 
     })

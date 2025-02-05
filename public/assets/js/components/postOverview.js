@@ -2,7 +2,7 @@
 
 import dom from '../dom.js';
 import settings from '../settings.js';
-// import userDetails from './userDetails.js';
+import postDetails from './postDetails.js';
 
 const postOverview = (parent, user, post) => {
     // console.log('post overview 8', post);
@@ -12,7 +12,7 @@ const postOverview = (parent, user, post) => {
         parent,
         listeners: {
             click() {
-                // userDetails(post)
+                postDetails(post)
             }
         }
     })
@@ -34,7 +34,9 @@ const postOverview = (parent, user, post) => {
     
    
     if (post.imgNames.length) {
+        
         post.imgNames.forEach((imgName, index) => {
+            // console.log('imgNames: ', `url(/getImg/${user._id}/${imgName})`);
             let imgPreview = dom.create({
                 cssClassName: `img img_${index}`,
                 parent: container,
@@ -64,6 +66,7 @@ const postOverview = (parent, user, post) => {
             content: post.text
         })
     }
+
 
 }
 

@@ -3,8 +3,13 @@
 import dom from '../dom.js';
 import settings from '../settings.js';
 import btnClose from './buttonClose.js';
+import btn from './button.js';
+import languages from '../languages/all.js';
+import ws from '../ws.js';
+import timeline from '../views/timeline.js';
 
 const postDetails = (post) => {
+    let ln = languages[settings.lang];
 
     let currentIndex = 0;
 
@@ -68,6 +73,25 @@ const postDetails = (post) => {
     dom.create({
         parent: container,
         content: post.text,
+    })
+
+    // Interaktion
+    // Post entfernen
+    btn({
+        legend: ln.removePost,
+        parent: container,
+        onClick() {
+            if (confirm(ln.confirmRemovePost)) {
+                ws.removePost(post).then(
+                    () => {
+                        bg.remove();
+                        timeline.reset();
+                    }
+                ).catch(
+                    console.warn
+                )
+            }
+        }
     })
 
     // Close-Button

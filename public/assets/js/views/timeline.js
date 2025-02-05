@@ -6,16 +6,22 @@ import elements from '../elements.js';
 import postOverview from '../components/postOverview.js';
 import settings from '../settings.js';
 import languages from '../languages/all.js';
+import observers from '../observers.js';
 
 const timeline = {
+    // Sammelbehälter für alle anzuzeigenden Posts
+    postsToRender: [],
+
     reset() {
         // Setzt alle lokalen Einstellungen zurück
         settings.firstLoad = true;
+        timeline.postsToRender = [];
         settings.offset = 0;
         timeline.init();
     },
     init() {
-        // Bereitet den Render-Prozess vor
+        // Bereitet den Render-Prozess vor, ...
+        // ... indem die nächsten Datensätze geladen werden
         if (settings.user) {
             let postsToLoad = settings.user.posts.filter((post, index) => {
                 return (
@@ -28,18 +34,18 @@ const timeline = {
 
             ws.getTimeline(postsToLoad).then(
                 payload => {
-                    if (settings.firstLoad)
-                        timeline.render(payload);
-                    else
-                        timeline.append(payload);
+                    // console.log('posts to render', payload);
+
+                    timeline.postsToRender.push(...payload);
+                    timeline.render();
                 }
             )
 
-            settings.offset += settings.numPostsToShow;
+            settings.offset += postsToLoad.length;
             settings.offset = Math.min(settings.offset, settings.user.posts.length);
         }
     },
-    render(payload) {
+    render() {
         // Stellt die Daten dar
         const parent = elements.content;
 
@@ -51,19 +57,27 @@ const timeline = {
             type: 'h2'
         })
 
-        payload.forEach(post => {
-            postOverview(parent, settings.user, post)
+        timeline.postsToRender
+            // Falls doch mal ein leerer Post ankommt ... ignorieren
+            .filter(p => p != null)
+            .forEach(post => {
+                // console.log(post);
+                postOverview(parent, settings.user, post)
+            })
+
+        const elLoadTrigger = dom.create({
+            type: 'loadTrigger',
+            parent,
         })
 
-        settings.firstLoad = false;
-
-    },
-    append(payload) {
-        const parent = elements.content;
-
-        payload.forEach(post => {
-            postOverview(parent, settings.user, post)
-        })
+        // Der Observer soll nur aktiv sein, wenn noch posts hinzugefügt werden können
+        if (settings.user.posts.length > timeline.postsToRender.length) {
+            // Verzögert den Observer hinzufügen, damit der beim Einhängen nicht automatisch getriggert wird
+            setTimeout(
+                () => observers.obsIntersectLoadTrigger.observe(elLoadTrigger),
+                100
+            )
+        }
     }
 }
 

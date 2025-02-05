@@ -20,6 +20,8 @@ const de = {
     subbedUsers: 'Bin Fan von',
     subbedMe: 'Meine Fans',
     newestUsers: 'Neueste Benutzer',
+    removePost: 'Beitrag Entfernen',
+    confirmRemovePost: 'Soll dieser Beitrag wirklich entfernt werden?',
 }
 
 export default de;

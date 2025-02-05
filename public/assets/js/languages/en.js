@@ -20,6 +20,8 @@ const en = {
     subbedUsers:'Fan of',
     subbedMe:'My Fans',
     newestUsers:'Newest Users',
+    removePost: 'Remove Post',
+    confirmRemovePost: 'Do you really want to remove this post?',
 }
 
 export default en

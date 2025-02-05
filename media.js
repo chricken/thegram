@@ -24,13 +24,26 @@ const media = {
                 return Promise.all(
                     // Array mit Promises 
                     payload.imgs.map(file => {
+                        // console.log(file);
+
                         return new Promise((resolve, reject) => {
-                            // Der Uploadpath ist mit der UserID identisch, daher redundant
-                            let fileName = (Math.random() * 1e17).toString(36) + '.png'
-                            let filePath = payload.userID + '/' + fileName
 
                             // Entferne den Header
-                            const base64Data = file.replace(/^data:image\/png;base64,/, "");
+                            let base64Data, fileSuffix;
+                            if (file.mime == 'image/jpeg') {
+                                base64Data = file.data.replace(/^data:image\/jpeg;base64,/, '');
+                                fileSuffix = '.jpg';
+                            } else if (file.mime == 'image/png') {
+                                base64Data = file.data.replace(/^data:image\/png;base64,/, "");
+                                fileSuffix = '.png';
+                            } else if (file.mime == 'image/webp') {
+                                base64Data = file.data.replace(/^data:image\/webp;base64,/, "");
+                                fileSuffix = '.webp';
+                            }
+
+                            // Der Uploadpath ist mit der UserID identisch, daher redundant
+                            let fileName = (Math.random() * 1e17).toString(36) + fileSuffix
+                            let filePath = payload.userID + '/' + fileName
 
                             // Schreibe Dateien
                             fs.writeFile(
@@ -53,10 +66,8 @@ const media = {
             }
         ).then(
             (res) => {
-
                 // Bilder entfernen
                 delete payload.imgs;
-
                 // Zur Datenbank hinzufügen
                 return database.addMedia(payload)
             }

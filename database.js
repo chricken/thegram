@@ -75,9 +75,12 @@ const database = {
             payload => dbUsers.insert(payload)
         ).then(
             () => dbUsers.get(userID)
-        ).then(
+        )
+        /*
+        .then(
             res => res.posts
         )
+            */
     },
 
     getMedia(mediaToLoad) {
@@ -173,7 +176,7 @@ const database = {
                     username: payload.username
                 }
             }).then(
-                res => res.docs 
+                res => res.docs
             ).then(
                 res => {
                     console.log('addUser 178', payload);
@@ -192,7 +195,20 @@ const database = {
             // wenn eine ID vorliegt, dann gibt es den Benutzer schon
             return new Promise((resolve, reject) => reject('ID already inserted'))
         }
-    }
+    },
+
+    removePost(payload) {
+        let dbPosts = dbConn.use(settings.dbNames.posts);
+        // let dbUsers = dbConn.use(settings.dbNames.users);
+        // console.log();
+
+        return dbPosts.destroy(payload._id, payload._rev).then(
+            res => {
+                // console.log(res);
+                return res;
+            }
+        )
+    },
 }
 
 export default database;
