@@ -8,11 +8,11 @@ import prefill from './prefill.js';
 
 const init = () => {
     dom.mapping();
-    dom.appendEventListeners();
-    observers.init();
 
     ws.init().then(
         () => ws.appendEventListeners()
+    ).then(
+        () => observers.init()
     ).then(
         prefill
     ).then(

@@ -68,7 +68,7 @@ const addMedia = () => {
                 })
 
                 ws.uploadMedia(payload).then(
-                    console.log
+                   res =>  console.log('uploaded', res)
                 ).catch(
                     console.warn
                 )

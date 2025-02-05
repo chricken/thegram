@@ -30,10 +30,12 @@ const postDetails = (post) => {
     })
 
     // Detailbild
+    let imgDetail
+    let imgsOverview = [];
     if (post.imgNames.length > 0) {
         let path = `/getImg/${settings.user._id}/${post.imgNames[currentIndex]}`;
 
-        dom.create({
+        imgDetail = dom.create({
             type: 'img',
             cssClassName: 'imgDetail',
             parent: container,
@@ -54,7 +56,7 @@ const postDetails = (post) => {
 
             let path = `/getImg/${settings.user._id}/${imgName}`;
 
-            dom.create({
+            let elImg = dom.create({
                 type: 'img',
                 parent,
                 cssClassName: `${index == currentIndex ? 'current' : ''}`,
@@ -63,11 +65,20 @@ const postDetails = (post) => {
                 },
                 listeners: {
                     click() {
+                        imgsOverview.forEach(img => {
+                            img.classList.remove('active')
+                        })
                         imgDetail.src = path;
+                        elImg.classList.add('active');
                     }
                 }
             })
+
+            imgsOverview.push(elImg);
         })
+
+        imgsOverview[0].classList.add('active');
+        
     }
 
     dom.create({

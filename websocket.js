@@ -45,6 +45,8 @@ wsServer.on('connection', socket => {
                 }
             )
         } else if (msg.type == 'login') {
+            console.log(msg.payload);
+            
             database.checkLogin(msg.payload).then(
                 res => {
                     socket.send(JSON.stringify({
@@ -96,7 +98,7 @@ wsServer.on('connection', socket => {
                 }
             )
         } else if (msg.type == 'register') {
-            console.log(msg.payload);
+            // console.log(msg.payload);
             handleUsers.register(msg.payload).then(
                 res => {
                     console.log('websocket 102', res);

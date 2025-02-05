@@ -64,12 +64,6 @@ const dom = {
         // elements.loadTrigger = dom.$('loadTrigger');
         elements.nav = dom.$('nav');
         elements.navAdditional = dom.$('navAdditional');
-    },
-    appendEventListeners(){
-    },
-    appendObservers(){
-        // const obsLoadTrigger = new IntersectionObserver(observerHandlers.intersectLoadTrigger);
-        // obsLoadTrigger.observe(elements.loadTrigger);
     }
 }
 

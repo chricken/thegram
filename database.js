@@ -2,6 +2,8 @@
 
 import settings from './settings.js'
 import nano from 'nano';
+import User from './classes/User.js';
+
 
 const cr = settings.credentials.db;
 const dbConn = nano(`http://${cr.user}:${cr.pw}@${cr.url}`).db;
@@ -33,7 +35,7 @@ const database = {
             }
         }).then(
             res => {
-                // console.log('35', res);
+                console.log('35', res);
 
                 if (res.docs.length == 0) return ({
                     status: 'err',
@@ -45,7 +47,7 @@ const database = {
                 });
                 return {
                     status: 'success',
-                    payload: res.docs[0]
+                    payload: new User(res.docs[0])
                 };
             }
         ).catch(
@@ -62,6 +64,9 @@ const database = {
         let dbUsers = dbConn.use(settings.dbNames.users);
 
         return dbUsers.get(userID).then(
+            // Aus den Daten eine neues Objekt erzeugen, um sicherzugehen, dass alle Attribute dabei sind. Auch neu erfundene
+            payload => new User(payload)
+        ).then(
             payload => {
                 // console.log('addMediaToUser', payload);
                 payload.posts.push({
@@ -76,11 +81,6 @@ const database = {
         ).then(
             () => dbUsers.get(userID)
         )
-        /*
-        .then(
-            res => res.posts
-        )
-            */
     },
 
     getMedia(mediaToLoad) {
@@ -182,7 +182,7 @@ const database = {
                     console.log('addUser 178', payload);
 
                     if (res.length) throw ('Username already exists')
-                    return dbUsers.insert(payload)
+                    return dbUsers.insert(new User(payload));
                 }
             ).then(
                 res => {

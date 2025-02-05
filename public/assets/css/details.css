@@ -23,8 +23,13 @@
     .imgDetail {
         position: relative;
         display: block;
-        width: 100%;
+        max-width: 100%;
         height: auto;
+        border-radius: 5px;
+        max-height: 603px;
+        width: auto;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .allImgs {
@@ -34,8 +39,9 @@
         height: 150px;
         overflow-x: auto;
         overflow-y: hidden;
-        margin-top:20px;
-        margin-bottom:20px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding: 5px;
 
         img {
             position: relative;
@@ -43,7 +49,14 @@
             height: 100%;
             width: auto;
             margin-right: 20px;
+            border-radius: 5px;
         }
+
+        img.active {
+            outline: 3px solid #f00;
+            outline-offset: 2px;
+        }
+
         img:last-child {
             margin-right: 0px;
         }

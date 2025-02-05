@@ -111,7 +111,10 @@ const ws = {
             payload
         }).then(
             payload => {
-                settings.user.posts = payload.posts.toSorted((a, b) => b.crDate - a.crDate);
+                console.log('uploadad ws', payload);
+
+                settings.user = payload.user;
+                settings.user.posts = settings.user.posts.toSorted((a, b) => b.crDate - a.crDate);
                 timeline.reset();
                 return 'Beitrag wurde gespeichert'
             }
@@ -146,13 +149,14 @@ const ws = {
     },
     saveCurrentUser() {
         console.log('Save current User');
-        
-        createWSCall({
+
+        return createWSCall({
             type: 'saveCurrentUser',
             payload: settings.user
         }).then(
             payload => {
                 settings.user = payload.result;
+                return settings.user;
             }
         )
     },
@@ -164,8 +168,8 @@ const ws = {
         }).then(
             result => {
                 console.log('Post entfernt?', result);
-                if(result.res.ok){
-                    settings.user.posts = settings.user.posts.filter ( p=>p.media != postToRemove._id)
+                if (result.res.ok) {
+                    settings.user.posts = settings.user.posts.filter(p => p.media != postToRemove._id)
                     return ws.saveCurrentUser()
                 }
             }

@@ -7,3 +7,13 @@ footer {
     position: relative;
     margin-bottom: 50px;
 }
+
+.container {
+    position: relative;
+    display: block;
+    padding: 5px;
+    margin: 5px;
+    background: #eee;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+}

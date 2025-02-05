@@ -80,7 +80,7 @@ const media = {
             res => {
                 return {
                     media: payload,
-                    posts: res
+                    user: res
                 }
             }
         )
