@@ -48,6 +48,11 @@ const de = {
     profileName: 'Profilname',
     shops: 'Shops',
     save: 'Speichern',
+    crDate:'Erstellt',
+    chDate:'Letzte Änderung',
+    description: 'Beschreibung',
+    imgAvatar: 'Benutzerbild',
+    clipAvatar: 'Bild zuschneiden',
 }
 
 export default de;

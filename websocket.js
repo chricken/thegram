@@ -25,7 +25,8 @@ wsServer.on('connection', socket => {
         // console.log(msg);
 
         if (msg.type == 'uploadMedia') {
-            media.handleUploaded(msg.payload).then(
+            msg.payload.timestamp = Date.now();
+            media.handleUploaded(settings.uploadPath, msg.payload).then(
                 res => {
                     res.status = 'done';
                     socket.send(JSON.stringify({

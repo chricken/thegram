@@ -11,14 +11,13 @@ const userOverview = (parent, user) => {
     let ln = lang[settings.lang];
 
     const container = dom.create({
-        cssClassName: 'overview userOverview',
+        cssClassName: 'overview transit userOverview',
         parent,
         listeners: {
             click() {
                 userDetails({
                     user,
                     changeCallback() {
-                        
                         findUsers.reset()
                     }
                 })

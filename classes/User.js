@@ -17,6 +17,8 @@ class User {
         this.username = payload.username || '';
         this.password = payload.password || '';
 
+        this.imgAvatar = payload.imgAvatar || '';
+
         this.crDate = payload.crDate || Date.now();
         this.chDate = payload.chDate || Date.now();
         this.subbedUsers = payload.subbedUsers || [];
@@ -24,6 +26,7 @@ class User {
 
         this.preName = payload.preName || '';
         this.surName = payload.surName || '';
+        this.description = payload.description || '';
 
         this.address = new Address(payload.address || {})
         

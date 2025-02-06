@@ -27,32 +27,56 @@ const inpShops = (parent, shops) => {
             value: shop.name,
             attr: {
                 placeholder: ln.shopname
+            }, 
+            listeners:{
+                input(evt){
+                    shop.name = evt.target.value;
+                }
             }
         })
+        /*
         dom.create({
             type: 'input',
             parent: container,
             value: shop.website,
             attr: {
                 placeholder: ln.website
+            }, 
+            listeners:{
+                input(evt){
+                    shop.name = evt.target.value;
+                }
             }
         })
+        */
         dom.create({
             type: 'input',
             parent: container,
             value: shop.profileName,
             attr: {
                 placeholder: ln.profileName
+            }, 
+            listeners:{
+                input(evt){
+                    shop.profileName = evt.target.value;
+                }
             }
         })
+        
         dom.create({
             type: 'input',
             parent: container,
             value: shop.profileURL,
             attr: {
                 placeholder: ln.website
+            }, 
+            listeners:{
+                input(evt){
+                    shop.profileURL = evt.target.value;
+                }
             }
         })
+        
         dom.create({
             parent: container,
             type: 'br',

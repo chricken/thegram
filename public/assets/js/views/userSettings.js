@@ -6,13 +6,17 @@ import elements from '../elements.js';
 import postOverview from '../components/postOverview.js';
 import languages from '../languages/all.js';
 import observers from '../observers.js';
+import helpers from '../helpers.js';
 import settings from '../settings.js';
 import compInput from '../components/input.js';
+import compTA from '../components/textarea.js';
+import compImgInput from '../components/inpImage.js';
 import compInpAddress from '../components/inpAddress.js';
 import compInpContact from '../components/inpContact.js';
 import compInpSocialMedia from '../components/inpSocialMedia.js';
 import compInpShops from '../components/inpShops.js';
 import button from '../components/button.js';
+import clipAvatar from '../components/clipAvatar.js';
 
 const userSettings = {
     reset() {
@@ -31,6 +35,22 @@ const userSettings = {
         const parent = dom.create({
             cssClassName: 'container',
             parent: elements.content
+        })
+
+        const inpImg = compImgInput({
+            parent,
+            legend: ln.imgAvatar,
+            value: user.imgAvatar,
+            onChange(value) {
+                // Hier das Objekt mit den Bilddaten einhängen
+                // Das wird auf dem Server dann in ein Bild verwandelt 
+                // und in den Datensatz wird nur noch die URL geschrieben
+                user.imgAvatar = value;
+                clipAvatar(value).addEventListener('selected', evt => {
+                    console.log('selected', evt);
+                    
+                })
+            }
         })
 
         compInput({
@@ -52,12 +72,22 @@ const userSettings = {
             }
         })
 
+        dom.create({
+            parent,
+            content: ln.crDate + ': ' + new Date(user.crDate).toLocaleString(),
+        })
+
+        dom.create({
+            parent,
+            content: ln.chDate + ': ' + new Date(user.chDate).toLocaleString(),
+
+        })
+
         compInput({
             parent,
             value: user.preName,
             legend: ln.preName,
             onInput(value) {
-
                 user.preName = value;
             }
         })
@@ -68,6 +98,16 @@ const userSettings = {
             legend: ln.surName,
             onInput(value) {
                 user.surName = value;
+            }
+        })
+        // console.log(user);
+
+        compTA({
+            parent,
+            value: user.description,
+            legend: ln.description,
+            onInput(value) {
+                user.description = value;
             }
         })
 

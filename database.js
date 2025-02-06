@@ -3,6 +3,7 @@
 import settings from './settings.js'
 import nano from 'nano';
 import User from './classes/User.js';
+import media from './media.js';
 
 
 const cr = settings.credentials.db;
@@ -35,7 +36,7 @@ const database = {
             }
         }).then(
             res => {
-                console.log('35', res);
+                // console.log('35', res);
 
                 if (res.docs.length == 0) return ({
                     status: 'err',
@@ -162,10 +163,28 @@ const database = {
 
     saveUser(payload) {
         let dbUsers = dbConn.use(settings.dbNames.users);
-
-        return dbUsers.insert(payload).then(
+        return new Promise((resolve, reject) => {
+            if (typeof payload.imgAvatar == 'String') {
+                resolve()
+            } else {
+                resolve(
+                    media.handleUploadedImage(
+                        settings.uploadPathAvatars,
+                        payload._id,
+                        payload.imgAvatar,
+                    )
+                )
+            }
+        }).then(
+            res => {
+                if (res) payload.imgAvatar = res
+            }
+        ).then(
+            () => dbUsers.insert(payload)
+        ).then(
             res => dbUsers.get(res.id)
-        );
+        )
+
     },
 
     addUser(payload) {

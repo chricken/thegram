@@ -21,7 +21,12 @@ const userDetails = ({user, changeCallback}) => {
 
     const container = dom.create({
         parent: bg,
-        cssClassName: 'details'
+        cssClassName: 'details',
+        listeners: {
+            scroll(evt) {
+                evt.stopPropagation();
+            }
+        },
     })
 
     dom.create({

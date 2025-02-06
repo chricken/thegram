@@ -1,0 +1,28 @@
+input,
+textarea {
+    position: relative;
+    font-size: 14px;
+    padding: 5px;
+    border: 1px solid #888;
+    border-radius: 5px;
+    background-color: #f7f7f7;
+}
+
+input:focus,
+textarea:focus {
+    outline: 2px solid #4f5064;
+    border: 1px solid #4f5064;
+    background-color: #fff;
+
+}
+
+textarea {
+    width: 300px;
+    height: 150px;
+}
+
+.imgInputImg {
+    position: relative;
+    display: inline-block;
+    height: 80px;
+}

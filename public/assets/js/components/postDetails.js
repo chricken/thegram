@@ -20,7 +20,12 @@ const postDetails = (post) => {
 
     const container = dom.create({
         parent: bg,
-        cssClassName: 'details'
+        cssClassName: 'details',
+        listeners: {
+            scroll(evt) {
+                evt.stopPropagation();
+            }
+        },
     })
 
     dom.create({
@@ -78,7 +83,7 @@ const postDetails = (post) => {
         })
 
         imgsOverview[0].classList.add('active');
-        
+
     }
 
     dom.create({

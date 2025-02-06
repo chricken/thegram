@@ -13,7 +13,8 @@ const settings = {
     numNewUsersToShow: 5,
     viewMode: null,
     lang: 'de',
-    postTypes: ['artwork', 'comment', 'news']
+    postTypes: ['artwork', 'comment', 'news'],
+    avatarSize: 300,
 }
 
 export default settings;

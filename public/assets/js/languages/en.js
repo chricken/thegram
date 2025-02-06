@@ -48,6 +48,11 @@ const en = {
     profileName: 'Profile name',
     shops: 'Shops',
     save: 'Save',
+    crDate:'Created',
+    chDate:'Latest Change',
+    description: 'Description',
+    imgAvatar: 'User Image',
+    clipAvatar: 'Clip Image',
 }
 
 export default en

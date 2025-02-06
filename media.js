@@ -7,65 +7,68 @@ import fs from 'fs';
 const fsp = fs.promises;
 
 const media = {
-    handleUploaded(payload) {
-        // console.log(payload);
-        let path = settings.uploadPath + payload.userID + '/';
-        payload.timestamp = Date.now();
-        // Pfad Existenz checken
+    handleUploadedImage(uploadPath, userID, file) {
+        let path = uploadPath + userID + '/';
         return fsp.access(path).then(
             () => { }
         ).catch(
             () => fsp.mkdir(path)
         ).then(
             () => {
-                // Datensatz um den Pfad erweitern
-                payload.imgNames = [];
-                // Alle Schreibversuche zu einem Promise zusammenfassen
-                return Promise.all(
-                    // Array mit Promises 
-                    payload.imgs.map(file => {
-                        // console.log(file);
+                return new Promise((resolve, reject) => {
+                    // Entferne den Header
+                    let base64Data, fileSuffix;
+                    if (file.mime == 'image/jpeg') {
+                        base64Data = file.data.replace(/^data:image\/jpeg;base64,/, '');
+                        fileSuffix = '.jpg';
+                    } else if (file.mime == 'image/png') {
+                        base64Data = file.data.replace(/^data:image\/png;base64,/, "");
+                        fileSuffix = '.png';
+                    } else if (file.mime == 'image/webp') {
+                        base64Data = file.data.replace(/^data:image\/webp;base64,/, "");
+                        fileSuffix = '.webp';
+                    }
 
-                        return new Promise((resolve, reject) => {
-
-                            // Entferne den Header
-                            let base64Data, fileSuffix;
-                            if (file.mime == 'image/jpeg') {
-                                base64Data = file.data.replace(/^data:image\/jpeg;base64,/, '');
-                                fileSuffix = '.jpg';
-                            } else if (file.mime == 'image/png') {
-                                base64Data = file.data.replace(/^data:image\/png;base64,/, "");
-                                fileSuffix = '.png';
-                            } else if (file.mime == 'image/webp') {
-                                base64Data = file.data.replace(/^data:image\/webp;base64,/, "");
-                                fileSuffix = '.webp';
+                    // Der Uploadpath ist mit der UserID identisch, daher redundant
+                    let fileName = (Math.random() * 1e17).toString(36) + Date.now() + fileSuffix
+                    let filePath = userID + '/' + fileName
+                    
+                    // Schreibe Dateien
+                    fs.writeFile(
+                        uploadPath + filePath,
+                        base64Data,
+                        'base64',
+                        (err) => {
+                            if (err) {
+                                console.error('Fehler beim Speichern des Bildes:', err);
+                                reject()
+                            } else {
+                                resolve(fileName)
                             }
-
-                            // Der Uploadpath ist mit der UserID identisch, daher redundant
-                            let fileName = (Math.random() * 1e17).toString(36) + fileSuffix
-                            let filePath = payload.userID + '/' + fileName
-
-                            // Schreibe Dateien
-                            fs.writeFile(
-                                settings.uploadPath + filePath,
-                                base64Data,
-                                'base64',
-                                (err) => {
-                                    if (err) {
-                                        console.error('Fehler beim Speichern des Bildes:', err);
-                                        reject()
-                                    } else {
-                                        payload.imgNames.push(fileName);
-                                        resolve()
-                                    }
-                                }
-                            );
-                        })
-                    })
-                )
+                        }
+                    );
+                })
             }
+        )
+    },
+    handleUploaded(uploadPath, payload) {
+        return Promise.all(
+            // Array mit Promises 
+            payload.imgs.map(file => {
+                // console.log(file);
+                return media.handleUploadedImage(
+                    uploadPath,
+                    payload.userID,
+                    file
+                )
+            })
         ).then(
             (res) => {
+                // Datensatz um den Pfad erweitern
+                payload.imgNames = res;
+            }
+        ).then(
+            () => {
                 // Bilder entfernen
                 delete payload.imgs;
                 // Zur Datenbank hinzufügen

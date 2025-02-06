@@ -12,6 +12,7 @@ const settings = {
         coins:'tg_coins',   // Alle coins werden hier abgelegt
     },
     uploadPath: './data/img/',
+    uploadPathAvatars: './data/avatars/',
     wsSockets: {},
     viewMode:null
 }

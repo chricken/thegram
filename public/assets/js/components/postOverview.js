@@ -8,11 +8,14 @@ const postOverview = (parent, user, post) => {
     // console.log('post overview 8', post);
 
     const container = dom.create({
-        cssClassName: 'overview postOverview',
+        cssClassName: 'overview transit postOverview',
         parent,
         listeners: {
             click() {
                 postDetails(post)
+            },
+            scroll(evt) {
+                evt.stopPropagation();
             }
         }
     })
@@ -31,10 +34,10 @@ const postOverview = (parent, user, post) => {
             content: new Date(post.timestamp).toLocaleString()
         })
     }
-    
-   
+
+
     if (post.imgNames.length) {
-        
+
         post.imgNames.forEach((imgName, index) => {
             // console.log('imgNames: ', `url(/getImg/${user._id}/${imgName})`);
             let imgPreview = dom.create({
