@@ -53,6 +53,7 @@ const en = {
     description: 'Description',
     imgAvatar: 'User Image',
     clipAvatar: 'Clip Image',
+    saveImage: 'Save image',
 }
 
 export default en

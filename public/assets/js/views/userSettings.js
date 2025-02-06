@@ -37,7 +37,7 @@ const userSettings = {
             parent: elements.content
         })
 
-        const inpImg = compImgInput({
+        const { img: previewAvatar } = compImgInput({
             parent,
             legend: ln.imgAvatar,
             value: user.imgAvatar,
@@ -47,8 +47,9 @@ const userSettings = {
                 // und in den Datensatz wird nur noch die URL geschrieben
                 user.imgAvatar = value;
                 clipAvatar(value).addEventListener('selected', evt => {
-                    console.log('selected', evt);
-                    
+                    // console.log('selected', evt.detail);
+                    user.imgAvatar = evt.detail.img;
+                    previewAvatar.src = evt.detail.img.data;
                 })
             }
         })

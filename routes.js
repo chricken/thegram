@@ -22,7 +22,7 @@ router.get('/getImg/:userID/:filename/:flag?', (request, response) => {
     }
 
     filepath = path.join(__dirname, filepath);
-    console.log('filepath: ', filepath);
+    // console.log('filepath: ', filepath);
 
     response.sendFile(filepath)
 })

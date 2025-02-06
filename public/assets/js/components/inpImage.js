@@ -37,14 +37,14 @@ const input = ({
         }
     })
 
-    dom.create({
+    const img = dom.create({
         type: 'img',
         parent: container,
         src: 'getImg/' + settings.user._id + '/' + value + '/' + 'isAvatar',
         cssClassName: 'imgInputImg'
     })
 
-    return container;
+    return { container, img };
 
 }
 

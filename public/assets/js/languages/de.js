@@ -53,6 +53,7 @@ const de = {
     description: 'Beschreibung',
     imgAvatar: 'Benutzerbild',
     clipAvatar: 'Bild zuschneiden',
+    saveImage:'Bild sichern',
 }
 
 export default de;
