@@ -5,7 +5,8 @@ import settings from './settings.js';
 import helpers from './helpers.js';
 import database from './database.js';
 import media from './media.js';
-import handleUsers from './handleUsers.js'
+import handleUsers from './handleUsers.js';
+import authToken from "./authToken.js";
 
 const wsServer = new WebSocketServer({ port: 8080 });
 
@@ -22,7 +23,6 @@ wsServer.on('connection', socket => {
 
     socket.on('message', msg => {
         msg = JSON.parse(msg.toString());
-        // console.log(msg);
 
         if (msg.type == 'uploadMedia') {
             msg.payload.timestamp = Date.now();
@@ -45,16 +45,30 @@ wsServer.on('connection', socket => {
                     }))
                 }
             )
+        } else if (msg.type == 'loginByToken') {
+
         } else if (msg.type == 'login') {
-            console.log(msg.payload);
-            
+            // console.log(msg.payload);
+
             database.checkLogin(msg.payload).then(
                 res => {
-                    socket.send(JSON.stringify({
-                        type: msg.callbackType,
-                        payload: res
-                    }))
+                    // console.log('Rückgabe vom Login', res);
+                    if (res.status == 'success') {
+                        let token = authToken.create(res.payload);
+                        socket.send(JSON.stringify({
+                            type: msg.callbackType,
+                            payload: {
+                                user: res.payload,
+                                token
+                            }
+                        }))
+                        return token;
+                    } else {
+
+                    }
                 }
+            ).then(
+                database.saveToken
             )
         } else if (msg.type == 'getTimeline') {
             database.getMedia(msg.payload.mediaToLoad).then(
@@ -102,7 +116,7 @@ wsServer.on('connection', socket => {
             // console.log(msg.payload);
             handleUsers.register(msg.payload).then(
                 res => {
-                    console.log('websocket 102', res);
+                    console.log('websocket 119', res);
 
                     socket.send(JSON.stringify({
                         type: msg.callbackType,
@@ -114,7 +128,7 @@ wsServer.on('connection', socket => {
                 }
             ).catch(
                 err => {
-                    console.log('websocket 114', err);
+                    console.log('websocket 131', err);
 
                     socket.send(JSON.stringify({
                         type: msg.callbackType,
@@ -127,7 +141,12 @@ wsServer.on('connection', socket => {
             );
 
         } else if (msg.type == 'removePost') {
-            database.removePost(msg.payload).then(
+
+            media.removeFiles(settings.uploadPath, msg.payload).then(
+                () => database.removePost(msg.payload)
+            ).then(
+                () => database.getUser(msg.payload.userID)
+            ).then(
                 res => {
                     socket.send(JSON.stringify({
                         type: msg.callbackType,

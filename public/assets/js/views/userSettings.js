@@ -28,7 +28,6 @@ const userSettings = {
     },
     render() {
         let ln = languages[settings.lang];
-        // console.log('Render user settings');
 
         const user = settings.user;
 
@@ -45,9 +44,9 @@ const userSettings = {
                 // Hier das Objekt mit den Bilddaten einhängen
                 // Das wird auf dem Server dann in ein Bild verwandelt 
                 // und in den Datensatz wird nur noch die URL geschrieben
+                
                 user.imgAvatar = value;
                 clipAvatar(value).addEventListener('selected', evt => {
-                    // console.log('selected', evt.detail);
                     user.imgAvatar = evt.detail.img;
                     previewAvatar.src = evt.detail.img.data;
                 })
@@ -101,7 +100,6 @@ const userSettings = {
                 user.surName = value;
             }
         })
-        // console.log(user);
 
         compTA({
             parent,
@@ -121,8 +119,6 @@ const userSettings = {
             legend: ln.save,
             parent,
             onClick() {
-                console.log(user);
-
                 ws.saveCurrentUser().then(
                     console.log
                 ).catch(

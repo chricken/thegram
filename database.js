@@ -163,8 +163,9 @@ const database = {
 
     saveUser(payload) {
         let dbUsers = dbConn.use(settings.dbNames.users);
+
         return new Promise((resolve, reject) => {
-            if (typeof payload.imgAvatar == 'String') {
+            if (typeof payload.imgAvatar == 'string') {
                 resolve()
             } else {
                 resolve(
@@ -180,7 +181,9 @@ const database = {
                 if (res) payload.imgAvatar = res
             }
         ).then(
-            () => dbUsers.insert(payload)
+            () => {
+                return dbUsers.insert(payload)
+            }
         ).then(
             res => dbUsers.get(res.id)
         )
@@ -198,15 +201,11 @@ const database = {
                 res => res.docs
             ).then(
                 res => {
-                    console.log('addUser 178', payload);
-
                     if (res.length) throw ('Username already exists')
                     return dbUsers.insert(new User(payload));
                 }
             ).then(
                 res => {
-                    console.log('get', res);
-
                     return dbUsers.get(res.id)
                 }
             )
@@ -216,17 +215,28 @@ const database = {
         }
     },
 
+    getUser(id) {
+        let dbUsers = dbConn.use(settings.dbNames.users);
+
+        return dbUsers.get(id);
+    },
+
     removePost(payload) {
         let dbPosts = dbConn.use(settings.dbNames.posts);
-        // let dbUsers = dbConn.use(settings.dbNames.users);
-        // console.log();
 
         return dbPosts.destroy(payload._id, payload._rev).then(
             res => {
-                // console.log(res);
                 return res;
             }
         )
+    },
+
+    saveToken(token) {
+        console.log('save Token', token);
+
+        let dbTokens = dbConn.use(settings.dbNames.authtokens);
+
+        return dbTokens.insert(token);
     },
 }
 

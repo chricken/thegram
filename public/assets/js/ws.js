@@ -13,7 +13,7 @@ const handleLogin = msg => {
         // settings.user = msg.payload;
         localStorage.setItem(
             settings.nameItemCredential,
-            JSON.stringify(msg.payload)
+            JSON.stringify(msg.payload.user)
         );
         app.handleLogin();
 
@@ -89,8 +89,10 @@ const ws = {
             msg => {
                 console.log(msg);
                 if (msg.status == 'success') {
-                    settings.user = msg.payload;
-                    settings.user.posts = settings.user.posts.toSorted((a, b) => b.crDate - a.crDate);
+                    settings.user = msg.payload.user;
+                    settings.user.posts = settings.user.posts.toSorted(
+                        (a, b) => b.crDate - a.crDate
+                    );
                     handleLogin(msg);
                     return 'Login abgeschlossen';
                 } else if (msg.status == 'err') {

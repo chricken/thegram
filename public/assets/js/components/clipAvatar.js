@@ -94,7 +94,7 @@ const clipAvatar = (file) => {
         legend: ln.saveImage,
         parent: container,
         onClick() {
-            console.log('saveImage');
+            // console.log('saveImage');
             const cNeu = document.createElement('canvas');
             const ctxNeu = cNeu.getContext('2d');
             cNeu.width = settings.avatarSize;
@@ -114,7 +114,7 @@ const clipAvatar = (file) => {
 
             // container.append(cNeu);
             const imageData = cNeu.toDataURL('image/png');
-            console.log(imageData);
+            // console.log(imageData);
             const myEvent = new CustomEvent('selected', {
                 detail: {
                     img: {

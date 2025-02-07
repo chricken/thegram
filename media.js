@@ -1,13 +1,11 @@
 'use strict';
 
 import database from './database.js';
-import settings from './settings.js';
-import websocket from './websocket.js';
 import fs from 'fs';
 const fsp = fs.promises;
 
 const media = {
-    handleUploadedImage(uploadPath, userID, file) {
+    handleUploadedImage(uploadPath, userID, file, index = 0) {
         let path = uploadPath + userID + '/';
         return fsp.access(path).then(
             () => { }
@@ -30,9 +28,10 @@ const media = {
                     }
 
                     // Der Uploadpath ist mit der UserID identisch, daher redundant
-                    let fileName = (Math.random() * 1e17).toString(36) + Date.now() + fileSuffix
+                    // Der Dateipfad enthält die User ID und einen Timestamp. Damit sind Dupletten praktisch ausgeschlossen
+                    let fileName = (Math.random() * 1e17).toString(36) + '_' + Date.now() + '_' + index + fileSuffix
                     let filePath = userID + '/' + fileName
-                    
+
                     // Schreibe Dateien
                     fs.writeFile(
                         uploadPath + filePath,
@@ -54,12 +53,12 @@ const media = {
     handleUploaded(uploadPath, payload) {
         return Promise.all(
             // Array mit Promises 
-            payload.imgs.map(file => {
-                // console.log(file);
+            payload.imgs.map((file, index) => {
                 return media.handleUploadedImage(
                     uploadPath,
                     payload.userID,
-                    file
+                    file,
+                    index
                 )
             })
         ).then(
@@ -87,7 +86,29 @@ const media = {
                 }
             }
         )
-    }
+    },
+    removeFiles(uploadPath, post) {
+        return Promise.all(post.imgNames.map(imgName => {
+            return new Promise((resolve, reject) => {
+                let filePath = post.userID + '/' + imgName
+                fs.unlink(
+                    uploadPath + '/' + filePath,
+                    err => {
+                        if (err) resolve(err)
+                        else resolve(`${filePath} removed successfully`)
+                    }
+                )
+            })
+        })).then(
+            res => {
+                // Wenn die Datei nicht gelöscht werden konnte, ist sie vermutlich einfach nicht da. 
+                // Der Lösch-Prozess soll dann weiter laufen
+                // console.log(res);
+                return res;
+            }
+        )
+    },
+
 }
 
 export default media;

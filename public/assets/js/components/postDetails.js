@@ -91,11 +91,18 @@ const postDetails = (post) => {
         content: post.text,
     })
 
+
     // Interaktion
+    const containerUI = dom.create({
+        parent: container,
+        cssClassName:'container',
+    })    
+
     // Post entfernen
     btn({
         legend: ln.removePost,
-        parent: container,
+        parent: containerUI,
+        isEncapsuled: false,
         onClick() {
             if (confirm(ln.confirmRemovePost)) {
                 ws.removePost(post).then(
@@ -109,6 +116,17 @@ const postDetails = (post) => {
             }
         }
     })
+    
+    if(post.userID == settings.user._id){
+        btn({
+            legend: ln.editPost,
+            parent: containerUI,
+            isEncapsuled: false,
+            onClick() {
+               
+            }
+        }) 
+    }
 
     // Close-Button
     btnClose({

@@ -54,6 +54,7 @@ const en = {
     imgAvatar: 'User Image',
     clipAvatar: 'Clip Image',
     saveImage: 'Save image',
+    editPost: 'Edit Post',
 }
 
 export default en

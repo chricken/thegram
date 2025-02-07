@@ -54,6 +54,7 @@ const de = {
     imgAvatar: 'Benutzerbild',
     clipAvatar: 'Bild zuschneiden',
     saveImage:'Bild sichern',
+    editPost: 'Post bearbeiten',
 }
 
 export default de;
