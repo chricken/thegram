@@ -55,6 +55,7 @@ const de = {
     clipAvatar: 'Bild zuschneiden',
     saveImage:'Bild sichern',
     editPost: 'Post bearbeiten',
+    addComment: 'Kommentar hinterlassen',
 }
 
 export default de;

@@ -91,8 +91,10 @@ const addMedia = () => {
             change() {
                 let files = [...elInpImage.files];
 
-                files.forEach(file => {
+                files.forEach((file, index) => {
                     if (file) {
+                        // console.log(index);
+                        
                         const reader = new FileReader();
                         reader.onload = evt => {
                             // Bild an Daten anhängen

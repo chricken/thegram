@@ -11,6 +11,7 @@ const settings = {
         wallet: 'tg_wallet', // hier gibt es eine Verknüpfung zwischen dem Benutzer und den Coins in seiner Wallet
         coins: 'tg_coins',   // Alle coins werden hier abgelegt
         authtokens: 'tg_tokens',   // Token zur Authentifizierung 
+        comments: 'tg_comments',   // Kommentare, die über die ID mit dem Post verbunden sind
     },
     uploadPath: './data/img/',
     uploadPathAvatars: './data/avatars/',

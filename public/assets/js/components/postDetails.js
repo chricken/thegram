@@ -127,6 +127,17 @@ const postDetails = (post) => {
             }
         }) 
     }
+    
+    if(post.userID != settings.user._id){
+        btn({
+            legend: ln.addComment,
+            parent: containerUI,
+            isEncapsuled: false,
+            onClick() {
+               
+            }
+        }) 
+    }
 
     // Close-Button
     btnClose({

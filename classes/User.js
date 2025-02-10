@@ -17,6 +17,8 @@ class User {
         this.username = payload.username || '';
         this.password = payload.password || '';
 
+        this.language = payload.language || 'en';
+
         this.imgAvatar = payload.imgAvatar || '';
 
         this.crDate = payload.crDate || Date.now();
@@ -29,13 +31,9 @@ class User {
         this.description = payload.description || '';
 
         this.address = new Address(payload.address || {})
-        
         this.contact = new Contact(payload.contact || {})
-
         this.socialMedia = new SocialMedia(payload.socialMedia || {})
-
         this.shops = new Shops(payload.shops || {})
-
     }
     addFollow(idToFollow) {
         let subbed = new Set(this.subbedUsers);
@@ -46,6 +44,9 @@ class User {
     removeFollow(idToRemove) {
         this.subbedUsers = this.subbedUsers.filter(u => u != idToRemove);
 
+    }
+    get score() {
+        // Je Tag und upload 1 Punkt. Je like 2 pkte, je Kommentar 10 pkte, je pledge...
     }
 }
 
