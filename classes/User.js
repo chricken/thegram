@@ -18,6 +18,8 @@ class User {
         this.password = payload.password || '';
 
         this.language = payload.language || 'en';
+        this.type = payload.type ||'visitor';   // Welche Benutzerrolle hat der User.
+                                                //  Admin, Artist (Muss bestätigt werden), Agent, Visitor
 
         this.imgAvatar = payload.imgAvatar || '';
 
