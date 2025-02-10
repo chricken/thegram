@@ -5,7 +5,7 @@ const settings = {
     wsAddress: 'ws://localhost:8080',
     socketID: null,
     appName: 'artSphere',
-    nameItemCredential: 'credentials',
+    nameItemAuthToken: 'authToken',
     firstLoad: true,
     posts: [],
     offset: 0,

@@ -13,72 +13,65 @@ let username = 'chricken';
 let password = 'abc';
 
 const maskLogin = () => {
-    // Erstmal Autologin versuchen
-    let storedLogin = localStorage.getItem(settings.nameItemCredential);
-
     let ln = lang[settings.lang];
 
     elements.content.innerHTML = '';
 
-    if (storedLogin) {
-        storedLogin = JSON.parse(storedLogin);
-        loginout.login(storedLogin);
-    } else {
-        const container = dom.create({
-            type: 'div',
-            parent: elements.content,
-            cssClassName: 'view viewLogin'
-        })
 
-        dom.create({
-            type: 'h3',
-            content: ln.login,
-            parent: container,
-        })
+    const container = dom.create({
+        type: 'div',
+        parent: elements.content,
+        cssClassName: 'view viewLogin'
+    })
 
-        compInput({
-            parent: container,
-            value: username,
-            legend: ln.username,
-            onInput(value) {
-                username = value;
-            }
-        })
+    dom.create({
+        type: 'h3',
+        content: ln.login,
+        parent: container,
+    })
 
-        compInput({
-            parent: container,
-            value: password,
-            type: 'password',
-            legend: ln.password,
-            onInput(value) {
-                password = value;
-            }
-        })
+    compInput({
+        parent: container,
+        value: username,
+        legend: ln.username,
+        onInput(value) {
+            username = value;
+        }
+    })
 
-        // Anmelden
-        compButton({
-            legend: ln.login,
-            parent: container,
-            isEncapsuled:false,
-            onClick() {
-                loginout.login({
-                    username,
-                    password
-                })
-            }
-        })
+    compInput({
+        parent: container,
+        value: password,
+        type: 'password',
+        legend: ln.password,
+        onInput(value) {
+            password = value;
+        }
+    })
 
-        // Registrieren
-        compButton({
-            legend: ln.register,
-            parent: container,
-            isEncapsuled:false,
-            onClick() {
-                maskRegister();
-            }
-        })
+    // Anmelden
+    compButton({
+        legend: ln.login,
+        parent: container,
+        isEncapsuled: false,
+        onClick() {
+            loginout.login({
+                username,
+                password
+            })
+        }
+    })
 
-    }
+    // Registrieren
+    compButton({
+        legend: ln.register,
+        parent: container,
+        isEncapsuled: false,
+        onClick() {
+            maskRegister();
+        }
+    })
+
 }
 
 export default maskLogin;

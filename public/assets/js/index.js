@@ -1,10 +1,10 @@
 'use strict';
 
 import dom from './dom.js';
-import viewLogin from './views/maskLogin.js';
 import observers from './observers.js';
 import ws from './ws.js';
 import prefill from './prefill.js';
+import loginout from './loginout.js';
 
 const init = () => {
     dom.mapping();
@@ -14,9 +14,11 @@ const init = () => {
     ).then(
         () => observers.init()
     ).then(
-        prefill
+        loginout.autoLogin
     ).then(
-        viewLogin
+        prefill
+    // ).then(
+    //  viewLogin
     ).catch(
         console.warn
     )

@@ -48,28 +48,52 @@ wsServer.on('connection', socket => {
         } else if (msg.type == 'loginByToken') {
 
         } else if (msg.type == 'login') {
-            // console.log(msg.payload);
-
             database.checkLogin(msg.payload).then(
                 res => {
-                    // console.log('Rückgabe vom Login', res);
                     if (res.status == 'success') {
-                        let token = authToken.create(res.payload);
-                        socket.send(JSON.stringify({
-                            type: msg.callbackType,
-                            payload: {
-                                user: res.payload,
-                                token
-                            }
-                        }))
-                        return token;
+                        // Token erzeugen und in DB hängen.
+                        authToken.create(res.payload).then(
+                            token => socket.send(JSON.stringify({
+                                type: msg.callbackType,
+                                payload: {
+                                    status: 'created',
+                                    user: res.payload,
+                                    token
+                                }
+                            }))
+                        )
                     } else {
 
                     }
                 }
-            ).then(
-                database.saveToken
             )
+
+        } else if (msg.type == 'checkToken') {
+            console.log('Check Token', msg.payload);
+
+            database.getToken(msg.payload).then(
+                user => socket.send(JSON.stringify({
+                    type: msg.callbackType,
+                    payload: {
+                        status: 'success',
+                        user
+                    }
+                }))
+            ).catch(
+                // Wenn Token nicht gefunden oder nicht mehr gültig
+                err => {
+                    console.log('websocket 85', err);
+                    
+                    socket.send(JSON.stringify({
+                        type: msg.callbackType,
+                        payload: {
+                            status: 'err',
+                            err
+                        }
+                    }))
+                }
+            )
+
         } else if (msg.type == 'getTimeline') {
             database.getMedia(msg.payload.mediaToLoad).then(
                 res => {
@@ -106,7 +130,7 @@ wsServer.on('connection', socket => {
                     socket.send(JSON.stringify({
                         type: msg.callbackType,
                         payload: {
-                            status: 'done',
+                            status: 'success',
                             result: res
                         }
                     }))

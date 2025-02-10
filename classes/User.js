@@ -36,7 +36,6 @@ class User {
 
         this.shops = new Shops(payload.shops || {})
 
-
     }
     addFollow(idToFollow) {
         let subbed = new Set(this.subbedUsers);

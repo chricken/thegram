@@ -36,7 +36,7 @@ const database = {
             }
         }).then(
             res => {
-                // console.log('35', res);
+                console.log('39', 'check PW');
 
                 if (res.docs.length == 0) return ({
                     status: 'err',
@@ -48,6 +48,8 @@ const database = {
                 });
                 return {
                     status: 'success',
+                    // Objekt neu anlegen, um sicherzugehen, dass alle Attribute drinnen sind
+                    // und überzählige entfernt werden
                     payload: new User(res.docs[0])
                 };
             }
@@ -232,11 +234,31 @@ const database = {
     },
 
     saveToken(token) {
-        console.log('save Token', token);
-
         let dbTokens = dbConn.use(settings.dbNames.authtokens);
 
-        return dbTokens.insert(token);
+        // Token in DB eintragen und das Token bei Erledigung zurück geben
+        return dbTokens.insert(token).then(
+            res => dbTokens.get(res.id)
+        )
+    },
+
+    getToken(token) {
+        let dbTokens = dbConn.use(settings.dbNames.authtokens);
+        let dbUsers = dbConn.use(settings.dbNames.users);
+
+        console.log('token', token);
+
+        return dbTokens.get(token._id).then(
+            res => {
+                console.log('res gefunden ', res.body, settings.tokenValidity);
+                if (res.body.crDate < (Date.now() - settings.tokenValidity))
+                    throw 'Token too old';
+                else if (res.body.token != token.body.token)
+                    throw 'Token invalid';
+                else
+                    return dbUsers.get(token.userID)
+            }
+        )
     },
 }
 

@@ -26,7 +26,7 @@ class AuthToken {
         this.body = {
             token: (Math.random() * 1e17).toString(36) + '_' + Date.now().toString(36) + '_' + hash.toString(36),
             crDate: Date.now(),
-            expDate: Date.now() + settings.tokenValidity,
+            // expDate: Date.now() + settings.tokenValidity,
             status: status[1],
         }
     }

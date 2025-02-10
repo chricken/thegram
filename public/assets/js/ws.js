@@ -9,13 +9,9 @@ let socket;
 
 // functions 
 const handleLogin = msg => {
-    if (msg.status == 'success') {
+    if (msg.status == 'created') {
         // settings.user = msg.payload;
-        localStorage.setItem(
-            settings.nameItemCredential,
-            JSON.stringify(msg.payload.user)
-        );
-        app.handleLogin();
+       
 
     } else {
         console.log('Nicht erfolgreich');
@@ -85,21 +81,15 @@ const ws = {
             payload: {
                 username, password
             }
-        }).then(
-            msg => {
-                console.log(msg);
-                if (msg.status == 'success') {
-                    settings.user = msg.payload.user;
-                    settings.user.posts = settings.user.posts.toSorted(
-                        (a, b) => b.crDate - a.crDate
-                    );
-                    handleLogin(msg);
-                    return 'Login abgeschlossen';
-                } else if (msg.status == 'err') {
-                    return msg.err;
-                }
-            }
-        )
+        })
+    },
+    checkToken(token) {
+        // console.log(token);
+        return createWSCall({
+            type: 'checkToken',
+            payload: token
+
+        })
     },
     register(credentials) {
         return createWSCall({
