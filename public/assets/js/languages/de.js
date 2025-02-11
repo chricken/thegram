@@ -60,7 +60,8 @@ const de = {
     news: 'Neuigkeit',
     servicepost: 'Service',
     photos: 'Fotos',
-    forwarding: 'Weiterleitung'
+    forwarding: 'Weiterleitung',
+    progress: 'Fortschritt',
 }
 
 export default de;

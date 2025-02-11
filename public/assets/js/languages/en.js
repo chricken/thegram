@@ -61,6 +61,7 @@ const en = {
     servicepost: 'Service',
     photos: 'Photos',
     forwarding: 'Forwarder',
+    progress: 'Progress',
 }
 
 export default en
