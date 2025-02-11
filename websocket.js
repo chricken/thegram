@@ -46,7 +46,6 @@ wsServer.on('connection', socket => {
                 }
             )
         } else if (msg.type == 'loginByToken') {
-
         } else if (msg.type == 'login') {
             database.checkLogin(msg.payload).then(
                 res => {

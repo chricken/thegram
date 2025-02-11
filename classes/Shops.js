@@ -1,7 +1,7 @@
 'use strict';
 
 class Shop {
-    constructor(data) {
+    constructor(data = {}) {
         this.name = data.name || '';
         this.website = data.website || '';
         this.profileName = data.profileName || '';
@@ -10,7 +10,7 @@ class Shop {
 }
 
 class Shops {
-    constructor(data) {
+    constructor(data={}) {
         for (let i = 1; i <= 10; i++) {
             this['shop' + i] = new Shop(data['shop' + i] || []);
         }

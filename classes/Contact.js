@@ -1,7 +1,7 @@
 'use strict';
 
 class Contact {
-    constructor(data) {
+    constructor(data={}) {
         this.phone1 = data.phone1 || '';
         this.phone2 = data.phone2 || '';
         this.phone3 = data.phone3 || '';

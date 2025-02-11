@@ -1,7 +1,7 @@
 'use strict';
 
 class SocialMedia {
-    constructor(data) {
+    constructor(data={}) {
         this.instagram = data.instagram || '';
         this.xing = data.xing || '';
         this.linkedin = data.linkedin || '';

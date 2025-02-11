@@ -1,7 +1,7 @@
 'use strict';
 
 class Address {
-    constructor(data) {
+    constructor(data={}) {
         this.recipientname = data.recipientname || '';
         this.street = data.street || '';
         this.no = data.no || '';

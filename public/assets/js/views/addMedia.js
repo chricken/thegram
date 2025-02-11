@@ -9,6 +9,7 @@ import elements from '../elements.js';
 import settings from '../settings.js';
 import timeline from './timeline.js';
 import randomTexts from '../randomTexts.js';
+import ContentElement from '../classes/ContentElement.js';
 
 const addMedia = () => {
 
@@ -16,13 +17,12 @@ const addMedia = () => {
     const parent = elements.content;
     parent.innerHTML = '';
 
-    const payload = {
+    const payload = new ContentElement({
         title: randomTexts[helpers.createNumber(0, randomTexts.length - 1)].substring(0, 20),
         text: randomTexts[helpers.createNumber(0, randomTexts.length - 1)],
         userID: settings.user._id,
-        imgs: []
-    }
-
+        
+    })
     // Objekt, das die Daten des Content-Elementes enthält
     const elImagePreview = dom.create({
         cssClassName: 'parentImagePreview',
@@ -68,7 +68,7 @@ const addMedia = () => {
                 })
 
                 ws.uploadMedia(payload).then(
-                   res =>  console.log('uploaded', res)
+                    res => console.log('uploaded', res)
                 ).catch(
                     console.warn
                 )
@@ -94,7 +94,7 @@ const addMedia = () => {
                 files.forEach((file, index) => {
                     if (file) {
                         // console.log(index);
-                        
+
                         const reader = new FileReader();
                         reader.onload = evt => {
                             // Bild an Daten anhängen

@@ -16,8 +16,22 @@ const settings = {
     uploadPath: './data/img/',
     uploadPathAvatars: './data/avatars/',
     wsSockets: {},
+    numNewUsersToShow: 15,
     tokenValidity: 14 * 24 * 60 * 60 * 1000, // 14 Tage in ms
     viewMode: null,
+    contentTypes: {
+        '0': 'artwork',
+        '10': 'news',
+        '20': 'servicepost',
+        '30': 'photos',
+        '40': 'forwarding'
+    },
+    userTypes: {
+        '0': 'visitor',
+        '10': 'user',
+        '20': 'artist',
+        '30': 'admin',
+    }
 }
 
 export default settings;

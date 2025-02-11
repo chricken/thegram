@@ -6,46 +6,47 @@ import SocialMedia from './SocialMedia.js';
 import Shops from './Shops.js';
 
 class User {
-    constructor(payload) {
+    constructor({
+        _id = null,
+        _rev = null,
+        username = '',
+        password = '',
+        language = 'en',
+        type = 0,
+        imgAvatar = '',
+        crDate = Date.now(),
+        chDate = Date.now(),
+        subbedUsers = [],
+        posts = [],
+        preName = '',
+        surName = '',
+        description = '',
+        address = new Address(),
+        contact = new Contact(),
+        socialMedia = new SocialMedia(),
+        shops = new Shops(),
+
+    }) {
         // _id und _rev werden nur eingehängt, wenn die Daten aus der Datenbank kommen
-        if (payload._id)
-            this._id = payload._id;
+        if (_id)
+            this._id = _id;
 
-        if (payload._rev)
-            this._rev = payload._rev;
+        if (_rev)
+            this._rev = _rev;
 
-        this.username = payload.username || '';
-        this.password = payload.password || '';
-
-        this.language = payload.language || 'en';
-        this.type = payload.type ||'visitor';   // Welche Benutzerrolle hat der User.
-                                                //  Admin, Artist (Muss bestätigt werden), Agent, Visitor
-
-        this.imgAvatar = payload.imgAvatar || '';
-
-        this.crDate = payload.crDate || Date.now();
-        this.chDate = payload.chDate || Date.now();
-        this.subbedUsers = payload.subbedUsers || [];
-        this.posts = payload.posts || [];
-
-        this.preName = payload.preName || '';
-        this.surName = payload.surName || '';
-        this.description = payload.description || '';
-
-        this.address = new Address(payload.address || {})
-        this.contact = new Contact(payload.contact || {})
-        this.socialMedia = new SocialMedia(payload.socialMedia || {})
-        this.shops = new Shops(payload.shops || {})
+        Object.assign(this, {
+            username, password, language, type, imgAvatar, crDate, chDate,
+            subbedUsers, posts, preName, surName, description,
+            address, contact, socialMedia, shops
+        })
     }
     addFollow(idToFollow) {
         let subbed = new Set(this.subbedUsers);
         subbed.add(idToFollow);
         this.subbedUsers = [...subbed];
-
     }
     removeFollow(idToRemove) {
         this.subbedUsers = this.subbedUsers.filter(u => u != idToRemove);
-
     }
     get score() {
         // Je Tag und upload 1 Punkt. Je like 2 pkte, je Kommentar 10 pkte, je pledge...

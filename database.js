@@ -133,30 +133,47 @@ const database = {
             res => {
                 // console.log(res);
 
-                return Promise.all(
-                    res.map(user =>
-                        dbUsers.get(user.userID)
-                    )
+                return dbUsers.list().then(
+                    users => users.rows
+                        .map(row => row.id)
+                        .filter(row => !row.startsWith('_design'))
+                ).then(
+                    // Sicherstellen, dass die gewünschten IDs auch existieren
+                    userIDs => {
+                        return Promise.all(
+                            res.filter(
+                                subbed => userIDs.some(el => el == subbed.userID)
+                            ).map(
+                                user => dbUsers.get(user.userID)
+                            )
+                        )
+                    }
                 )
             }
         ).then(
-            res => res.map(user => {
-                delete user.password;
-                return user;
-            })
+            res => {
+                // console.log(res);
+
+                return res.map(user => {
+                    delete user.password;
+                    return user;
+                })
+            }
         ).then(
             res => res.toSorted((a, b) => b.chDate - a.chDate)
         )
     },
 
     getNewUsers(payload) {
+        // console.log('get new Users Payload', payload);
+        
         let dbUsers = dbConn.use(settings.dbNames.users);
 
         return dbUsers.view(
             'dd_sort', 'byCrDate',
             {
                 descending: true,
-                limit: payload.numUsers
+                limit: settings.numNewUsersToShow
             }
         ).then(
             res => res.rows.map(row => row.value)
@@ -246,11 +263,11 @@ const database = {
         let dbTokens = dbConn.use(settings.dbNames.authtokens);
         let dbUsers = dbConn.use(settings.dbNames.users);
 
-        console.log('token', token);
+        // console.log('token', token);
 
         return dbTokens.get(token._id).then(
             res => {
-                console.log('res gefunden ', res.body, settings.tokenValidity);
+                // console.log('res gefunden ', res.body, settings.tokenValidity);
                 if (res.body.crDate < (Date.now() - settings.tokenValidity))
                     throw 'Token too old';
                 else if (res.body.token != token.body.token)

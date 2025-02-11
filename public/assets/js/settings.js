@@ -10,7 +10,6 @@ const settings = {
     posts: [],
     offset: 0,
     numPostsToShow: 3,
-    numNewUsersToShow: 5,
     viewMode: null,
     lang: 'de',
     postTypes: ['artwork', 'comment', 'news'],

@@ -134,8 +134,7 @@ const ws = {
         return createWSCall({
             type: 'getNewUsers',
             payload: {
-                userID: settings.user._id,
-                numUsers
+                userID: settings.user._id
             }
         })
     },
