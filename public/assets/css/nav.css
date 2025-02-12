@@ -1,30 +1,32 @@
-nav, navAdditional {
+nav,
+navAdditional {
     position: fixed;
     left: 0;
     top: 0;
     right: 0;
-    background:#000;
+    background: #000;
     color: #fff;
-    padding:10px;
+    padding: 10px;
     text-align: center;
 
-    .link, .navLink {
+    .link,
+    .navLink {
         position: relative;
         display: inline-block;
-        margin-left:5px;
-        margin-right:5px;
+        margin-left: 5px;
+        margin-right: 5px;
         cursor: pointer;
+        padding: 5px;
     }
-/*
-    .navLink.addMedia::before {
-        width: 20px;
-        height: 100%;
-        background-color: #f00;
-        content: '➕';
+
+    .link:hover,
+    .navLink:hover {
+        background: rgba(255, 255, 255, .3);
     }
-*/
+
 }
+
 navAdditional {
     top: auto;
-    bottom:0;
+    bottom: 0;
 }

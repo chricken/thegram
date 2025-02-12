@@ -6,7 +6,7 @@ import btnClose from './buttonClose.js';
 import btn from './button.js';
 import languages from '../languages/all.js';
 import ws from '../ws.js';
-import timeline from '../views/timeline.js';
+import timeline from '../views/posts.js';
 
 const postDetails = (post) => {
     let ln = languages[settings.lang];

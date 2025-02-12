@@ -1,11 +1,14 @@
 input,
-textarea {
+textarea,
+select,
+option {
     position: relative;
     font-size: 14px;
     padding: 5px;
     border: 1px solid #888;
     border-radius: 5px;
     background-color: #f7f7f7;
+    font-family: 'allerregular';
 }
 
 input:focus,
@@ -13,7 +16,11 @@ textarea:focus {
     outline: 2px solid #4f5064;
     border: 1px solid #4f5064;
     background-color: #fff;
+}
 
+input[type="range"] {
+    outline: none;
+    border: none;
 }
 
 textarea {

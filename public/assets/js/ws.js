@@ -2,7 +2,7 @@
 
 import settings from './settings.js';
 import app from './views/app.js';
-import timeline from './views/timeline.js';
+import timeline from './views/posts.js';
 import findUsers from './views/findUsers.js';
 
 let socket;
@@ -112,13 +112,24 @@ const ws = {
             }
         )
     },
-    getTimeline(mediaToLoad) {
+    getPosts(mediaToLoad) {
         // Return to call
+        return createWSCall({
+            type: 'getPosts',
+            payload: {
+                userID: settings.user._id,
+                mediaToLoad
+            }
+        })
+    },
+    getTimeline() {
+        // Return to call
+        console.log('get Timeline');
+        
         return createWSCall({
             type: 'getTimeline',
             payload: {
                 userID: settings.user._id,
-                mediaToLoad
             }
         })
     },

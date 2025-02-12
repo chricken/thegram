@@ -3,6 +3,7 @@
 import dom from '../dom.js';
 import elements from '../elements.js';
 import settings from '../settings.js';
+import viewPosts from '../views/posts.js';
 import viewTimeline from '../views/timeline.js';
 import viewFindUsers from '../views/findUsers.js';
 import lang from '../languages/all.js';
@@ -21,6 +22,18 @@ const nav = () => {
         listeners:{
             click(){
                 settings.viewMode = viewTimeline;
+                settings.viewMode.reset()
+            }
+        }
+    })
+
+    const linkPosts = dom.create({
+        cssClassName:'link',
+        parent,
+        content: ln.posts,
+        listeners:{
+            click(){
+                settings.viewMode = viewPosts;
                 settings.viewMode.reset()
             }
         }

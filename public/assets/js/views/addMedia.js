@@ -7,33 +7,14 @@ import ws from '../ws.js';
 import helpers from '../helpers.js';
 import elements from '../elements.js';
 import settings from '../settings.js';
-import timeline from './timeline.js';
+import timeline from './posts.js';
 import randomTexts from '../randomTexts.js';
 import ContentElement from '../classes/ContentElement.js';
 import inpRange from '../components/inpRange.js';
 import lang from '../languages/all.js';
+import selector from '../components/selection.js';
 
 const addMedia = () => {
-    /*
-    "_id": "2209c7a52cd806b1ea4bb70aa600229f",
-    "_rev": "1-aecb53f53b3e0ed224214c37d4ca356e",
-    "title": "Die alte Brücke über",
-    "text": "Reisen ist eine der bereicherndsten Erfahrungen, die man im Leben machen kann. Es eröffnet neue Perspektiven, Kulturen und Traditionen, die unser Verständnis von der Welt erweitern. Wenn wir neue Orte besuchen, treffen wir Menschen mit unterschiedlichen Lebensweisen und Geschichten, die uns inspirieren und zum Nachdenken anregen. Ob es sich um eine Reise in die Berge, an den Strand oder in eine pulsierende Stadt handelt, jede Reise hat das Potenzial, uns zu verändern und uns neue Einsichten zu geben. Die Erinnerungen, die wir sammeln, begleiten uns ein Leben lang und bereichern unser Dasein.",
-    "userID": "2209c7a52cd806b1ea4bb70aa60010fd",
-    "type": 0,
-    "tags": [],
-    "likes": [],
-    "dislikes": [],
-    "comments": [],
-    "forwardedPostID": "",
-    "progress": 0,
-    "timestamp": 1739279725055,
-    "imgNames": [
-        "187pscpal98.i_1739279725056_0.jpg"
-    ]
-    */
-
-
     let ln = lang[settings.lang];
 
     // const parent = modal();
@@ -46,10 +27,15 @@ const addMedia = () => {
         userID: settings.user._id,
     })
 
-
-
-
-    console.log(payload);
+    const selType = selector({
+        parent,
+        options:settings.postTypes,
+        title: 'Type of Post',
+        onChange(value){
+            console.log('Type', value);
+            payload.contentType = value;
+        }
+    })
 
     // Objekt, das die Daten des Content-Elementes enthält
     const elImagePreview = dom.create({
@@ -68,11 +54,13 @@ const addMedia = () => {
         }
     })
 
-    const elShowID = dom.create({
-        parent,
-        cssClassName: 'info',
-        content: `ID: ${payload._id}`
-    })
+    if (payload._id) {
+        const elShowID = dom.create({
+            parent,
+            cssClassName: 'info',
+            content: `ID: ${payload._id}`
+        })
+    }
 
     const elInpText = dom.create({
         // parent: parent.modal,
@@ -93,8 +81,6 @@ const addMedia = () => {
                 payload.text = elInpText.innerHTML;
                 payload.title = elInpTitle.innerHTML;
 
-                // console.log(payload);
-
                 dom.create({
                     parent: elements.messages,
                     cssClassName: 'singleMessage',
@@ -106,9 +92,6 @@ const addMedia = () => {
                 ).catch(
                     console.warn
                 )
-
-                // parent.bg.remove();
-
             }
         }
     })
@@ -123,24 +106,6 @@ const addMedia = () => {
         },
         listeners: {
             change() {
-                /*
-                 "_id": "2209c7a52cd806b1ea4bb70aa600229f",
-                "_rev": "1-aecb53f53b3e0ed224214c37d4ca356e",
-                "title": "Die alte Brücke über",
-                "text": "Reisen ist eine der bereicherndsten Erfahrungen, die man im Leben machen kann. Es eröffnet neue Perspektiven, Kulturen und Traditionen, die unser Verständnis von der Welt erweitern. Wenn wir neue Orte besuchen, treffen wir Menschen mit unterschiedlichen Lebensweisen und Geschichten, die uns inspirieren und zum Nachdenken anregen. Ob es sich um eine Reise in die Berge, an den Strand oder in eine pulsierende Stadt handelt, jede Reise hat das Potenzial, uns zu verändern und uns neue Einsichten zu geben. Die Erinnerungen, die wir sammeln, begleiten uns ein Leben lang und bereichern unser Dasein.",
-                "userID": "2209c7a52cd806b1ea4bb70aa60010fd",
-                "type": 0,
-                "tags": [],
-                "likes": [],
-                "dislikes": [],
-                "comments": [],
-                "forwardedPostID": "",
-                "progress": 0,
-                "timestamp": 1739279725055,
-                "imgNames": [
-                    "187pscpal98.i_1739279725056_0.jpg"
-                ]
-                    */
                 let files = [...elInpImage.files];
 
                 files.forEach((file, index) => {
@@ -172,36 +137,54 @@ const addMedia = () => {
         }
     })
 
-    const rngProgress = inpRange({
+    inpRange({
         title: ln.progress,
-        parent,
+        parent: formAddMedia,
         value: payload.progress,
-        listeners: {
-            input(evt) {
-                console.log('Eingabe von Wert', evt.detail);
-
-            }
+        onChange(value) {
+            payload.progress = value;
         }
     })
 
-    /*
-    const rngProgress = dom.create({
-        type: 'input',
-        parent,
-        attr:{
-            type:'range',
-            min:0,
-            max:1,
-            step:.001,
+    inpRange({
+        title: ln.AIInfluenceConcept,
+        parent: formAddMedia,
+        value: payload.AIInfluence.concept,
+        onChange(value) {
+            payload.AIInfluence.concept = value;
         }
     })
-    rngProgress.value = payload.progress;
-    */
 
-    const btnSaveContent = button({
+    inpRange({
+        title: ln.AIInfluenceCreation,
+        parent: formAddMedia,
+        value: payload.AIInfluence.creation,
+        onChange(value) {
+            payload.AIInfluence.creation = value;
+        }
+    })
+
+    inpRange({
+        title: ln.AIInfluenceDocumentation,
+        parent: formAddMedia,
+        value: payload.AIInfluence.documentation,
+        onChange(value) {
+            payload.AIInfluence.documentation = value;
+        }
+    })
+
+    inpRange({
+        title: ln.AIInfluencePostProcess,
+        parent: formAddMedia,
+        value: payload.AIInfluence.postProcess,
+        onChange(value) {
+            payload.AIInfluence.postProcess = value;
+        }
+    })
+
+    button({
         parent: formAddMedia,
         legend: 'Save',
-
     })
 }
 

@@ -7,7 +7,7 @@ import elements from '../elements.js';
 import compAddMediaBtn from '../components/addMediaBtn.js';
 import compLogoutBtn from '../components/logoutBtn.js';
 import compBtnUserSettings from '../components/buttonUserSettings.js';
-import viewTimeline from './timeline.js';
+import viewTimeline from './posts.js';
 import compNav from '../components/nav.js';
 
 const app = {

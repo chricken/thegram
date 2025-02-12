@@ -3,7 +3,8 @@
 const de = {
     siteName: 'artSphere',
     siteSubName: 'Eine Social Media Plattform für grafische Kunst und Künstler.',
-    timeline: 'Meine Beiträge',
+    posts: 'Meine Beiträge',
+    timeline: 'Timeline',
     created: 'Angelegt',
     lastChange: 'Letzte Änderung',
     numPosts: 'Anzahl an Beiträgen',
@@ -62,6 +63,13 @@ const de = {
     photos: 'Fotos',
     forwarding: 'Weiterleitung',
     progress: 'Fortschritt',
+    AIInfluenceConcept: 'KI Einfluss in der Konzeptionierung',
+    AIInfluenceCreation: 'KI Einfluss in der Erstellung',
+    AIInfluenceDocumentation: 'KI Einfluss in der Dokumentation',
+    AIInfluencePostProcess: 'KI Einfluss in der Nachbearbeitung',
+    artwork: 'Werk',
+    comment: 'Kommentar',
+    news: 'Neuigkeit',
 }
 
 export default de;

@@ -12,9 +12,8 @@ const inpRange = ({
     step = .001,
     value = .1,
     isEncapsuled = true,
+    onChange=()=>{}
 } = {}) => {
-
-    console.log(value);
 
     let ln = lang[settings.lang];
 
@@ -28,7 +27,7 @@ const inpRange = ({
     dom.create({
         content: title,
         parent,
-        type: 'h3',
+        type: 'h5',
     })
 
     const parentInputs = dom.create({
@@ -44,11 +43,10 @@ const inpRange = ({
         },
         listeners: {
             input() {
-                input.value = rng.value;
-                const myEvent = new CustomEvent('input', {
-                    detail: { value: rng.value }
-                })
-                this.dispatchEvent(myEvent);
+                if (input.value != rng.value) {
+                    input.value = rng.value;
+                    onChange(rng.value );                    
+                }
             }
         }
     })
@@ -60,17 +58,28 @@ const inpRange = ({
         value,
         listeners: {
             input() {
-                rng.value = input.value;
-                const myEvent = new CustomEvent('input', {
-                    detail: { value: input.value }
-                })
-                this.dispatchEvent(myEvent);
+                // Dezimalzeichen korrigieren
+                input.value = input.value.replaceAll(',', '.');
 
-            },
+                // Nur übertragen, wenn der Wert nicht auf '.' endet (sonst Fehler)
+                // Und wenn die Werte unterschiedelich sind (sonst Rekursion)
+                if (
+                    !input.value.endsWith('.')
+                    && input.value != rng.value
+                ) {
+                    // Auf n Stellen runden
+                    let dec = step.toString().split('.')[1].length;
+                    input.value = +(+input.value).toFixed(dec);
+
+                    rng.value = input.value;
+                    onChange(rng.value );   
+                   
+                }
+            }
         }
     })
     input.value = value;
-
+    return parent;
 }
 
 export default inpRange;

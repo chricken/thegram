@@ -6,7 +6,7 @@ import btnClose from './buttonClose.js';
 import postOverview from './postOverview.js';
 import lang from '../languages/all.js';
 import ws from '../ws.js';
-import timeline from '../views/timeline.js';
+import timeline from '../views/posts.js';
 
 const userDetails = ({user, changeCallback}) => {
 

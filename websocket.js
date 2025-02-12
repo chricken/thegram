@@ -94,6 +94,11 @@ wsServer.on('connection', socket => {
             )
 
         } else if (msg.type == 'getTimeline') {
+            database.getUser(msg.payload.userID).then(
+                user => console.log('ws 98', user.subbedUsers)
+                
+            )
+        } else if (msg.type == 'getPosts') {
             database.getMedia(msg.payload.mediaToLoad).then(
                 res => {
                     socket.send(JSON.stringify({

@@ -39,13 +39,11 @@ const loginout = {
             ws.checkToken(token).then(
                 res => {
                     if (res.status == 'success') {
-                        console.log(res);
                         settings.user = res.user;
                         settings.user.posts = settings.user.posts.toSorted(
                             (a, b) => b.crDate - a.crDate
                         );
                         app.handleLogin();
-                        
                     } else {
                         viewLogin();
                     }
@@ -53,7 +51,6 @@ const loginout = {
             )
         } else {
             viewLogin();
-
         }
     },
     logout() {

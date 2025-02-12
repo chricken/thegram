@@ -9,10 +9,14 @@ const settings = {
     firstLoad: true,
     posts: [],
     offset: 0,
-    numPostsToShow: 3,
+    numPostsToShow: 6,
     viewMode: null,
     lang: 'de',
-    postTypes: ['artwork', 'comment', 'news'],
+    postTypes: {
+        '0': 'artwork',
+        '1': 'comment',
+        '2': 'news'
+    },
     avatarSize: 300,
 }
 

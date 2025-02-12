@@ -8,22 +8,21 @@ import settings from '../settings.js';
 import languages from '../languages/all.js';
 import observers from '../observers.js';
 
-const timeline = {
+const posts = {
     // Sammelbehälter für alle anzuzeigenden Posts
     postsToRender: [],
 
     reset() {
         // Setzt alle lokalen Einstellungen zurück
         settings.firstLoad = true;
-        timeline.postsToRender = [];
+        posts.postsToRender = [];
         settings.offset = 0;
-        timeline.init();
+        posts.init();
     },
     init() {
         // Bereitet den Render-Prozess vor, ...
         // ... indem die nächsten Datensätze geladen werden
         if (settings.user) {
-            /* 
             let postsToLoad = settings.user.posts.filter((post, index) => {
                 return (
                     index >= settings.offset
@@ -32,11 +31,13 @@ const timeline = {
             }).map(
                 post => post.media
             )
-            */
-            ws.getTimeline().then(
+
+            ws.getPosts(postsToLoad).then(
                 payload => {
-                    timeline.postsToRender.push(...payload);
-                    timeline.render();
+                    // console.log('posts to render', payload);
+
+                    posts.postsToRender.push(...payload);
+                    posts.render();
                 }
             )
 
@@ -52,11 +53,11 @@ const timeline = {
 
         dom.create({
             parent,
-            content: languages[settings.lang]['timeline'],
+            content: languages[settings.lang]['posts'],
             type: 'h2'
         })
 
-        timeline.postsToRender
+        posts.postsToRender
             // Falls doch mal ein leerer Post ankommt ... ignorieren
             .filter(p => p != null)
             .forEach(post => {
@@ -70,7 +71,7 @@ const timeline = {
         })
 
         // Der Observer soll nur aktiv sein, wenn noch posts hinzugefügt werden können
-        if (settings.user.posts.length > timeline.postsToRender.length) {
+        if (settings.user.posts.length > posts.postsToRender.length) {
             // Verzögert den Observer hinzufügen, damit der beim Einhängen nicht automatisch getriggert wird
             setTimeout(
                 () => observers.obsIntersectLoadTrigger.observe(elLoadTrigger),
@@ -80,4 +81,4 @@ const timeline = {
     }
 }
 
-export default timeline;
+export default posts;
