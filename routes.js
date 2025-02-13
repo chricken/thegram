@@ -12,8 +12,7 @@ router.get('/getImg/:userID/:filename/:flag?', (request, response) => {
     const __dirname = path.dirname(__filename);
 
     let filepath;
-    // console.log(request.params);
-    
+
     if (request.params.flag == 'isAvatar') {
         filepath = `data/avatars/${request.params.userID}/${request.params.filename}`
     } else {

@@ -62,7 +62,7 @@ const posts = {
             .filter(p => p != null)
             .forEach(post => {
                 // console.log(post);
-                postOverview(parent, settings.user, post)
+                postOverview(parent, post)
             })
 
         const elLoadTrigger = dom.create({

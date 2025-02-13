@@ -4,7 +4,7 @@ import dom from '../dom.js';
 import settings from '../settings.js';
 import postDetails from './postDetails.js';
 
-const postOverview = (parent, user, post) => {
+const postOverview = (parent, post) => {
     // console.log('post overview 8', post);
 
     const container = dom.create({
@@ -39,12 +39,12 @@ const postOverview = (parent, user, post) => {
     if (post.imgNames.length) {
 
         post.imgNames.forEach((imgName, index) => {
-            // console.log('imgNames: ', `url(/getImg/${user._id}/${imgName})`);
+            console.log('imgNames: ', `url(/getImg/${post.userID}/${imgName})`);
             let imgPreview = dom.create({
                 cssClassName: `img img_${index}`,
                 parent: container,
                 styles: {
-                    backgroundImage: `url(/getImg/${user._id}/${imgName})`
+                    backgroundImage: `url(/getImg/${post.userID}/${imgName})`
                 }
             })
 
@@ -52,12 +52,12 @@ const postOverview = (parent, user, post) => {
                 type: 'img',
                 listeners: {
                     error(evt) {
-                        console.log(`Bild ${imgName} konnte nicht geladen werden.`);
+                        console.log(`Bild "/getImg/${post.userID}/${imgName}" konnte nicht geladen werden.`);
                         imgPreview.style.backgroundImage = 'url(/assets/img/404.png)';
                     }
                 },
                 attr: {
-                    src: `/getImg/${user._id}/${imgName}`
+                    src: `/getImg/${post.userID}/${imgName}`
                 }
             })
         })

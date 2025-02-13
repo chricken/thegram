@@ -7,6 +7,7 @@ import btn from './button.js';
 import languages from '../languages/all.js';
 import ws from '../ws.js';
 import timeline from '../views/posts.js';
+import postComment from './postComment.js';
 
 const postDetails = (post) => {
     let ln = languages[settings.lang];
@@ -38,7 +39,7 @@ const postDetails = (post) => {
     let imgDetail
     let imgsOverview = [];
     if (post.imgNames.length > 0) {
-        let path = `/getImg/${settings.user._id}/${post.imgNames[currentIndex]}`;
+        let path = `/getImg/${post.userID}/${post.imgNames[currentIndex]}`;
 
         imgDetail = dom.create({
             type: 'img',
@@ -59,7 +60,7 @@ const postDetails = (post) => {
 
         post.imgNames.forEach((imgName, index) => {
 
-            let path = `/getImg/${settings.user._id}/${imgName}`;
+            let path = `/getImg/${post.userID}/${imgName}`;
 
             let elImg = dom.create({
                 type: 'img',
@@ -92,51 +93,53 @@ const postDetails = (post) => {
     })
 
 
-    // Interaktion
+    // Interaktion 
     const containerUI = dom.create({
         parent: container,
-        cssClassName:'container',
-    })    
-
-    // Post entfernen
-    btn({
-        legend: ln.removePost,
-        parent: containerUI,
-        isEncapsuled: false,
-        onClick() {
-            if (confirm(ln.confirmRemovePost)) {
-                ws.removePost(post).then(
-                    () => {
-                        bg.remove();
-                        timeline.reset();
-                    }
-                ).catch(
-                    console.warn
-                )
-            }
-        }
+        cssClassName: 'container',
     })
-    
-    if(post.userID == settings.user._id){
+
+    if (post.userID == settings.user._id) {
+
+        // Post entfernen
+        btn({
+            legend: ln.removePost,
+            parent: containerUI,
+            isEncapsuled: false,
+            onClick() {
+                if (confirm(ln.confirmRemovePost)) {
+                    ws.removePost(post).then(
+                        () => {
+                            bg.remove();
+                            timeline.reset();
+                        }
+                    ).catch(
+                        console.warn
+                    )
+                }
+            }
+        })
+
         btn({
             legend: ln.editPost,
             parent: containerUI,
             isEncapsuled: false,
             onClick() {
-               
+
             }
-        }) 
-    }
-    
-    if(post.userID != settings.user._id){
+        })
+    } else {
         btn({
             legend: ln.addComment,
             parent: containerUI,
             isEncapsuled: false,
             onClick() {
-               
+                postComment({
+                    parent: container,
+                    post
+                })
             }
-        }) 
+        })
     }
 
     // Close-Button

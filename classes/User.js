@@ -7,8 +7,8 @@ import Shops from './Shops.js';
 
 class User {
     constructor({
-        _id = null,
-        _rev = null,
+        _id = false,
+        _rev = false,
         username = '',
         password = '',
         language = 'en',
@@ -16,6 +16,7 @@ class User {
         imgAvatar = '',
         crDate = Date.now(),
         chDate = Date.now(),
+        latestPost = false,
         subbedUsers = [],
         posts = [],
         preName = '',
@@ -28,14 +29,12 @@ class User {
 
     }) {
         // _id und _rev werden nur eingehängt, wenn die Daten aus der Datenbank kommen
-        if (_id)
-            this._id = _id;
+        if (_id) this._id = _id;
 
-        if (_rev)
-            this._rev = _rev;
+        if (_rev) this._rev = _rev;
 
         Object.assign(this, {
-            username, password, language, type, imgAvatar, crDate, chDate,
+            username, password, language, type, imgAvatar, crDate, chDate,latestPost,
             subbedUsers, posts, preName, surName, description,
             address, contact, socialMedia, shops
         })

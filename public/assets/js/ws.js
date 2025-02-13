@@ -1,9 +1,7 @@
 'use strict';
 
 import settings from './settings.js';
-import app from './views/app.js';
 import timeline from './views/posts.js';
-import findUsers from './views/findUsers.js';
 
 let socket;
 
@@ -11,7 +9,7 @@ let socket;
 const handleLogin = msg => {
     if (msg.status == 'created') {
         // settings.user = msg.payload;
-       
+
 
     } else {
         console.log('Nicht erfolgreich');
@@ -58,6 +56,7 @@ const ws = {
             })
         })
     },
+
     appendEventListeners() {
         return new Promise(resolve => {
             socket.addEventListener('open', evt => {
@@ -75,6 +74,7 @@ const ws = {
             resolve();
         })
     },
+
     login({ username, password }) {
         return createWSCall({
             type: 'login',
@@ -83,6 +83,7 @@ const ws = {
             }
         })
     },
+
     checkToken(token) {
         // console.log(token);
         return createWSCall({
@@ -91,12 +92,14 @@ const ws = {
 
         })
     },
+
     register(credentials) {
         return createWSCall({
             type: 'register',
             payload: credentials
         })
     },
+
     uploadMedia(payload) {
         return createWSCall({
             type: 'uploadMedia',
@@ -112,6 +115,7 @@ const ws = {
             }
         )
     },
+
     getPosts(mediaToLoad) {
         // Return to call
         return createWSCall({
@@ -122,10 +126,11 @@ const ws = {
             }
         })
     },
+
     getTimeline() {
         // Return to call
         console.log('get Timeline');
-        
+
         return createWSCall({
             type: 'getTimeline',
             payload: {
@@ -133,6 +138,7 @@ const ws = {
             }
         })
     },
+
     getSubbedUsers() {
         return createWSCall({
             type: 'getSubbedUsers',
@@ -141,6 +147,7 @@ const ws = {
             }
         })
     },
+
     getNewUsers(numUsers) {
         return createWSCall({
             type: 'getNewUsers',
@@ -149,6 +156,7 @@ const ws = {
             }
         })
     },
+
     saveCurrentUser() {
         console.log('Save current User');
 
@@ -162,6 +170,7 @@ const ws = {
             }
         )
     },
+
     removePost(postToRemove) {
         // Post aus der DB entfernen
         return createWSCall({
@@ -177,7 +186,19 @@ const ws = {
             }
         )
 
-    }
+    },
+
+    saveComment(comment) {
+        return createWSCall({
+            type: 'saveComment',
+            payload: comment
+        }).then(
+            console.log
+        ).catch(
+            console.warn
+        )
+
+    },
 }
 
 export default ws;

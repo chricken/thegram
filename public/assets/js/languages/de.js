@@ -70,6 +70,7 @@ const de = {
     artwork: 'Werk',
     comment: 'Kommentar',
     news: 'Neuigkeit',
+    send: 'Absenden',
 }
 
 export default de;

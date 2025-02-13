@@ -23,16 +23,7 @@ const timeline = {
         // Bereitet den Render-Prozess vor, ...
         // ... indem die nächsten Datensätze geladen werden
         if (settings.user) {
-            /* 
-            let postsToLoad = settings.user.posts.filter((post, index) => {
-                return (
-                    index >= settings.offset
-                    && index < settings.offset + settings.numPostsToShow
-                )
-            }).map(
-                post => post.media
-            )
-            */
+
             ws.getTimeline().then(
                 payload => {
                     timeline.postsToRender.push(...payload);
@@ -40,7 +31,7 @@ const timeline = {
                 }
             )
 
-            settings.offset += postsToLoad.length;
+            // settings.offset += postsToLoad.length;
             settings.offset = Math.min(settings.offset, settings.user.posts.length);
         }
     },
@@ -58,10 +49,10 @@ const timeline = {
 
         timeline.postsToRender
             // Falls doch mal ein leerer Post ankommt ... ignorieren
-            .filter(p => p != null)
+            .filter(post => post != null)
             .forEach(post => {
-                // console.log(post);
-                postOverview(parent, settings.user, post)
+                console.log(post);
+                postOverview(parent, post)
             })
 
         const elLoadTrigger = dom.create({

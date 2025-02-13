@@ -70,6 +70,7 @@ const en = {
     artwork: 'Artwork',
     comment: 'Comment',
     news: 'News',
+    send: 'Send',
 }
 
 export default en

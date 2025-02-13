@@ -25,14 +25,38 @@ wsServer.on('connection', socket => {
         msg = JSON.parse(msg.toString());
 
         if (msg.type == 'uploadMedia') {
+            // console.log('Upload Media', msg.payload);
+
             msg.payload.timestamp = Date.now();
             media.handleUploaded(settings.uploadPath, msg.payload).then(
                 res => {
+                    // Daten erweitern
+                    res.user.latestPost = res.media.mediaID;
+                    res.user.chDate = Date.now();
                     res.status = 'done';
+                    return res;
+                }
+            ).then(
+                res => {
+                    return database.saveUserObject(res.user).then(
+                        () => {
+                            return res
+                        }
+                    ).catch(
+                        err => {
+                            console.warn(err);
+                            return res;
+                        }
+                    )
+                }
+            ).then(
+                res => {
+                    // Daten versenden
                     socket.send(JSON.stringify({
                         type: msg.callbackType,
                         payload: res
                     }))
+                    return res.user
                 }
             ).catch(
                 err => {
@@ -82,7 +106,7 @@ wsServer.on('connection', socket => {
                 // Wenn Token nicht gefunden oder nicht mehr gültig
                 err => {
                     console.log('websocket 85', err);
-                    
+
                     socket.send(JSON.stringify({
                         type: msg.callbackType,
                         payload: {
@@ -95,15 +119,35 @@ wsServer.on('connection', socket => {
 
         } else if (msg.type == 'getTimeline') {
             database.getUser(msg.payload.userID).then(
-                user => console.log('ws 98', user.subbedUsers)
-                
+                user => {
+                    // console.log('ws 123', user.subbedUsers);
+                    return Promise.all(user.subbedUsers.map(subbed => {
+                        return database.getUser(subbed.userID);
+                    }))
+                }
+            ).then(
+                users => {
+                    users.sort((a, b) => b.chDate - a.chDate);
+                    return database.getMedia(users.map(user => user.latestPost))
+                }
+            ).then(
+                posts => {
+                    socket.send(JSON.stringify({
+                        type: msg.callbackType,
+                        payload: posts
+                    }))
+                }
+            ).catch(
+                err => {
+                    console.log(err)
+                }
             )
         } else if (msg.type == 'getPosts') {
             database.getMedia(msg.payload.mediaToLoad).then(
-                res => {
+                posts => {
                     socket.send(JSON.stringify({
                         type: msg.callbackType,
-                        payload: res
+                        payload: posts
                     }))
                 }
             )
@@ -181,6 +225,19 @@ wsServer.on('connection', socket => {
                         payload: {
                             status: 'done',
                             res
+                        }
+                    }))
+                }
+            )
+        } else if (msg.type == 'saveComment') {
+            console.log(msg.payload);
+            database.saveComment(msg.payload).then(
+                res => {
+                    socket.send(JSON.stringify({
+                        type: msg.callbackType,
+                        payload: {
+                            status: 'done',
+
                         }
                     }))
                 }

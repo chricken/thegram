@@ -88,7 +88,6 @@ const database = {
 
     getMedia(mediaToLoad) {
         let dbPosts = dbConn.use(settings.dbNames.posts);
-        // console.log('getMedia', mediaToLoad);
         if (mediaToLoad.length) {
             return dbPosts.fetch({
                 keys: mediaToLoad
@@ -125,14 +124,10 @@ const database = {
     getSubbedUsers(userID) {
         let dbUsers = dbConn.use(settings.dbNames.users);
 
-        // console.log('subbed Users', userID);
-
         return dbUsers.get(userID).then(
             res => res.subbedUsers
         ).then(
             res => {
-                // console.log(res);
-
                 return dbUsers.list().then(
                     users => users.rows
                         .map(row => row.id)
@@ -152,8 +147,6 @@ const database = {
             }
         ).then(
             res => {
-                // console.log(res);
-
                 return res.map(user => {
                     delete user.password;
                     return user;
@@ -164,9 +157,7 @@ const database = {
         )
     },
 
-    getNewUsers(payload) {
-        // console.log('get new Users Payload', payload);
-        
+    getNewUsers() {
         let dbUsers = dbConn.use(settings.dbNames.users);
 
         return dbUsers.view(
@@ -178,6 +169,11 @@ const database = {
         ).then(
             res => res.rows.map(row => row.value)
         )
+    },
+
+    saveUserObject(user) {
+        let dbUsers = dbConn.use(settings.dbNames.users);
+        return dbUsers.insert(user);
     },
 
     saveUser(payload) {
@@ -277,6 +273,13 @@ const database = {
             }
         )
     },
+
+    saveComment(comment){
+        let dbComments = dbConn.use(settings.dbNames.comments);
+
+        dbComments.insert(comment)
+
+    }
 }
 
 export default database;
