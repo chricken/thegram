@@ -1,10 +1,9 @@
 'use strict';
 
-import settings from './settings.js'
+import settings, {agents} from './settings.js'
 import nano from 'nano';
 import User from './classes/User.js';
 import media from './media.js';
-
 
 const cr = settings.credentials.db;
 const dbConn = nano(`http://${cr.user}:${cr.pw}@${cr.url}`).db;
@@ -36,7 +35,7 @@ const database = {
             }
         }).then(
             res => {
-                console.log('39', 'check PW');
+                // console.log('39', 'check PW');
 
                 if (res.docs.length == 0) return ({
                     status: 'err',
@@ -87,6 +86,7 @@ const database = {
     },
 
     getMedia(mediaToLoad) {
+        /*
         let dbPosts = dbConn.use(settings.dbNames.posts);
         if (mediaToLoad.length) {
             return dbPosts.fetch({
@@ -99,6 +99,7 @@ const database = {
                 resolve([])
             })
         }
+        */
     },
 
     getTimeline(userID, offset) {
@@ -154,6 +155,15 @@ const database = {
             }
         ).then(
             res => res.toSorted((a, b) => b.chDate - a.chDate)
+        )
+    },
+
+    getAllUsers() {
+        let dbUsers = dbConn.use(settings.dbNames.users);
+        return dbUsers.list().then(
+            res => res.rows.map(row => row.id)
+        ).then(
+            res => res.filter(el => !el.startsWith('_design/'))
         )
     },
 
@@ -257,19 +267,15 @@ const database = {
 
     getToken(token) {
         let dbTokens = dbConn.use(settings.dbNames.authtokens);
-        let dbUsers = dbConn.use(settings.dbNames.users);
-
-        // console.log('token', token);
 
         return dbTokens.get(token._id).then(
             res => {
-                // console.log('res gefunden ', res.body, settings.tokenValidity);
                 if (res.body.crDate < (Date.now() - settings.tokenValidity))
                     throw 'Token too old';
                 else if (res.body.token != token.body.token)
                     throw 'Token invalid';
                 else
-                    return dbUsers.get(token.userID)
+                    return token.userID
             }
         )
     },
@@ -279,7 +285,7 @@ const database = {
 
         dbComments.insert(comment)
 
-    }
+    },
 }
 
 export default database;

@@ -31,7 +31,13 @@ const settings = {
         '10': 'user',
         '20': 'artist',
         '30': 'admin',
-    }
+    },
+
+    // Objekt, in dem für jeden Benutzer-Datensatz ein Objekt hinterlegt wird.
+    // Key ist die User-ID
+    // Alle Interaktion findet über dieses Objekt statt. Damit werden Seiteneffekte vermieden
+    agents: {},
 }
 
 export default settings;
+export let agents = settings.agents;

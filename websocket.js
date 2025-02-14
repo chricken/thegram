@@ -1,12 +1,13 @@
 'use strict';
 
 import { WebSocketServer } from "ws";
-import settings from './settings.js';
+import settings, { agents } from './settings.js';
 import helpers from './helpers.js';
 import database from './database.js';
 import media from './media.js';
 import handleUsers from './handleUsers.js';
 import authToken from "./authToken.js";
+import Agent from './classes/Agent.js';
 
 const wsServer = new WebSocketServer({ port: 8080 });
 
@@ -25,8 +26,6 @@ wsServer.on('connection', socket => {
         msg = JSON.parse(msg.toString());
 
         if (msg.type == 'uploadMedia') {
-            // console.log('Upload Media', msg.payload);
-
             msg.payload.timestamp = Date.now();
             media.handleUploaded(settings.uploadPath, msg.payload).then(
                 res => {
@@ -69,44 +68,62 @@ wsServer.on('connection', socket => {
                     }))
                 }
             )
-        } else if (msg.type == 'loginByToken') {
         } else if (msg.type == 'login') {
+
             database.checkLogin(msg.payload).then(
                 res => {
                     if (res.status == 'success') {
                         // Token erzeugen und in DB hängen.
                         authToken.create(res.payload).then(
-                            token => socket.send(JSON.stringify({
-                                type: msg.callbackType,
-                                payload: {
-                                    status: 'created',
-                                    user: res.payload,
-                                    token
-                                }
-                            }))
-                        )
-                    } else {
+                            token => {
+                                const agent = new Agent({
+                                    id: res.payload._id
+                                });
+                                agents[res.payload._id] = agent;
+                                console.log(Object.keys(agents));
 
+                                return token;
+                            }
+                        ).then(
+                            token => {
+
+                                socket.send(JSON.stringify({
+                                    type: msg.callbackType,
+                                    payload: {
+                                        status: 'created',
+                                        user: res.payload,
+                                        token
+                                    }
+                                }))
+                            }
+                        )
                     }
                 }
             )
-
         } else if (msg.type == 'checkToken') {
-            console.log('Check Token', msg.payload);
-
             database.getToken(msg.payload).then(
-                user => socket.send(JSON.stringify({
-                    type: msg.callbackType,
-                    payload: {
-                        status: 'success',
-                        user
-                    }
-                }))
+                userID => {
+                    const agent = new Agent({
+                        id: userID
+                    });
+                    agents[userID] = agent;
+                    console.log('agents on checkToken 118', Object.keys(agents));
+                    return agent.init(userID);
+                }
+            ).then(
+                user => {
+                    socket.send(JSON.stringify({
+                        type: msg.callbackType,
+                        payload: {
+                            status: 'success',
+                            user
+                        }
+                    }))
+                }
             ).catch(
                 // Wenn Token nicht gefunden oder nicht mehr gültig
                 err => {
-                    console.log('websocket 85', err);
-
+                    console.log('err 135', err);
                     socket.send(JSON.stringify({
                         type: msg.callbackType,
                         payload: {
@@ -118,19 +135,8 @@ wsServer.on('connection', socket => {
             )
 
         } else if (msg.type == 'getTimeline') {
-            database.getUser(msg.payload.userID).then(
-                user => {
-                    // console.log('ws 123', user.subbedUsers);
-                    return Promise.all(user.subbedUsers.map(subbed => {
-                        return database.getUser(subbed.userID);
-                    }))
-                }
-            ).then(
-                users => {
-                    users.sort((a, b) => b.chDate - a.chDate);
-                    return database.getMedia(users.map(user => user.latestPost))
-                }
-            ).then(
+            const agent = agents[msg.payload.userID];
+            agent.getTimeline().then(
                 posts => {
                     socket.send(JSON.stringify({
                         type: msg.callbackType,
@@ -143,14 +149,18 @@ wsServer.on('connection', socket => {
                 }
             )
         } else if (msg.type == 'getPosts') {
-            database.getMedia(msg.payload.mediaToLoad).then(
+            // console.log('Load Posts', msg.payload);
+            const agent = agents[msg.payload.userID];
+            agent.getPosts(msg.payload.mediaToLoad).then(
                 posts => {
+                    // console.log('loaded Posts', posts);
                     socket.send(JSON.stringify({
                         type: msg.callbackType,
                         payload: posts
                     }))
                 }
             )
+
         } else if (msg.type == 'getSubbedUsers') {
             database.getSubbedUsers(msg.payload.userID).then(
                 res => {
