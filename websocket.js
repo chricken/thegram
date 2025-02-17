@@ -80,13 +80,11 @@ wsServer.on('connection', socket => {
                                     id: res.payload._id
                                 });
                                 agents[res.payload._id] = agent;
-                                console.log(Object.keys(agents));
 
                                 return token;
                             }
                         ).then(
                             token => {
-
                                 socket.send(JSON.stringify({
                                     type: msg.callbackType,
                                     payload: {
@@ -107,23 +105,21 @@ wsServer.on('connection', socket => {
                         id: userID
                     });
                     agents[userID] = agent;
-                    console.log('agents on checkToken 118', Object.keys(agents));
                     return agent.init(userID);
                 }
             ).then(
-                user => {
+                agent => {
                     socket.send(JSON.stringify({
                         type: msg.callbackType,
                         payload: {
                             status: 'success',
-                            user
+                            user: agent.user
                         }
                     }))
                 }
             ).catch(
                 // Wenn Token nicht gefunden oder nicht mehr gültig
                 err => {
-                    console.log('err 135', err);
                     socket.send(JSON.stringify({
                         type: msg.callbackType,
                         payload: {
@@ -135,8 +131,9 @@ wsServer.on('connection', socket => {
             )
 
         } else if (msg.type == 'getTimeline') {
-            const agent = agents[msg.payload.userID];
-            agent.getTimeline().then(
+            agents[msg.payload.userID].init().then(
+                agent => agent.getTimeline()
+            ).then(
                 posts => {
                     socket.send(JSON.stringify({
                         type: msg.callbackType,
@@ -144,16 +141,19 @@ wsServer.on('connection', socket => {
                     }))
                 }
             ).catch(
-                err => {
-                    console.log(err)
+                () => {
+                    console.log('There is an error while loading timeline 404');
                 }
             )
+
+
         } else if (msg.type == 'getPosts') {
-            // console.log('Load Posts', msg.payload);
-            const agent = agents[msg.payload.userID];
-            agent.getPosts(msg.payload.mediaToLoad).then(
+            agents[msg.payload.userID].init().then(
+                agent => {
+                    return agent.getPosts(msg.payload.mediaToLoad)
+                }
+            ).then(
                 posts => {
-                    // console.log('loaded Posts', posts);
                     socket.send(JSON.stringify({
                         type: msg.callbackType,
                         payload: posts
@@ -185,6 +185,13 @@ wsServer.on('connection', socket => {
             // So kann im Client auf die Antwort direkt reagiert werden
             database.saveUser(msg.payload).then(
                 res => {
+                    // console.log('Save current user', msg.payload);
+                    return agents[msg.payload._id].update().then(
+                        () => res
+                    );
+                }
+            ).then(
+                res => {
                     socket.send(JSON.stringify({
                         type: msg.callbackType,
                         payload: {
@@ -192,13 +199,14 @@ wsServer.on('connection', socket => {
                             result: res
                         }
                     }))
+
                 }
             )
         } else if (msg.type == 'register') {
             // console.log(msg.payload);
             handleUsers.register(msg.payload).then(
                 res => {
-                    console.log('websocket 119', res);
+                    // console.log('websocket 119', res);
 
                     socket.send(JSON.stringify({
                         type: msg.callbackType,
@@ -240,7 +248,7 @@ wsServer.on('connection', socket => {
                 }
             )
         } else if (msg.type == 'saveComment') {
-            console.log(msg.payload);
+            // console.log(msg.payload);
             database.saveComment(msg.payload).then(
                 res => {
                     socket.send(JSON.stringify({

@@ -40,6 +40,8 @@ const loginout = {
                 res => {
                     if (res.status == 'success') {
                         settings.user = res.user;
+                        console.log(res.user);
+                        
                         settings.user.posts = settings.user.posts.toSorted(
                             (a, b) => b.crDate - a.crDate
                         );

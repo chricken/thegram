@@ -1,6 +1,6 @@
 'use strict';
 
-import settings, {agents} from './settings.js'
+import settings, { agents } from './settings.js'
 import nano from 'nano';
 import User from './classes/User.js';
 import media from './media.js';
@@ -241,9 +241,15 @@ const database = {
     },
 
     getUser(id) {
+        // console.log('getUser database 244', id);
+
         let dbUsers = dbConn.use(settings.dbNames.users);
 
-        return dbUsers.get(id);
+        return dbUsers.get(id).then(
+            res => res
+        ).catch(
+            () => null
+        );
     },
 
     removePost(payload) {
@@ -280,7 +286,7 @@ const database = {
         )
     },
 
-    saveComment(comment){
+    saveComment(comment) {
         let dbComments = dbConn.use(settings.dbNames.comments);
 
         dbComments.insert(comment)

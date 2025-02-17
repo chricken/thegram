@@ -13,6 +13,8 @@ const timeline = {
     postsToRender: [],
 
     reset() {
+        console.log('Reset Timeline');
+
         // Setzt alle lokalen Einstellungen zurück
         settings.firstLoad = true;
         timeline.postsToRender = [];
@@ -23,9 +25,11 @@ const timeline = {
         // Bereitet den Render-Prozess vor, ...
         // ... indem die nächsten Datensätze geladen werden
         if (settings.user) {
-
+            console.log('init');
             ws.getTimeline().then(
                 payload => {
+                    console.log(payload);
+
                     timeline.postsToRender.push(...payload);
                     timeline.render();
                 }
@@ -59,7 +63,7 @@ const timeline = {
             type: 'loadTrigger',
             parent,
         })
-
+        /* 
         // Der Observer soll nur aktiv sein, wenn noch posts hinzugefügt werden können
         if (settings.user.posts.length > timeline.postsToRender.length) {
             // Verzögert den Observer hinzufügen, damit der beim Einhängen nicht automatisch getriggert wird
@@ -68,6 +72,7 @@ const timeline = {
                 100
             )
         }
+        */
     }
 }
 

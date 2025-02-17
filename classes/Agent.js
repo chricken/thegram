@@ -11,7 +11,6 @@ class Agent {
     constructor({
         id = ''
     }) {
-
         this.userID = id;
         this.dbConn = nano(`http://${cr.user}:${cr.pw}@${cr.url}`).db;
         this.dbUsers = this.dbConn.use(settings.dbNames.users);
@@ -19,10 +18,22 @@ class Agent {
     }
     // Auch zum Aktualisieren der User-Daten aus der Datenbank
     init() {
+        if (this.user) {
+            return new Promise(resolve => resolve(this))
+        } else {
+            return this.loadUser().then(
+                result => {
+                    this.user = result;
+                    return this;
+                }
+            )
+        }
+    }
+    update() {
         return this.loadUser().then(
             result => {
                 this.user = result;
-                return this.user;
+                return this;
             }
         )
     }
@@ -39,6 +50,8 @@ class Agent {
 
     }
     getPosts(mediaToLoad) {
+        console.log('mediaToLoad', mediaToLoad);
+
         if (mediaToLoad.length) {
             return this.dbPosts.fetch({
                 keys: mediaToLoad
@@ -52,10 +65,16 @@ class Agent {
         }
     }
     getTimeline() {
+        console.log('Agent getTimeline', this.user);
+
         return Promise.all(this.user.subbedUsers.map(subbed => {
+            console.log('subbed user Agent', subbed);
+
             return database.getUser(subbed.userID);
+
         })).then(
             users => {
+                users = users.filter(user => user != null);
                 users.sort((a, b) => b.chDate - a.chDate);
                 return Promise.all(users.map(user =>
                     settings.agents[user._id].getLatestPost()
