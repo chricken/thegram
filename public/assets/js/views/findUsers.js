@@ -39,6 +39,8 @@ const findUsers = {
 
     },
     renderSubbedUsers(payload) {
+        console.log('payload subbed users', payload);
+        
         // Stellt die Daten dar
         const parent = elements.parentSubbedUsers;
 

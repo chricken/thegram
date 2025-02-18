@@ -44,7 +44,7 @@ const userSettings = {
                 // Hier das Objekt mit den Bilddaten einhängen
                 // Das wird auf dem Server dann in ein Bild verwandelt 
                 // und in den Datensatz wird nur noch die URL geschrieben
-                
+
                 user.imgAvatar = value;
                 clipAvatar(value).addEventListener('selected', evt => {
                     user.imgAvatar = evt.detail.img;
@@ -120,7 +120,7 @@ const userSettings = {
             parent,
             onClick() {
                 ws.saveCurrentUser().then(
-                    console.log
+                    res => console.log('Saved user', res)
                 ).catch(
                     console.warn
                 )

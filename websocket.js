@@ -8,6 +8,7 @@ import media from './media.js';
 import handleUsers from './handleUsers.js';
 import authToken from "./authToken.js";
 import Agent from './classes/Agent.js';
+import User from './classes/User.js';
 
 const wsServer = new WebSocketServer({ port: 8080 });
 
@@ -27,49 +28,17 @@ wsServer.on('connection', socket => {
 
         if (msg.type == 'uploadMedia') {
             msg.payload.timestamp = Date.now();
-            media.handleUploaded(settings.uploadPath, msg.payload).then(
-                res => {
-                    // Daten erweitern
-                    res.user.latestPost = res.media.mediaID;
-                    res.user.chDate = Date.now();
-                    res.status = 'done';
-                    return res;
-                }
+            agents[msg.payload.userID].init().then(
+                agent => agent.addPost(msg.payload)
             ).then(
-                res => {
-                    return database.saveUserObject(res.user).then(
-                        () => {
-                            return res
-                        }
-                    ).catch(
-                        err => {
-                            console.warn(err);
-                            return res;
-                        }
-                    )
-                }
-            ).then(
-                res => {
-                    // Daten versenden
+                user => {
                     socket.send(JSON.stringify({
                         type: msg.callbackType,
-                        payload: res
-                    }))
-                    return res.user
-                }
-            ).catch(
-                err => {
-                    socket.send(JSON.stringify({
-                        type: 'uploadStatus',
-                        payload: {
-                            status: 'err',
-                            err
-                        }
+                        payload: user
                     }))
                 }
             )
         } else if (msg.type == 'login') {
-
             database.checkLogin(msg.payload).then(
                 res => {
                     if (res.status == 'success') {
@@ -80,7 +49,6 @@ wsServer.on('connection', socket => {
                                     id: res.payload._id
                                 });
                                 agents[res.payload._id] = agent;
-
                                 return token;
                             }
                         ).then(
@@ -162,13 +130,13 @@ wsServer.on('connection', socket => {
             )
 
         } else if (msg.type == 'getSubbedUsers') {
-            database.getSubbedUsers(msg.payload.userID).then(
-                res => {
-                    socket.send(JSON.stringify({
-                        type: msg.callbackType,
-                        payload: res
-                    }))
-                }
+            return agents[msg.payload.userID].init().then(
+                agent => agent.getSubbedUsers()
+            ).then(
+                res => socket.send(JSON.stringify({
+                    type: msg.callbackType,
+                    payload: res
+                }))
             )
         } else if (msg.type == 'getNewUsers') {
             database.getNewUsers(msg.payload).then(
@@ -183,12 +151,11 @@ wsServer.on('connection', socket => {
             // Nachricht enthält den Namen, der als Antwort zurück gesendet werden soll
             // als "callbackType" 
             // So kann im Client auf die Antwort direkt reagiert werden
-            database.saveUser(msg.payload).then(
-                res => {
-                    // console.log('Save current user', msg.payload);
-                    return agents[msg.payload._id].update().then(
-                        () => res
-                    );
+            // console.log('save current user', msg.payload);
+            agents[msg.payload._id].init().then(
+                agent => {
+                    agent.user = new User(msg.payload);
+                    return agent.saveUser()
                 }
             ).then(
                 res => {

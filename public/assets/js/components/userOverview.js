@@ -23,7 +23,6 @@ const userOverview = (parent, user) => {
                 })
             }
         }
-
     })
 
     dom.create({

@@ -65,25 +65,7 @@ const media = {
             (res) => {
                 // Datensatz um den Pfad erweitern
                 payload.imgNames = res;
-            }
-        ).then(
-            () => {
-                // Bilder entfernen
-                delete payload.imgs;
-                // Zur Datenbank hinzufügen
-                return database.addMedia(payload)
-            }
-        ).then(
-            res => {
-                payload.mediaID = res.id;
-                return database.addMediaToUser(payload.userID, res.id);
-            }
-        ).then(
-            res => {
-                return {
-                    media: payload,
-                    user: res
-                }
+                return payload;
             }
         )
     },

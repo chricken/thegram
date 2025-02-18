@@ -61,7 +61,7 @@ const database = {
         let dbPosts = dbConn.use(settings.dbNames.posts);
         return dbPosts.insert(payload)
     },
-
+/*
     addMediaToUser(userID, mediaID) {
         let dbUsers = dbConn.use(settings.dbNames.users);
 
@@ -84,7 +84,7 @@ const database = {
             () => dbUsers.get(userID)
         )
     },
-
+*/
     getMedia(mediaToLoad) {
         /*
         let dbPosts = dbConn.use(settings.dbNames.posts);

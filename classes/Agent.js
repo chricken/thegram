@@ -4,6 +4,8 @@ import database from '../database.js';
 import settings from '../settings.js'
 import nano from 'nano';
 import User from './User.js';
+import media from '../media.js';
+import Post from './Post.js';
 
 const cr = settings.credentials.db;
 
@@ -29,6 +31,7 @@ class Agent {
             )
         }
     }
+
     update() {
         return this.loadUser().then(
             result => {
@@ -37,21 +40,68 @@ class Agent {
             }
         )
     }
+
+    getSubbedUsers() {
+        console.log('subbed Users', this.user.subbedUsers);
+
+        return this.dbUsers.fetch({
+            keys: this.user.subbedUsers.map(el => el.userID)
+        }).then(
+            res => res.rows.map(row => row.doc)
+        )
+    }
+
     loadUser() {
         return this.dbUsers.get(this.userID)
     }
+
     saveUser() {
-
+        return this.dbUsers.insert(this.user).then(
+            res => {
+                console.log('insert dbUser', res);
+                this.user._rev = res.rev;
+                return this.user;
+            }
+        )
     }
+
     addPost(payload) {
+        // console.log('Agent Add Post', payload);
 
+        return media.handleUploaded(settings.uploadPath, payload).then(
+            payload => {
+                // Bilder entfernen
+                delete payload.imgs;
+                console.log('Daten sind hochgeladen', payload);
+
+                // Zur Datenbank hinzufügen
+                return database.addMedia(payload);
+            }
+        ).then(
+            res => {
+                console.log('Rückgabe addMedia', res);
+                // Daten erweitern
+                this.user.latestPost = res.id;
+                this.user.chDate = Date.now();
+                this.user.posts.push(new Post({ id: res.id }));
+            }
+        ).then(
+            () => this.saveUser()
+        ).then(
+            () => {
+                console.log('aktueller user', this.user._id);
+
+                return this.user
+            }
+        )
     }
+
     removePost(payload) {
 
     }
-    getPosts(mediaToLoad) {
-        console.log('mediaToLoad', mediaToLoad);
 
+    getPosts(mediaToLoad) {
+        // console.log('mediaToLoad', mediaToLoad);
         if (mediaToLoad.length) {
             return this.dbPosts.fetch({
                 keys: mediaToLoad
@@ -64,14 +114,10 @@ class Agent {
             })
         }
     }
+
     getTimeline() {
-        console.log('Agent getTimeline', this.user);
-
         return Promise.all(this.user.subbedUsers.map(subbed => {
-            console.log('subbed user Agent', subbed);
-
             return database.getUser(subbed.userID);
-
         })).then(
             users => {
                 users = users.filter(user => user != null);

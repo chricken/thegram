@@ -108,7 +108,7 @@ const ws = {
             payload => {
                 console.log('uploadad ws', payload);
 
-                settings.user = payload.user;
+                settings.user = payload;
                 settings.user.posts = settings.user.posts.toSorted((a, b) => b.crDate - a.crDate);
                 timeline.reset();
                 return 'Beitrag wurde gespeichert'
