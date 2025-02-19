@@ -3,14 +3,11 @@
 import dom from '../dom.js';
 import ws from '../ws.js';
 import elements from '../elements.js';
-import postOverview from '../components/postOverview.js';
 import languages from '../languages/all.js';
-import observers from '../observers.js';
-import helpers from '../helpers.js';
 import settings from '../settings.js';
 import compInput from '../components/input.js';
 import compTA from '../components/textarea.js';
-import compImgInput from '../components/inpImage.js';
+import compAvatarInput from '../components/avatarImage.js';
 import compInpAddress from '../components/inpAddress.js';
 import compInpContact from '../components/inpContact.js';
 import compInpSocialMedia from '../components/inpSocialMedia.js';
@@ -36,23 +33,6 @@ const userSettings = {
             parent: elements.content
         })
 
-        const { img: previewAvatar } = compImgInput({
-            parent,
-            legend: ln.imgAvatar,
-            value: user.imgAvatar,
-            onChange(value) {
-                // Hier das Objekt mit den Bilddaten einhängen
-                // Das wird auf dem Server dann in ein Bild verwandelt 
-                // und in den Datensatz wird nur noch die URL geschrieben
-
-                user.imgAvatar = value;
-                clipAvatar(value).addEventListener('selected', evt => {
-                    user.imgAvatar = evt.detail.img;
-                    previewAvatar.src = evt.detail.img.data;
-                })
-            }
-        })
-
         compInput({
             parent,
             value: user.username,
@@ -75,12 +55,34 @@ const userSettings = {
         dom.create({
             parent,
             content: ln.crDate + ': ' + new Date(user.crDate).toLocaleString(),
+            cssClassName: 'additionalInfo',
         })
 
         dom.create({
             parent,
             content: ln.chDate + ': ' + new Date(user.chDate).toLocaleString(),
+            cssClassName: 'additionalInfo',
+        })
 
+
+        const { img: previewAvatar } = compAvatarInput({
+            parent,
+            legend: ln.imgAvatar,
+            value: user.imgAvatar,
+            onChange(value) {
+                // Hier das Objekt mit den Bilddaten einhängen
+                // Das wird auf dem Server dann in ein Bild verwandelt 
+                // und in den Datensatz wird nur noch die URL geschrieben
+
+                user.imgAvatar = value;
+                clipAvatar(value).addEventListener('selected', evt => {
+                    user.imgAvatar = evt.detail.img;
+                    previewAvatar.src = evt.detail.img.data;
+                    console.log(evt.detail);
+                    // user.previousImgsAvatar.push(evt.detail.img)
+                })
+
+            }
         })
 
         compInput({
@@ -121,6 +123,8 @@ const userSettings = {
             onClick() {
                 ws.saveCurrentUser().then(
                     res => console.log('Saved user', res)
+                ).then(
+                    userSettings.reset
                 ).catch(
                     console.warn
                 )

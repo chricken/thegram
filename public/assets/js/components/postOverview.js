@@ -39,7 +39,7 @@ const postOverview = (parent, post) => {
     if (post.imgNames.length) {
 
         post.imgNames.forEach((imgName, index) => {
-            console.log('imgNames: ', `url(/getImg/${post.userID}/${imgName})`);
+            // console.log('imgNames: ', `url(/getImg/${post.userID}/${imgName})`);
             let imgPreview = dom.create({
                 cssClassName: `img img_${index}`,
                 parent: container,

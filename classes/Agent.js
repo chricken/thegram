@@ -56,12 +56,31 @@ class Agent {
     }
 
     saveUser() {
-        return this.dbUsers.insert(this.user).then(
-            res => {
-                console.log('insert dbUser', res);
-                this.user._rev = res.rev;
-                return this.user;
+        return new Promise((resolve, reject) => {
+            if (typeof this.user.imgAvatar == 'string') {
+                resolve()
+            } else {
+                media.handleUploadedImage(
+                    settings.uploadPathAvatars,
+                    this.user._id,
+                    this.user.imgAvatar
+                ).then(
+                    filename => {
+                        this.user.imgAvatar = filename;
+                        this.user.previousImgsAvatar.push(filename);
+                        resolve()
+                    }
+                )
             }
+
+        }).then(
+            () => this.dbUsers.insert(this.user).then(
+                res => {
+                    console.log('insert dbUser', res);
+                    this.user._rev = res.rev;
+                    return this.user;
+                }
+            )
         )
     }
 

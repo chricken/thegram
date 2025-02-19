@@ -14,6 +14,7 @@ class User {
         language = 'en',
         type = 0,
         imgAvatar = '',
+        previousImgsAvatar = [],
         crDate = Date.now(),
         chDate = Date.now(),
         latestPost = false,
@@ -34,10 +35,10 @@ class User {
         if (_rev) this._rev = _rev;
 
         Object.assign(this, {
-            username, password, language, type, imgAvatar, crDate, chDate,latestPost,
+            username, password, language, type, imgAvatar, previousImgsAvatar, crDate, chDate, latestPost,
             subbedUsers, posts, preName, surName, description,
             address, contact, socialMedia, shops
-        })
+        }) 
     }
     addFollow(idToFollow) {
         let subbed = new Set(this.subbedUsers);

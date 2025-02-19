@@ -18,6 +18,7 @@ const input = ({
         parent: container,
         content: legend + ': ',
         type: 'span',
+        cssClassName: 'legend',
     })
 
     dom.create({

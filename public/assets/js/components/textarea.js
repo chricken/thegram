@@ -18,6 +18,7 @@ const ta = ({
         parent: container,
         content: legend + ': ',
         type: 'span',
+        cssClassName: 'legend',
     })
 
     const ta = dom.create({

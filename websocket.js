@@ -153,6 +153,8 @@ wsServer.on('connection', socket => {
             // So kann im Client auf die Antwort direkt reagiert werden
             // console.log('save current user', msg.payload);
             agents[msg.payload._id].init().then(
+              
+            ).then(
                 agent => {
                     agent.user = new User(msg.payload);
                     return agent.saveUser()
