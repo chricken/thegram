@@ -198,7 +198,14 @@ wsServer.on('connection', socket => {
             );
 
         } else if (msg.type == 'removePost') {
+            console.log('remove Post', msg.payload);
+            
+            
+            agents[msg.payload._id].init().then(
+                agent => agent.removePost(msg.payload)
+            )
 
+            /* 
             media.removeFiles(settings.uploadPath, msg.payload).then(
                 () => database.removePost(msg.payload)
             ).then(
@@ -214,6 +221,7 @@ wsServer.on('connection', socket => {
                     }))
                 }
             )
+             */
         } else if (msg.type == 'saveComment') {
             // console.log(msg.payload);
             database.saveComment(msg.payload).then(
@@ -222,7 +230,6 @@ wsServer.on('connection', socket => {
                         type: msg.callbackType,
                         payload: {
                             status: 'done',
-
                         }
                     }))
                 }

@@ -4,6 +4,7 @@ import dom from '../dom.js';
 import compInput from './input.js';
 import languages from '../languages/all.js';
 import settings from '../settings.js';
+import foldOpener from './foldOpener.js';
 
 const inpSocialMedia = (parent, socialMedia) => {
 
@@ -11,17 +12,20 @@ const inpSocialMedia = (parent, socialMedia) => {
 
     const container = dom.create({
         parent,
-        cssClassName: 'container',
+        cssClassName: 'container foldable',
     })
 
-    dom.create({
-        type: 'h2',
-        content: ln.socialMedia,
-        parent: container
-    })
-
-    compInput({
+    const containerInputs = foldOpener({
         parent: container,
+        legend: ln.socialMedia,
+        toggleOpenHandler(value) {
+            container.classList.remove('open', 'closed');
+            container.classList.add(value ? 'open' : 'closed');
+        }
+    })
+    
+    compInput({
+        parent: containerInputs,
         value: socialMedia.instagram,
         legend: 'Instagram',
         onInput(value) {
@@ -30,7 +34,7 @@ const inpSocialMedia = (parent, socialMedia) => {
     })
 
     compInput({
-        parent: container,
+        parent: containerInputs,
         value: socialMedia.facebook,
         legend: 'Facebook',
         onInput(value) {
@@ -39,7 +43,7 @@ const inpSocialMedia = (parent, socialMedia) => {
     })
 
     compInput({
-        parent: container,
+        parent: containerInputs,
         value: socialMedia.bluesky,
         legend: 'Bluesky',
         onInput(value) {
@@ -48,7 +52,7 @@ const inpSocialMedia = (parent, socialMedia) => {
     })
 
     compInput({
-        parent: container,
+        parent: containerInputs,
         value: socialMedia.cara,
         legend: 'Cara',
         onInput(value) {
@@ -57,7 +61,7 @@ const inpSocialMedia = (parent, socialMedia) => {
     })
 
     compInput({
-        parent: container,
+        parent: containerInputs,
         value: socialMedia.pinterest,
         legend: 'Pinterest',
         onInput(value) {
@@ -66,7 +70,7 @@ const inpSocialMedia = (parent, socialMedia) => {
     })
 
     compInput({
-        parent: container,
+        parent: containerInputs,
         value: socialMedia.xing,
         legend: 'Xing',
         onInput(value) {
@@ -75,7 +79,7 @@ const inpSocialMedia = (parent, socialMedia) => {
     })
 
     compInput({
-        parent: container,
+        parent: containerInputs,
         value: socialMedia.linkedin,
         legend: 'LinkedIn',
         onInput(value) {
@@ -84,7 +88,7 @@ const inpSocialMedia = (parent, socialMedia) => {
     })
 
     compInput({
-        parent: container,
+        parent: containerInputs,
         value: socialMedia.artstation,
         legend: 'ArtStation',
         onInput(value) {
@@ -93,7 +97,7 @@ const inpSocialMedia = (parent, socialMedia) => {
     })
 
     compInput({
-        parent: container,
+        parent: containerInputs,
         value: socialMedia.deviantart,
         legend: 'DeviantArt',
         onInput(value) {
@@ -102,7 +106,7 @@ const inpSocialMedia = (parent, socialMedia) => {
     })
 
     compInput({
-        parent: container,
+        parent: containerInputs,
         value: socialMedia.behance,
         legend: 'Behance',
         onInput(value) {
@@ -111,7 +115,7 @@ const inpSocialMedia = (parent, socialMedia) => {
     })
 
     compInput({
-        parent: container,
+        parent: containerInputs,
         value: socialMedia.dribble,
         legend: 'Dribble',
         onInput(value) {

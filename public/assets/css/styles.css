@@ -9,6 +9,7 @@
 @import './macro.css';
 @import './fonts.css';
 @import './inputs.css';
+@import './foldable.css';
 
 * {
     font-family: 'allerregular';

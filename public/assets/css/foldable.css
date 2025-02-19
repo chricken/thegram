@@ -1,0 +1,50 @@
+.foldable {
+    position: relative;
+    overflow: hidden;
+
+    .containerFoldable {
+        position: relative;
+        display: block;
+        padding-top: 10px;
+        height: 0;
+        overflow: hidden;
+    }
+
+    .headerFoldable {
+        position: relative;
+        cursor: pointer;
+
+        .icon.iconOpener {
+            position: relative;
+            display: inline-block;
+            /* margin-top: 20px; */
+            font-size: 24px;
+            margin-right: 5px;
+        }
+
+        .icon.iconOpener.open {
+            transform: rotate(90deg);
+        }
+
+        h2 {
+            position: relative;
+            display: inline-block;
+        }
+    }
+
+    .headerFoldable:hover {
+        .icon.iconOpener {
+            color: #696f83;
+        }
+
+        h2 {
+            color: #696f83;
+        }
+    }
+}
+
+.foldable.open {
+    .containerFoldable {
+        /* height: auto; */
+    }
+}

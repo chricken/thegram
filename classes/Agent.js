@@ -97,7 +97,7 @@ class Agent {
     }
 
     removePost(payload) {
-
+        return null
     }
 
     getPosts(mediaToLoad) {

@@ -4,6 +4,7 @@ import dom from '../dom.js';
 import compInput from './input.js';
 import languages from '../languages/all.js';
 import settings from '../settings.js';
+import foldOpener from './foldOpener.js';
 
 const inpShops = (parent, shops) => {
 
@@ -11,19 +12,24 @@ const inpShops = (parent, shops) => {
 
     const container = dom.create({
         parent,
-        cssClassName: 'container',
+        cssClassName: 'container foldable',
     })
 
-    dom.create({
-        type: 'h2',
-        content: ln.shops,
-        parent: container
+    const containerInputs = foldOpener({
+        parent: container,
+        legend: ln.shops,
+        toggleOpenHandler(value) {
+            container.classList.remove('open', 'closed');
+            container.classList.add(value ? 'open' : 'closed');
+        }
     })
+    
+
 
     Object.values(shops).forEach(shop => {
         dom.create({
             type: 'input',
-            parent: container,
+            parent: containerInputs,
             value: shop.name,
             attr: {
                 placeholder: ln.shopname
@@ -34,24 +40,10 @@ const inpShops = (parent, shops) => {
                 }
             }
         })
-        /*
+        
         dom.create({
             type: 'input',
-            parent: container,
-            value: shop.website,
-            attr: {
-                placeholder: ln.website
-            }, 
-            listeners:{
-                input(evt){
-                    shop.name = evt.target.value;
-                }
-            }
-        })
-        */
-        dom.create({
-            type: 'input',
-            parent: container,
+            parent: containerInputs,
             value: shop.profileName,
             attr: {
                 placeholder: ln.profileName
@@ -65,7 +57,7 @@ const inpShops = (parent, shops) => {
         
         dom.create({
             type: 'input',
-            parent: container,
+            parent: containerInputs,
             value: shop.profileURL,
             attr: {
                 placeholder: ln.website
@@ -78,7 +70,7 @@ const inpShops = (parent, shops) => {
         })
         
         dom.create({
-            parent: container,
+            parent: containerInputs,
             type: 'br',
         })
     })
