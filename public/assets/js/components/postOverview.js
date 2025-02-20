@@ -3,11 +3,12 @@
 import dom from '../dom.js';
 import settings from '../settings.js';
 import postDetails from './postDetails.js';
+import userBadge from './userBadge.js';
 
 const postOverview = (parent, post) => {
     // console.log('post overview 8', post);
 
-    const container = dom.create({
+    let container = dom.create({
         cssClassName: 'overview transit postOverview',
         parent,
         listeners: {
@@ -19,6 +20,14 @@ const postOverview = (parent, post) => {
             }
         }
     })
+    
+    // User Badge
+    if (post.userID != settings.user._id) {
+        container = userBadge({
+            parent: container,
+            userID: post.userID
+        })
+    }
 
     if (post.title) {
         dom.create({

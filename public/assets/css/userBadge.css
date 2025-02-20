@@ -1,0 +1,30 @@
+.containerWithUserBadge {
+    position: relative;
+    display: flex;
+}
+
+.containerUserBadge {
+    position: relative;
+}
+
+.containerUserBadge img.avatar {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    /* height: auto; */
+    margin-right: 10px;
+    /* vertical-align: middle; */
+}
+
+.containerUserBadge .username {
+    position: absolute;
+    font-size: 24px;
+    color: rgba(0, 0, 0, .3);
+    transform: rotate(90deg) translateX(70px) translateY(0px);
+    outline: 1px solid #888;
+}
+
+.containerNextToUserBadge {
+    position: relative;
+    display: inline-block;
+}

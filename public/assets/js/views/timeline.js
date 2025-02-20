@@ -55,7 +55,7 @@ const timeline = {
             // Falls doch mal ein leerer Post ankommt ... ignorieren
             .filter(post => post != null)
             .forEach(post => {
-                console.log(post);
+                // console.log(post);
                 postOverview(parent, post)
             })
 

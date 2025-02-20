@@ -27,12 +27,12 @@ const addMedia = () => {
         userID: settings.user._id,
     })
 
-    const selType = selector({
+    selector({
         parent,
-        options:settings.postTypes,
+        options: settings.postTypes,
         title: 'Type of Post',
-        onChange(value){
-            console.log('Type', value);
+        onChange(value) {
+            // console.log('Type', value);
             payload.contentType = value;
         }
     })
@@ -55,7 +55,7 @@ const addMedia = () => {
     })
 
     if (payload._id) {
-        const elShowID = dom.create({
+        dom.create({
             parent,
             cssClassName: 'info',
             content: `ID: ${payload._id}`
@@ -81,12 +81,14 @@ const addMedia = () => {
                 payload.text = elInpText.innerHTML;
                 payload.title = elInpTitle.innerHTML;
 
+                /*
                 dom.create({
                     parent: elements.messages,
                     cssClassName: 'singleMessage',
                     content: 'Uploading',
                 })
-
+                */
+               
                 ws.uploadMedia(payload).then(
                     res => console.log('uploaded', res)
                 ).catch(
@@ -110,9 +112,8 @@ const addMedia = () => {
 
                 files.forEach((file, index) => {
                     if (file) {
-                        // console.log(index);
-
                         const reader = new FileReader();
+
                         reader.onload = evt => {
                             // Bild an Daten anhängen
                             payload.imgs.push({
@@ -121,7 +122,7 @@ const addMedia = () => {
                             });
 
                             // Bild in FE anzeigen
-                            const imagePreview = dom.create({
+                            dom.create({
                                 type: 'img',
                                 parent: elImagePreview,
                                 cssClassName: 'imagePreview',

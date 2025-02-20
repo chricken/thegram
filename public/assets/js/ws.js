@@ -157,6 +157,20 @@ const ws = {
         })
     },
 
+    getUser({
+        userID
+    }) {
+        console.log('ws getUser', userID);
+        return createWSCall({
+            type: 'getUser',
+            payload: {
+                userID: userID
+            }
+        }).then(
+            payload => payload.user
+        )
+    },
+
     saveCurrentUser() {
         console.log('Save current User');
 

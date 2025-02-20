@@ -10,6 +10,7 @@
 @import './fonts.css';
 @import './inputs.css';
 @import './foldable.css';
+@import './userBadge.css';
 
 * {
     font-family: 'allerregular';

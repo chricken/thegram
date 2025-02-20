@@ -153,7 +153,7 @@ wsServer.on('connection', socket => {
             // So kann im Client auf die Antwort direkt reagiert werden
             // console.log('save current user', msg.payload);
             agents[msg.payload._id].init().then(
-              
+
             ).then(
                 agent => {
                     agent.user = new User(msg.payload);
@@ -199,10 +199,25 @@ wsServer.on('connection', socket => {
                 }
             );
 
+        } else if (msg.type == 'getUser') {
+            console.log('getUser', msg.payload);
+
+            database.getUser(msg.payload.userID).then(
+                res => {
+                    console.log('get User result', res);
+
+                    socket.send(JSON.stringify({
+                        type: msg.callbackType,
+                        payload: {
+                            user: res
+                        }
+                    }))
+                }
+            )
         } else if (msg.type == 'removePost') {
             console.log('remove Post', msg.payload);
-            
-            
+
+
             agents[msg.payload._id].init().then(
                 agent => agent.removePost(msg.payload)
             )

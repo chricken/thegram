@@ -10,7 +10,7 @@ import lang from './languages/all.js';
 const prefill = () => {
 
     let ln = lang[settings.lang];
-
+    /* 
     // Oberheader
     dom.create({
         parent: elements.main,
@@ -24,6 +24,7 @@ const prefill = () => {
         content: ln.siteSubName,
         type:'h5'
     })
+    */
 }
 
 export default prefill;
