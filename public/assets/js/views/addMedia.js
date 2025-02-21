@@ -1,13 +1,11 @@
 'use strict';
 
 import dom from '../dom.js';
-import modal from '../components/modal.js';
 import button from '../components/button.js';
 import ws from '../ws.js';
 import helpers from '../helpers.js';
 import elements from '../elements.js';
 import settings from '../settings.js';
-import timeline from './posts.js';
 import randomTexts from '../randomTexts.js';
 import ContentElement from '../classes/ContentElement.js';
 import inpRange from '../components/inpRange.js';
@@ -62,6 +60,27 @@ const addMedia = () => {
         })
     }
 
+
+    const cbIsDraft = dom.create({
+        type: 'input',
+        parent,
+        id: 'cbIsDraft',
+        attr: {
+            type: 'checkbox'
+        }
+    })
+
+    let labelIsDraft = dom.create({
+        type: 'label',
+        parent,
+        content: ln.isDraft
+    })
+
+    labelIsDraft.setAttribute('for', 'cbIsDraft');
+    // console.log('isDraft', payload);
+
+    if (payload.isDraft) cbIsDraft.setAttribute('checked', payload.isDraft);
+
     const elInpText = dom.create({
         // parent: parent.modal,
         parent,
@@ -88,7 +107,7 @@ const addMedia = () => {
                     content: 'Uploading',
                 })
                 */
-               
+
                 ws.uploadMedia(payload).then(
                     res => console.log('uploaded', res)
                 ).catch(

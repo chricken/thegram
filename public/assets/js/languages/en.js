@@ -71,6 +71,8 @@ const en = {
     comment: 'Comment',
     news: 'News',
     send: 'Send',
+    isDraft: 'Draft',
+    forward: 'Forwarder',
 }
 
 export default en

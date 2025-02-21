@@ -1,9 +1,8 @@
 'use strict';
 
 import database from '../database.js';
-import settings from '../settings.js'
+import settings, { agents } from '../settings.js'
 import nano from 'nano';
-import User from './User.js';
 import media from '../media.js';
 import Post from './Post.js';
 
@@ -109,14 +108,30 @@ class Agent {
         ).then(
             () => {
                 console.log('aktueller user', this.user._id);
-
                 return this.user
             }
         )
     }
 
-    removePost(payload) {
-        return null
+    removePost(post) {
+        console.log('Method remove Post', post);
+
+        return media.removeFiles(settings.uploadPath, post).then(
+            () => {
+                console.log('Lösche Dies', post._id, post._rev);
+                return this.dbPosts.destroy(post._id, post._rev)
+            }
+        ).then(
+            res => {
+                console.log(res);
+
+                this.user.posts = this.user.posts.filter(el => {
+                    return el.media != post._id
+                })
+                return this;
+            }
+        )
+
     }
 
     getPosts(mediaToLoad) {
@@ -147,6 +162,7 @@ class Agent {
             }
         )
     }
+
     getLatestPost() {
         return this.dbPosts.get(this.user.latestPost);
     }

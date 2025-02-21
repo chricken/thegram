@@ -81,14 +81,7 @@ const media = {
                     }
                 )
             })
-        })).then(
-            res => {
-                // Wenn die Datei nicht gelöscht werden konnte, ist sie vermutlich einfach nicht da. 
-                // Der Lösch-Prozess soll dann weiter laufen
-                // console.log(res);
-                return res;
-            }
-        )
+        }))
     },
 
 }

@@ -2,6 +2,7 @@
 
 import settings from './settings.js';
 import timeline from './views/posts.js';
+import ContentElement from './classes/ContentElement.js';
 
 let socket;
 
@@ -106,8 +107,6 @@ const ws = {
             payload
         }).then(
             payload => {
-                console.log('uploadad ws', payload);
-
                 settings.user = payload;
                 settings.user.posts = settings.user.posts.toSorted((a, b) => b.crDate - a.crDate);
                 timeline.reset();
@@ -124,7 +123,11 @@ const ws = {
                 userID: settings.user._id,
                 mediaToLoad
             }
-        })
+        }).then(
+            posts => posts
+                .filter(post => post != null)
+                .map(post => new ContentElement(post))
+        )
     },
 
     getTimeline() {
@@ -186,15 +189,17 @@ const ws = {
     },
 
     removePost(postToRemove) {
+        // console.log(postToRemove);
+
         // Post aus der DB entfernen
         return createWSCall({
             type: 'removePost',
             payload: postToRemove
         }).then(
             result => {
-                console.log('Post entfernt?', result);
-                if (result.res.ok) {
-                    settings.user.posts = settings.user.posts.filter(p => p.media != postToRemove._id)
+                if (result) {
+                // console.log('Post entfernt', settings);
+                settings.user = result;
                     return ws.saveCurrentUser()
                 }
             }

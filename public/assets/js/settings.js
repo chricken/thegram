@@ -14,7 +14,7 @@ const settings = {
     lang: 'de',
     postTypes: {
         '0': 'artwork',
-        '1': 'comment',
+        '1': 'forward',
         '2': 'news'
     },
     avatarSize: 300,

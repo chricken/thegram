@@ -13,6 +13,8 @@ const posts = {
     postsToRender: [],
 
     reset() {
+        // console.log('Reset Posts');
+
         // Setzt alle lokalen Einstellungen zurück
         settings.firstLoad = true;
         posts.postsToRender = [];
@@ -20,6 +22,8 @@ const posts = {
         posts.init();
     },
     init() {
+        // console.log('post init');
+
         // Bereitet den Render-Prozess vor, ...
         // ... indem die nächsten Datensätze geladen werden
         if (settings.user) {
@@ -46,6 +50,7 @@ const posts = {
         }
     },
     render() {
+        // console.log('post render', Math.random());
         // Stellt die Daten dar
         const parent = elements.content;
 
@@ -71,6 +76,7 @@ const posts = {
         })
 
         // Der Observer soll nur aktiv sein, wenn noch posts hinzugefügt werden können
+        /*
         if (settings.user.posts.length > posts.postsToRender.length) {
             // Verzögert den Observer hinzufügen, damit der beim Einhängen nicht automatisch getriggert wird
             setTimeout(
@@ -78,6 +84,7 @@ const posts = {
                 100
             )
         }
+            */
     }
 }
 

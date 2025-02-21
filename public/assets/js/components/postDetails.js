@@ -6,7 +6,7 @@ import btnClose from './buttonClose.js';
 import btn from './button.js';
 import languages from '../languages/all.js';
 import ws from '../ws.js';
-import timeline from '../views/posts.js';
+import posts from '../views/posts.js';
 import postComment from './postComment.js';
 
 const postDetails = (post) => {
@@ -111,7 +111,7 @@ const postDetails = (post) => {
                     ws.removePost(post).then(
                         () => {
                             bg.remove();
-                            timeline.reset();
+                            posts.reset();
                         }
                     ).catch(
                         console.warn

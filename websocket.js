@@ -29,7 +29,8 @@ wsServer.on('connection', socket => {
         if (msg.type == 'uploadMedia') {
             msg.payload.timestamp = Date.now();
             agents[msg.payload.userID].init().then(
-                agent => agent.addPost(msg.payload)
+                agent =>
+                    agent.addPost(msg.payload)
             ).then(
                 user => {
                     socket.send(JSON.stringify({
@@ -116,6 +117,8 @@ wsServer.on('connection', socket => {
 
 
         } else if (msg.type == 'getPosts') {
+            console.log('get Post', Math.random());
+
             agents[msg.payload.userID].init().then(
                 agent => {
                     return agent.getPosts(msg.payload.mediaToLoad)
@@ -215,30 +218,20 @@ wsServer.on('connection', socket => {
                 }
             )
         } else if (msg.type == 'removePost') {
-            console.log('remove Post', msg.payload);
+            console.log('remove Post', msg.payload._id);
+            // console.log('remove Post', msg.payload);
 
-
-            agents[msg.payload._id].init().then(
+            agents[msg.payload.userID].init().then(
                 agent => agent.removePost(msg.payload)
+            ).then(
+                agent => agent.saveUser()
+            ).then(
+                user => socket.send(JSON.stringify({
+                    type: msg.callbackType,
+                    payload: user
+                }))
             )
 
-            /* 
-            media.removeFiles(settings.uploadPath, msg.payload).then(
-                () => database.removePost(msg.payload)
-            ).then(
-                () => database.getUser(msg.payload.userID)
-            ).then(
-                res => {
-                    socket.send(JSON.stringify({
-                        type: msg.callbackType,
-                        payload: {
-                            status: 'done',
-                            res
-                        }
-                    }))
-                }
-            )
-             */
         } else if (msg.type == 'saveComment') {
             // console.log(msg.payload);
             database.saveComment(msg.payload).then(

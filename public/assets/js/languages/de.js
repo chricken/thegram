@@ -71,6 +71,8 @@ const de = {
     comment: 'Kommentar',
     news: 'Neuigkeit',
     send: 'Absenden',
+    isDraft: 'Entwurf',
+    forward: 'Weiterleitung',
 }
 
 export default de;

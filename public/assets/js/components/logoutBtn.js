@@ -1,7 +1,5 @@
 'use strict';
 
-import addMedia from '../views/addMedia.js';
-import btn from './button.js';
 import dom from '../dom.js';
 import lang from '../languages/all.js';
 import settings from '../settings.js';
