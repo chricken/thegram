@@ -6,7 +6,6 @@ import postDetails from './postDetails.js';
 import userBadge from './userBadge.js';
 
 const postOverview = (parent, post) => {
-    // console.log('post overview 8', post);
 
     let container = dom.create({
         cssClassName: 'overview transit postOverview',
@@ -20,7 +19,16 @@ const postOverview = (parent, post) => {
             }
         }
     })
-    
+
+    if (post.isDraft) {
+        container.classList.add('isDraft')
+        const markerDraft = dom.create({
+            parent: container,
+            cssClassName:'markerDraft',
+            content: 'Draft'
+        })
+    }
+
     // User Badge
     if (post.userID != settings.user._id) {
         container = userBadge({

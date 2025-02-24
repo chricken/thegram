@@ -28,6 +28,22 @@
     display: block;
 }
 
+.isDraft {
+    margin-left: 50px;
+}
+
+.markerDraft {
+    position: absolute;
+    left: -110px;
+    width: 80px;
+    transform: rotate(270deg);
+    transform-origin: right top;
+    text-align: right;
+    font-family: allerbold;
+    font-size: 24px;
+    color: #aaa;
+  }
+
 .overview:hover {
     background-color: #fff;
     border-color: #000;

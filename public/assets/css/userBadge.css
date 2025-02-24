@@ -5,26 +5,35 @@
 
 .containerUserBadge {
     position: relative;
+    position: absolute;
+    left: -110px;
+    width: 80px;
+    transform: rotate(270deg);
+    transform-origin: right top;
+    text-align: right;
+    font-family: allerbold;
+    font-size: 24px;
+    color: #aaa;
 }
 
 .containerUserBadge img.avatar {
     position: relative;
     width: 50px;
     height: 50px;
-    /* height: auto; */
     margin-right: 10px;
-    /* vertical-align: middle; */
+    left: 0px;
+    transform: rotate(90deg) translateX(30px) translateY(-5px);
 }
 
 .containerUserBadge .username {
     position: absolute;
-    font-size: 24px;
-    color: rgba(0, 0, 0, .3);
-    transform: rotate(90deg) translateX(70px) translateY(0px);
-    outline: 1px solid #888;
+    right: 65px;
+    top: 55px;
+   
 }
 
 .containerNextToUserBadge {
     position: relative;
     display: inline-block;
+    margin-left: 60px;
 }

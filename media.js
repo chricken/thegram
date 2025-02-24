@@ -1,5 +1,6 @@
 'use strict';
 
+import { resourceUsage } from 'process';
 import database from './database.js';
 import fs from 'fs';
 const fsp = fs.promises;
@@ -8,7 +9,10 @@ const media = {
     handleUploadedImage(uploadPath, userID, file, index = 0) {
         let path = uploadPath + userID + '/';
         return fsp.access(path).then(
-            () => { }
+            res => {
+                // console.log(res);
+                return res
+            }
         ).catch(
             () => fsp.mkdir(path)
         ).then(
@@ -50,24 +54,41 @@ const media = {
             }
         )
     },
-    handleUploaded(uploadPath, payload) {
-        return Promise.all(
-            // Array mit Promises 
-            payload.imgs.map((file, index) => {
-                return media.handleUploadedImage(
-                    uploadPath,
-                    payload.userID,
-                    file,
-                    index
-                )
-            })
-        ).then(
-            (res) => {
-                // Datensatz um den Pfad erweitern
-                payload.imgNames = res;
-                return payload;
-            }
-        )
+    async handleUploaded(uploadPath, payload) {
+        const results = [];
+
+        for (const index in payload.imgs) {
+            let file = payload.imgs[index]
+            const result = await media.handleUploadedImage(
+                uploadPath,
+                payload.userID,
+                file,
+                index
+            )
+            results.push(result);
+        }
+        payload.imgNames = results;
+        return payload;
+
+        /*
+         return Promise.all(
+             // Array mit Promises 
+             payload.imgs.map((file, index) => {
+                 return media.handleUploadedImage(
+                     uploadPath,
+                     payload.userID,
+                     file,
+                     index
+                 )
+             })
+         ).then(
+             (res) => {
+                 // Datensatz um den Pfad erweitern
+                 payload.imgNames = res;
+                 return payload;
+             }
+         )
+         */
     },
     removeFiles(uploadPath, post) {
         return Promise.all(post.imgNames.map(imgName => {

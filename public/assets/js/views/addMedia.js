@@ -67,6 +67,13 @@ const addMedia = () => {
         id: 'cbIsDraft',
         attr: {
             type: 'checkbox'
+        },
+        listeners: {
+            input() {
+                payload.isDraft = cbIsDraft.checked;
+                console.log(payload.isDraft);
+                
+            }
         }
     })
 

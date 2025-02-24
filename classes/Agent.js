@@ -41,7 +41,6 @@ class Agent {
     }
 
     getSubbedUsers() {
-        console.log('subbed Users', this.user.subbedUsers);
 
         return this.dbUsers.fetch({
             keys: this.user.subbedUsers.map(el => el.userID)
@@ -75,7 +74,6 @@ class Agent {
         }).then(
             () => this.dbUsers.insert(this.user).then(
                 res => {
-                    console.log('insert dbUser', res);
                     this.user._rev = res.rev;
                     return this.user;
                 }
@@ -84,20 +82,16 @@ class Agent {
     }
 
     addPost(payload) {
-        // console.log('Agent Add Post', payload);
-
         return media.handleUploaded(settings.uploadPath, payload).then(
             payload => {
                 // Bilder entfernen
                 delete payload.imgs;
-                console.log('Daten sind hochgeladen', payload);
 
                 // Zur Datenbank hinzufügen
                 return database.addMedia(payload);
             }
         ).then(
             res => {
-                console.log('Rückgabe addMedia', res);
                 // Daten erweitern
                 this.user.latestPost = res.id;
                 this.user.chDate = Date.now();
@@ -107,23 +101,19 @@ class Agent {
             () => this.saveUser()
         ).then(
             () => {
-                console.log('aktueller user', this.user._id);
                 return this.user
             }
         )
     }
 
     removePost(post) {
-        console.log('Method remove Post', post);
 
         return media.removeFiles(settings.uploadPath, post).then(
             () => {
-                console.log('Lösche Dies', post._id, post._rev);
                 return this.dbPosts.destroy(post._id, post._rev)
             }
         ).then(
             res => {
-                console.log(res);
 
                 this.user.posts = this.user.posts.filter(el => {
                     return el.media != post._id
@@ -135,7 +125,6 @@ class Agent {
     }
 
     getPosts(mediaToLoad) {
-        // console.log('mediaToLoad', mediaToLoad);
         if (mediaToLoad.length) {
             return this.dbPosts.fetch({
                 keys: mediaToLoad
@@ -156,6 +145,7 @@ class Agent {
             users => {
                 users = users.filter(user => user != null);
                 users.sort((a, b) => b.chDate - a.chDate);
+
                 return Promise.all(users.map(user =>
                     settings.agents[user._id].getLatestPost()
                 ));
@@ -164,7 +154,16 @@ class Agent {
     }
 
     getLatestPost() {
-        return this.dbPosts.get(this.user.latestPost);
+
+        return this.dbPosts.get(this.user.latestPost).then(
+            res => {
+                return res;
+            }
+        ).catch(
+            err => {
+                return null
+            }
+        );
     }
 }
 

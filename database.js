@@ -27,7 +27,6 @@ const database = {
 
     checkLogin({ username, password }) {
         let dbUsers = dbConn.use(settings.dbNames.users);
-        // console.log('database', username, password);
 
         return dbUsers.find({
             selector: {
@@ -35,7 +34,6 @@ const database = {
             }
         }).then(
             res => {
-                // console.log('39', 'check PW');
 
                 if (res.docs.length == 0) return ({
                     status: 'err',
@@ -61,30 +59,7 @@ const database = {
         let dbPosts = dbConn.use(settings.dbNames.posts);
         return dbPosts.insert(payload)
     },
-/*
-    addMediaToUser(userID, mediaID) {
-        let dbUsers = dbConn.use(settings.dbNames.users);
 
-        return dbUsers.get(userID).then(
-            // Aus den Daten eine neues Objekt erzeugen, um sicherzugehen, dass alle Attribute dabei sind. Auch neu erfundene
-            payload => new User(payload)
-        ).then(
-            payload => {
-                // console.log('addMediaToUser', payload);
-                payload.posts.push({
-                    media: mediaID,
-                    crDate: Date.now(),
-                    crDateClear: new Date().toLocaleTimeString(),
-                });
-                return payload;
-            }
-        ).then(
-            payload => dbUsers.insert(payload)
-        ).then(
-            () => dbUsers.get(userID)
-        )
-    },
-*/
     getMedia(mediaToLoad) {
         /*
         let dbPosts = dbConn.use(settings.dbNames.posts);
@@ -241,7 +216,6 @@ const database = {
     },
 
     getUser(id) {
-        // console.log('getUser database 244', id);
 
         let dbUsers = dbConn.use(settings.dbNames.users);
 

@@ -4,7 +4,6 @@ import { WebSocketServer } from "ws";
 import settings, { agents } from './settings.js';
 import helpers from './helpers.js';
 import database from './database.js';
-import media from './media.js';
 import handleUsers from './handleUsers.js';
 import authToken from "./authToken.js";
 import Agent from './classes/Agent.js';
@@ -27,7 +26,10 @@ wsServer.on('connection', socket => {
         msg = JSON.parse(msg.toString());
 
         if (msg.type == 'uploadMedia') {
+
             msg.payload.timestamp = Date.now();
+            // console.log('Hochgeladene Daten', msg.payload);
+            
             agents[msg.payload.userID].init().then(
                 agent =>
                     agent.addPost(msg.payload)
@@ -36,7 +38,7 @@ wsServer.on('connection', socket => {
                     socket.send(JSON.stringify({
                         type: msg.callbackType,
                         payload: user
-                    }))
+                    })) 
                 }
             )
         } else if (msg.type == 'login') {
@@ -110,14 +112,13 @@ wsServer.on('connection', socket => {
                     }))
                 }
             ).catch(
-                () => {
-                    console.log('There is an error while loading timeline 404');
+                (err) => {
+                    console.log(err);
                 }
             )
 
 
         } else if (msg.type == 'getPosts') {
-            console.log('get Post', Math.random());
 
             agents[msg.payload.userID].init().then(
                 agent => {
@@ -154,7 +155,6 @@ wsServer.on('connection', socket => {
             // Nachricht enthält den Namen, der als Antwort zurück gesendet werden soll
             // als "callbackType" 
             // So kann im Client auf die Antwort direkt reagiert werden
-            // console.log('save current user', msg.payload);
             agents[msg.payload._id].init().then(
 
             ).then(
@@ -171,14 +171,11 @@ wsServer.on('connection', socket => {
                             result: res
                         }
                     }))
-
                 }
             )
         } else if (msg.type == 'register') {
-            // console.log(msg.payload);
             handleUsers.register(msg.payload).then(
                 res => {
-                    // console.log('websocket 119', res);
 
                     socket.send(JSON.stringify({
                         type: msg.callbackType,
@@ -190,8 +187,6 @@ wsServer.on('connection', socket => {
                 }
             ).catch(
                 err => {
-                    console.log('websocket 131', err);
-
                     socket.send(JSON.stringify({
                         type: msg.callbackType,
                         payload: {
@@ -203,12 +198,9 @@ wsServer.on('connection', socket => {
             );
 
         } else if (msg.type == 'getUser') {
-            console.log('getUser', msg.payload);
 
             database.getUser(msg.payload.userID).then(
                 res => {
-                    console.log('get User result', res);
-
                     socket.send(JSON.stringify({
                         type: msg.callbackType,
                         payload: {
@@ -218,9 +210,6 @@ wsServer.on('connection', socket => {
                 }
             )
         } else if (msg.type == 'removePost') {
-            console.log('remove Post', msg.payload._id);
-            // console.log('remove Post', msg.payload);
-
             agents[msg.payload.userID].init().then(
                 agent => agent.removePost(msg.payload)
             ).then(
@@ -233,7 +222,6 @@ wsServer.on('connection', socket => {
             )
 
         } else if (msg.type == 'saveComment') {
-            // console.log(msg.payload);
             database.saveComment(msg.payload).then(
                 res => {
                     socket.send(JSON.stringify({
