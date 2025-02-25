@@ -18,6 +18,7 @@ const settings = {
         '2': 'news'
     },
     avatarSize: 300,
+    postPreviewMaxLength:280,
 }
 
 export default settings;

@@ -20,6 +20,7 @@ class User {
         latestPost = false,
         subbedUsers = [],
         posts = [],
+        comments = [],
         preName = '',
         surName = '',
         description = '',
@@ -36,9 +37,9 @@ class User {
 
         Object.assign(this, {
             username, password, language, type, imgAvatar, previousImgsAvatar, crDate, chDate, latestPost,
-            subbedUsers, posts, preName, surName, description,
+            subbedUsers, posts, comments, preName, surName, description,
             address, contact, socialMedia, shops
-        }) 
+        })
     }
     addFollow(idToFollow) {
         let subbed = new Set(this.subbedUsers);

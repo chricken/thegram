@@ -18,6 +18,7 @@ class ContentElement {
         comments = [],
         forwardedPostID = '',
         isDraft = false,
+        timestamp='',
         progress = 0,     // Wert zwischen 0 und 1
         AIInfluence = {
             concept: 0,
@@ -29,7 +30,7 @@ class ContentElement {
         Object.assign(this, {
             title, text, imgs, imgNames, userID, type, tags,
             likes, dislikes, comments, isDraft,
-            forwardedPostID, progress, AIInfluence
+            forwardedPostID, progress, AIInfluence, timestamp
         })
         if (_id) this._id = _id;
         if (_rev) this._rev = _rev;

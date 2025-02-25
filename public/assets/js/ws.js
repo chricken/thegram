@@ -132,7 +132,7 @@ const ws = {
 
     getTimeline() {
         // Return to call
-        console.log('get Timeline');
+        // console.log('get Timeline');
 
         return createWSCall({
             type: 'getTimeline',
@@ -160,10 +160,21 @@ const ws = {
         })
     },
 
+    getComment(commentID) {
+        return createWSCall({
+            type: 'getComment',
+            payload: {
+                commentID
+            }
+        }).then(
+            res => res.comment
+        )
+    },
+
     getUser({
         userID
     }) {
-        console.log('ws getUser', userID);
+        // console.log('ws getUser', userID);
         return createWSCall({
             type: 'getUser',
             payload: {
@@ -198,8 +209,8 @@ const ws = {
         }).then(
             result => {
                 if (result) {
-                // console.log('Post entfernt', settings);
-                settings.user = result;
+                    // console.log('Post entfernt', settings);
+                    settings.user = result;
                     return ws.saveCurrentUser()
                 }
             }
@@ -212,9 +223,9 @@ const ws = {
             type: 'saveComment',
             payload: comment
         }).then(
-            console.log
-        ).catch(
-            console.warn
+            payload => {
+                settings.user = payload.user;
+            }
         )
 
     },

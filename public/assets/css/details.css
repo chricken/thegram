@@ -71,4 +71,17 @@
              margin-right: 0px;
          }
      }
+
+     .containerComment {
+         position: relative;
+         border: 1px solid #aaa;
+         border-radius: 5px;
+         margin-bottom: 5px;
+         padding: 5px;
+     }
+     .info {
+        position: relative;
+        color: rgba(0,0,0,.7);
+        font-size:.8em;
+     }
  }

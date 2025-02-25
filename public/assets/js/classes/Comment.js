@@ -2,16 +2,24 @@
 
 class Comment {
     constructor({
+        title='',
         text = '',
         user = {},
-        post = {}
+        post = null,
+        comment = null,     // Falls die eine Antwort auf einen Kommentar ist
     }) {
         this.userID = user._id;
         this.crDate = Date.now();
-        this.postID = post._id;
+
+        if (post) this.postID = post._id;
+        if (comment) this.commentID = comment._id;
+        
+        this.title = title;
         this.text = text;
+
         this.likes = [];  // Array mit den IDs der likenden Personen, damit niemand mehrfach liken kann
         this.dislikes = [];
+        this.comments = []
     }
 }
 

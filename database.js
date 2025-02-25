@@ -216,7 +216,6 @@ const database = {
     },
 
     getUser(id) {
-
         let dbUsers = dbConn.use(settings.dbNames.users);
 
         return dbUsers.get(id).then(
@@ -260,10 +259,46 @@ const database = {
         )
     },
 
+    addCommentToPost(comment) {
+        let dbPosts = dbConn.use(settings.dbNames.posts);
+
+        return dbPosts.get(comment.postID).then(
+            post => {
+                post.comments.push(comment._id);
+                return post;
+            }
+        ).then(
+            post => dbPosts.insert(post)
+        )
+    },
+    addCommentToComment(comment) {
+        let dbComments = dbConn.use(settings.dbNames.comments);
+        console.log('anzuhängender Kommentar: ', comment);
+
+        return dbComments.get(comment.commentID).then(
+            post => {
+                post.comments.push(comment._id);
+                return post;
+            }
+        ).then(
+            post => dbComments.insert(post)
+        )
+    },
+
+    getComment(commentID) {
+        let dbComments = dbConn.use(settings.dbNames.comments);
+        return dbComments.get(commentID).then(
+            res => {
+                // console.log(res);
+                return res;
+            }
+        )
+    },
+
     saveComment(comment) {
         let dbComments = dbConn.use(settings.dbNames.comments);
 
-        dbComments.insert(comment)
+        return dbComments.insert(comment)
 
     },
 }

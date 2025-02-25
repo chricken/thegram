@@ -28,15 +28,16 @@ const userBadge = ({
                 parent: containerBadge,
                 type: 'img',
                 cssClassName: 'avatar',
-                src: `getImg/${userID}/${user.imgAvatar}/isAvatar`,
-                listener:{
+                attr:{
+                    src: `getImg/${userID}/${user.imgAvatar}/isAvatar`,
+                },
+                listeners:{
                     error(evt){
-                        console.log('Error');
-                        
-                        evt.target.src = `getImg/dummy/404.png/isAvatar`;
+                        evt.target.src = `/assets/img/profile_404.png`;
                     }
                 }
             })
+
 
             dom.create({
                 parent: containerBadge,

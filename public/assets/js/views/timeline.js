@@ -13,7 +13,7 @@ const timeline = {
     postsToRender: [],
 
     reset() {
-        console.log('Reset Timeline');
+        // console.log('Reset Timeline');
 
         // Setzt alle lokalen Einstellungen zurück
         settings.firstLoad = true;
@@ -25,10 +25,10 @@ const timeline = {
         // Bereitet den Render-Prozess vor, ...
         // ... indem die nächsten Datensätze geladen werden
         if (settings.user) {
-            console.log('init');
+            // console.log('init');
             ws.getTimeline().then(
                 payload => {
-                    console.log(payload);
+                    // console.log(payload);
 
                     timeline.postsToRender.push(...payload);
                     timeline.render();

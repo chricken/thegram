@@ -29,7 +29,7 @@ wsServer.on('connection', socket => {
 
             msg.payload.timestamp = Date.now();
             // console.log('Hochgeladene Daten', msg.payload);
-            
+
             agents[msg.payload.userID].init().then(
                 agent =>
                     agent.addPost(msg.payload)
@@ -38,7 +38,7 @@ wsServer.on('connection', socket => {
                     socket.send(JSON.stringify({
                         type: msg.callbackType,
                         payload: user
-                    })) 
+                    }))
                 }
             )
         } else if (msg.type == 'login') {
@@ -221,13 +221,56 @@ wsServer.on('connection', socket => {
                 }))
             )
 
+        } else if (msg.type == 'getComment') {
+            database.getComment(msg.payload.commentID).then(
+                comment => {
+                    socket.send(JSON.stringify({
+                        type: msg.callbackType,
+                        payload: {
+                            comment
+                        }
+                    }))
+                }
+            )
+
         } else if (msg.type == 'saveComment') {
+            console.log('Kommentar speichern', msg.payload);
+
             database.saveComment(msg.payload).then(
+                // Kommentar im User ablegen
+                res => {
+                    msg.payload._id = res.id;
+                    // console.log('neuer Kommentar: ', msg.payload);
+
+                    return agents[msg.payload.userID].init()
+                }
+            ).then(
+                agent => agent.addComment(msg.payload)
+            ).then(
+                // Kommentar im Post / Kommentar ablegen
+                user => {
+                    console.log('Kommentar im Kommntar einhängen', msg.payload);
+                    
+                    if (msg.payload.postID) {
+                        // console.log('Kommentar zu Post', msg.payload.postID);
+                        return database.addCommentToPost(msg.payload)
+                    } else if (msg.payload.commentID) {
+                        console.log('Kommentar zu Kommentar', msg.payload.commentID);
+                        return database.addCommentToComment(msg.payload)
+                    }
+                }
+            ).then(
+                () => {
+                    console.log('Kommentar angehängt', msg.payload);
+                    
+                 return   agents[msg.payload.userID].init()
+                }
+            ).then(
                 res => {
                     socket.send(JSON.stringify({
                         type: msg.callbackType,
                         payload: {
-                            status: 'done',
+                            user: res.user
                         }
                     }))
                 }

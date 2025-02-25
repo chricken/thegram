@@ -7,6 +7,8 @@ import userBadge from './userBadge.js';
 
 const postOverview = (parent, post) => {
 
+    // console.log('post', post);
+
     let container = dom.create({
         cssClassName: 'overview transit postOverview',
         parent,
@@ -24,7 +26,7 @@ const postOverview = (parent, post) => {
         container.classList.add('isDraft')
         const markerDraft = dom.create({
             parent: container,
-            cssClassName:'markerDraft',
+            cssClassName: 'markerDraft',
             content: 'Draft'
         })
     }
@@ -68,8 +70,8 @@ const postOverview = (parent, post) => {
             dom.create({
                 type: 'img',
                 listeners: {
-                    error(evt) {
-                        console.log(`Bild "/getImg/${post.userID}/${imgName}" konnte nicht geladen werden.`);
+                    error() {
+                        // console.log(`Bild "/getImg/${post.userID}/${imgName}" konnte nicht geladen werden.`);
                         imgPreview.style.backgroundImage = 'url(/assets/img/404.png)';
                     }
                 },
@@ -81,9 +83,13 @@ const postOverview = (parent, post) => {
     }
 
     if (post.text) {
+        let text = post.text;
+        if (text.length > settings.postPreviewMaxLength + 5)
+            text = text.substring(0, settings.postPreviewMaxLength) + '...';
+
         dom.create({
             parent: container,
-            content: post.text
+            content: text
         })
     }
 

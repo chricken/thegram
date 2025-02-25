@@ -134,13 +134,89 @@ const postDetails = (post) => {
             parent: containerUI,
             isEncapsuled: false,
             onClick() {
-                postComment({
-                    parent: container,
+                let elPostComment = postComment({
+                    parent: containerUI,
                     post
+                })
+                elPostComment.addEventListener('saved', () => {
+                    // Post neu laden
+                    console.log('Comment saved');
+                    bg.remove();
+                    postDetails(post);
                 })
             }
         })
     }
+
+
+
+    // Kommentare anzeigen
+    const containerComments = dom.create({
+        parent: container,
+        cssClassName: 'container containerComments'
+    })
+
+    Promise.all(
+        post.comments.map(commentID => ws.getComment(commentID))
+    ).then(
+        comments => {
+            comments.toSorted((a, b) => {
+                console.log(b.crDate, a.crDate);
+                return b.crDate - a.crDate
+            }).forEach((comment, index) => {
+
+                console.log(index, comment);
+
+                // Das hier muss eine Funktion sein, um responsiv aufgerufen zu werden
+
+                const containerComment = dom.create({
+                    cssClassName: 'containerComment',
+                    parent: containerComments
+                })
+
+                const headerContainer = dom.create({
+                    type: 'div',
+                    parent: containerComment
+                })
+                dom.create({
+                    type: 'span',
+                    content: comment.title,
+                    parent: headerContainer,
+                    cssClassName: 'header'
+                })
+
+                dom.create({
+                    type: 'span',
+                    cssClassName: 'info',
+                    content: ' - created: ' + new Date(comment.crDate).toLocaleString(),
+                    parent: headerContainer
+                })
+
+                dom.create({
+                    type: 'p',
+                    content: comment.text,
+                    parent: containerComment
+                })
+                btn({
+                    legend: ln.addComment,
+                    parent: containerComment,
+                    isEncapsuled: false,
+                    onClick() {
+                        let elPostComment = postComment({
+                            parent: containerComment,
+                            comment
+                        })
+                        elPostComment.addEventListener('saved', () => {
+                            // Post neu laden
+                            console.log('Comment saved');
+                            bg.remove();
+                            postDetails(post);
+                        })
+                    }
+                })
+            })
+        }
+    )
 
     // Close-Button
     btnClose({

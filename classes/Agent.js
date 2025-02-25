@@ -100,9 +100,18 @@ class Agent {
         ).then(
             () => this.saveUser()
         ).then(
-            () => {
-                return this.user
-            }
+            () => this.user
+        )
+    }
+
+    addComment(payload) {
+        return new Promise((resolve, reject) => {
+            this.user.comments.push(payload._id);
+            resolve()
+        }).then(
+            () => this.saveUser()
+        ).then(
+            () => this.user
         )
     }
 
@@ -130,6 +139,11 @@ class Agent {
                 keys: mediaToLoad
             }).then(
                 res => res.rows.map(row => row.doc)
+            ).then(
+                res => {
+                    // console.log(res);
+                    return res;
+                }
             )
         } else {
             return new Promise(resolve => {

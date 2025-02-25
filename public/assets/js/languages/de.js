@@ -3,7 +3,7 @@
 const de = {
     siteName: 'artSphere',
     siteSubName: 'Eine Social Media Plattform für grafische Kunst und Künstler.',
-    posts: 'Meine Beiträge',
+    posts: 'Meine Inhalte',
     timeline: 'Timeline',
     created: 'Angelegt',
     lastChange: 'Letzte Änderung',
@@ -73,6 +73,8 @@ const de = {
     send: 'Absenden',
     isDraft: 'Entwurf',
     forward: 'Weiterleitung',
+    textContent: 'Text',
+    titleContent: 'Überschrift',
 }
 
 export default de;

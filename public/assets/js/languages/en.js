@@ -3,7 +3,7 @@
 const en = {
     siteName: 'artSphere',
     siteSubName: 'A social media platform for graphical artists and art.',
-    posts: 'My Posts',
+    posts: 'My Content',
     timeline: 'Timeline',
     created: 'Created',
     lastChange: 'Latest Change',
@@ -73,6 +73,8 @@ const en = {
     send: 'Send',
     isDraft: 'Draft',
     forward: 'Forwarder',
+    textContent: 'Text',
+    titleContent: 'Title',
 }
 
 export default en

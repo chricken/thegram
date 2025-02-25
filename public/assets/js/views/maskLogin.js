@@ -17,7 +17,6 @@ const maskLogin = () => {
 
     elements.content.innerHTML = '';
 
-
     const container = dom.create({
         type: 'div',
         parent: elements.content,

@@ -9,7 +9,8 @@ import ws from '../ws.js';
 
 const postComment = ({
     parent = null,
-    post = {},
+    post = null,
+    comment = null
 }) => {
 
     let ln = languages[settings.lang];
@@ -25,9 +26,25 @@ const postComment = ({
         parent: container
     })
 
+    const taTitle = dom.create({
+        type: 'input',
+        parent: container,
+        attr: {
+            placeholder: ln.titleContent
+        }
+    })
+
+    dom.create({
+        type: 'br',
+        parent: container
+    })
+
     const taComment = dom.create({
         type: 'textarea',
-        parent: container
+        parent: container,
+        attr: {
+            placeholder: ln.textContent
+        }
     })
 
     button({
@@ -36,22 +53,25 @@ const postComment = ({
         onClick() {
             console.log(settings.user._id);
 
-            const comment = new Comment({
+            const myComment = new Comment({
+                title: taTitle.value,
                 text: taComment.value,
                 user: settings.user,
-                post
+                post,
+                comment
             })
 
-            ws.saveComment(comment).then(
-                res => {
-                    console.log(res);
+            ws.saveComment(myComment).then(
+                () => {
+                    let myEvent = new CustomEvent('saved');
+                    container.dispatchEvent(myEvent);
                 }
             ).catch(
                 console.warn
             )
         }
     })
-
+    return container
 }
 
 export default postComment;
