@@ -4,7 +4,7 @@ import express from 'express';
 import routes from './routes.js';
 import database from './database.js';
 import websocket from './websocket.js';
-import Agent from './classes/Agent.js';
+import Agent from './classes/AgentUser.js';
 import settings, {agents} from './settings.js';
 
 const server = express();

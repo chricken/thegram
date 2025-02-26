@@ -1,12 +1,13 @@
 'use strict';
 
 import { WebSocketServer } from "ws";
-import settings, { agents } from './settings.js';
+import settings, { agents, agentsPosts } from './settings.js';
 import helpers from './helpers.js';
 import database from './database.js';
 import handleUsers from './handleUsers.js';
 import authToken from "./authToken.js";
-import Agent from './classes/Agent.js';
+import Agent from './classes/AgentUser.js';
+import AgentPost from './classes/AgentPost.js';
 import User from './classes/User.js';
 
 const wsServer = new WebSocketServer({ port: 8080 });
@@ -210,6 +211,7 @@ wsServer.on('connection', socket => {
                 }
             )
         } else if (msg.type == 'removePost') {
+
             agents[msg.payload.userID].init().then(
                 agent => agent.removePost(msg.payload)
             ).then(
@@ -240,8 +242,6 @@ wsServer.on('connection', socket => {
                 // Kommentar im User ablegen
                 res => {
                     msg.payload._id = res.id;
-                    // console.log('neuer Kommentar: ', msg.payload);
-
                     return agents[msg.payload.userID].init()
                 }
             ).then(
@@ -249,22 +249,14 @@ wsServer.on('connection', socket => {
             ).then(
                 // Kommentar im Post / Kommentar ablegen
                 user => {
-                    console.log('Kommentar im Kommntar einhängen', msg.payload);
-                    
                     if (msg.payload.postID) {
-                        // console.log('Kommentar zu Post', msg.payload.postID);
                         return database.addCommentToPost(msg.payload)
                     } else if (msg.payload.commentID) {
-                        console.log('Kommentar zu Kommentar', msg.payload.commentID);
                         return database.addCommentToComment(msg.payload)
                     }
                 }
             ).then(
-                () => {
-                    console.log('Kommentar angehängt', msg.payload);
-                    
-                 return   agents[msg.payload.userID].init()
-                }
+                () => agents[msg.payload.userID].init()
             ).then(
                 res => {
                     socket.send(JSON.stringify({
@@ -275,6 +267,18 @@ wsServer.on('connection', socket => {
                     }))
                 }
             )
+        } else if (msg.type == 'addLike') {
+            console.log('Add Like: ', agentsPosts, msg.payload.postID);
+
+            // Hier muss zunächst gecheckt werden, ob der Agent in der Sammlung exostiert, ggf angelegt werden und mit einem Timer wieder entfernt werden
+            // Vielleicht mit einer Static Methode?
+
+            agentsPosts[msg.payload.postID].init().then(
+                agentPost => agentPost.addLike(msg.payload)
+            ).then(
+                res => console.log(res)
+            )
+
         }
 
     })

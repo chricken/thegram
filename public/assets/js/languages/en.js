@@ -75,6 +75,8 @@ const en = {
     forward: 'Forwarder',
     textContent: 'Text',
     titleContent: 'Title',
+    like: 'I like',
+    dislike: 'Don\'t like',
 }
 
 export default en

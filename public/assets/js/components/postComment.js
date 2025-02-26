@@ -56,9 +56,9 @@ const postComment = ({
             const myComment = new Comment({
                 title: taTitle.value,
                 text: taComment.value,
-                user: settings.user,
+                userID: settings.user._id,
                 post,
-                comment
+                comment,
             })
 
             ws.saveComment(myComment).then(

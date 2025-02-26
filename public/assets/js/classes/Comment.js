@@ -1,14 +1,15 @@
 'use strict';
 
+import settings from "../settings.js";
+
 class Comment {
     constructor({
         title='',
         text = '',
-        user = {},
         post = null,
         comment = null,     // Falls die eine Antwort auf einen Kommentar ist
     }) {
-        this.userID = user._id;
+        this.userID = settings.user._id;
         this.crDate = Date.now();
 
         if (post) this.postID = post._id;

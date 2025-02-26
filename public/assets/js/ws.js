@@ -219,6 +219,8 @@ const ws = {
     },
 
     saveComment(comment) {
+        console.log('Neuer Kommentar', comment);
+
         return createWSCall({
             type: 'saveComment',
             payload: comment
@@ -229,6 +231,24 @@ const ws = {
         )
 
     },
+
+    addLike({ postID, commentID, userID }) {
+        console.log(postID, commentID);
+
+        return createWSCall({
+            type: 'addLike',
+            payload: {
+                postID, commentID,
+                userID: settings.user._id,
+            }
+        }).then(
+            payload => {
+                if(this.post.likes.some(like => like.userID == userID))
+                settings.user = payload.user;
+            }
+        )
+
+    }
 }
 
 export default ws;

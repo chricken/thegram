@@ -8,7 +8,7 @@ import Post from './Post.js';
 
 const cr = settings.credentials.db;
 
-class Agent {
+class AgentUser {
     constructor({
         id = ''
     }) {
@@ -41,12 +41,15 @@ class Agent {
     }
 
     getSubbedUsers() {
-
-        return this.dbUsers.fetch({
-            keys: this.user.subbedUsers.map(el => el.userID)
-        }).then(
-            res => res.rows.map(row => row.doc)
-        )
+        if (this.user.subbedUsers.length) {
+            return this.dbUsers.fetch({
+                keys: this.user.subbedUsers.map(el => el.userID)
+            }).then(
+                res => res.rows.map(row => row.doc)
+            )
+        } else {
+            return new Promise((resolve) => resolve([]))
+        }
     }
 
     loadUser() {
@@ -93,8 +96,10 @@ class Agent {
         ).then(
             res => {
                 // Daten erweitern
-                this.user.latestPost = res.id;
-                this.user.chDate = Date.now();
+                if (!payload.isDraft) {
+                    this.user.latestPost = res.id;
+                    this.user.chDate = Date.now();
+                }
                 this.user.posts.push(new Post({ id: res.id }));
             }
         ).then(
@@ -181,4 +186,4 @@ class Agent {
     }
 }
 
-export default Agent;
+export default AgentUser;

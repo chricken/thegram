@@ -65,7 +65,7 @@ const userSettings = {
         })
 
 
-        const { img: previewAvatar } = compAvatarInput({
+        const { imgAvatar: previewAvatar } = compAvatarInput({
             parent,
             legend: ln.imgAvatar,
             value: user.imgAvatar,

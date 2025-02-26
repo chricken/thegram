@@ -8,6 +8,7 @@ import languages from '../languages/all.js';
 import ws from '../ws.js';
 import posts from '../views/posts.js';
 import postComment from './postComment.js';
+import compComment from './comment.js';
 
 const postDetails = (post) => {
     let ln = languages[settings.lang];
@@ -35,9 +36,12 @@ const postDetails = (post) => {
         type: 'h3'
     })
 
-    // Detailbild
+    // imgDetail wird im if-Scope beschrieben
     let imgDetail
+
     let imgsOverview = [];
+    console.log(post.imgNames);
+    
     if (post.imgNames.length > 0) {
         let path = `/getImg/${post.userID}/${post.imgNames[currentIndex]}`;
 
@@ -47,6 +51,11 @@ const postDetails = (post) => {
             parent: container,
             attr: {
                 src: path
+            },
+            listeners:{
+                error(){
+                    imgDetail.src = '/assets/img/404.png'
+                }
             }
         })
     }
@@ -92,7 +101,6 @@ const postDetails = (post) => {
         content: post.text,
     })
 
-
     // Interaktion 
     const containerUI = dom.create({
         parent: container,
@@ -130,6 +138,15 @@ const postDetails = (post) => {
         })
     } else {
         btn({
+            legend: ln.like,
+            parent: containerUI,
+            onClick(){
+                ws.addLike({
+                    postID: post._id,
+                })
+            }
+        })
+        btn({
             legend: ln.addComment,
             parent: containerUI,
             isEncapsuled: false,
@@ -160,61 +177,25 @@ const postDetails = (post) => {
         post.comments.map(commentID => ws.getComment(commentID))
     ).then(
         comments => {
-            comments.toSorted((a, b) => {
-                console.log(b.crDate, a.crDate);
-                return b.crDate - a.crDate
-            }).forEach((comment, index) => {
+            comments
+                .toSorted((a, b) => b.crDate - a.crDate)
+                .forEach((comment, index) => {
+                    console.log(index, comment.comments);
 
-                console.log(index, comment);
+                    const elComment = compComment({
+                        payload: comment,
+                        index,
+                        parent: containerComments
+                    })
 
-                // Das hier muss eine Funktion sein, um responsiv aufgerufen zu werden
+                    elComment.addEventListener('saved', () => {
+                        // Post neu laden
+                        console.log('Comment saved');
+                        bg.remove();
+                        postDetails(post);
+                    })
 
-                const containerComment = dom.create({
-                    cssClassName: 'containerComment',
-                    parent: containerComments
                 })
-
-                const headerContainer = dom.create({
-                    type: 'div',
-                    parent: containerComment
-                })
-                dom.create({
-                    type: 'span',
-                    content: comment.title,
-                    parent: headerContainer,
-                    cssClassName: 'header'
-                })
-
-                dom.create({
-                    type: 'span',
-                    cssClassName: 'info',
-                    content: ' - created: ' + new Date(comment.crDate).toLocaleString(),
-                    parent: headerContainer
-                })
-
-                dom.create({
-                    type: 'p',
-                    content: comment.text,
-                    parent: containerComment
-                })
-                btn({
-                    legend: ln.addComment,
-                    parent: containerComment,
-                    isEncapsuled: false,
-                    onClick() {
-                        let elPostComment = postComment({
-                            parent: containerComment,
-                            comment
-                        })
-                        elPostComment.addEventListener('saved', () => {
-                            // Post neu laden
-                            console.log('Comment saved');
-                            bg.remove();
-                            postDetails(post);
-                        })
-                    }
-                })
-            })
         }
     )
 

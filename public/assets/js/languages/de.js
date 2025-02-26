@@ -75,6 +75,8 @@ const de = {
     forward: 'Weiterleitung',
     textContent: 'Text',
     titleContent: 'Überschrift',
+    like: 'Mag ich',
+    dislike: 'Mag ich nicht',
 }
 
 export default de;
