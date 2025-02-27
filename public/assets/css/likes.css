@@ -1,0 +1,26 @@
+.container.likes {
+    position: relative;
+    display: inline-block;
+
+    .btnAdd {
+        position: relative;
+        display: inline-block;
+        border: 1px solid #000;
+        min-width: 15px;
+        min-height: 15px;
+        padding: 5px;
+        font-size: 20px;
+        text-align: center;
+        margin-left: 5px;
+        border-radius: 5px;
+        background-color: #bbb;
+        transition: all 300ms;
+        cursor: pointer;
+    }
+
+
+    .btnAdd:hover {
+        background-color: #eee;
+
+    }
+}

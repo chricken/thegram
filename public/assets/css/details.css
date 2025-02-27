@@ -72,18 +72,26 @@
          }
      }
 
-     .containerComment {
-         position: relative;
-         border: 1px solid #aaa;
-         border-radius: 5px;
-         margin-bottom: 5px;
-         padding: 5px;
-         padding-left: 12px;
-     }
 
      .info {
          position: relative;
          color: rgba(0, 0, 0, .7);
          font-size: .8em;
+     }
+
+     .barTop {
+        position: absolute;
+        left:0;
+        right:0;
+        top:0px;
+        padding:10px;
+        background-color: #aaa;
+        border-bottom: 2px solid #000;
+        z-index: 1;
+
+        .btnClose {
+            top:5px;
+            right:5px;
+        }
      }
  }

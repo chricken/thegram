@@ -271,6 +271,7 @@ const database = {
             post => dbPosts.insert(post)
         )
     },
+
     addCommentToComment(comment) {
         let dbComments = dbConn.use(settings.dbNames.comments);
         console.log('anzuhängender Kommentar: ', comment);
@@ -290,6 +291,16 @@ const database = {
         return dbComments.get(commentID).then(
             res => {
                 // console.log(res);
+                return res;
+            }
+        )
+    },
+
+    getPost(postID){
+        let dbPosts = dbConn.use(settings.dbNames.posts);
+        return dbPosts.get(postID).then(
+            res => {
+                // console.log('DB Get Post', res);
                 return res;
             }
         )

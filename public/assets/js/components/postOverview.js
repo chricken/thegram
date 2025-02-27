@@ -14,7 +14,7 @@ const postOverview = (parent, post) => {
         parent,
         listeners: {
             click() {
-                postDetails(post)
+                postDetails.init(post)
             },
             scroll(evt) {
                 evt.stopPropagation();

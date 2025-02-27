@@ -1,7 +1,7 @@
 'use strict';
 
 import { WebSocketServer } from "ws";
-import settings, { agents, agentsPosts } from './settings.js';
+import settings, { agents, agentsPost } from './settings.js';
 import helpers from './helpers.js';
 import database from './database.js';
 import handleUsers from './handleUsers.js';
@@ -210,6 +210,7 @@ wsServer.on('connection', socket => {
                     }))
                 }
             )
+
         } else if (msg.type == 'removePost') {
 
             agents[msg.payload.userID].init().then(
@@ -233,6 +234,8 @@ wsServer.on('connection', socket => {
                         }
                     }))
                 }
+            ).catch(
+                err => console.warn(err)
             )
 
         } else if (msg.type == 'saveComment') {
@@ -266,18 +269,43 @@ wsServer.on('connection', socket => {
                         }
                     }))
                 }
+            ).catch(
+                err => console.warn(err)
             )
+
+        } else if (msg.type == 'getPost') {
+            console.log('get Post', msg.payload);
+
+            database.getPost(msg.payload.postID).then(
+                res => socket.send(JSON.stringify({
+                    type: msg.callbackType,
+                    payload: res
+                }))
+            ).catch(
+                err => console.warn(err)
+            )
+
         } else if (msg.type == 'addLike') {
-            console.log('Add Like: ', agentsPosts, msg.payload.postID);
+            console.log('Add Like: ', msg.payload);
 
             // Hier muss zunächst gecheckt werden, ob der Agent in der Sammlung exostiert, ggf angelegt werden und mit einem Timer wieder entfernt werden
             // Vielleicht mit einer Static Methode?
 
-            agentsPosts[msg.payload.postID].init().then(
-                agentPost => agentPost.addLike(msg.payload)
+            AgentPost.getAgent(msg.payload.postID).then(
+                agent => {
+                    console.log('agent provided', !!agent);
+
+                    return agent.addLike({
+                        userID: msg.payload.userID
+                    })
+                }
             ).then(
-                res => console.log(res)
+                res => socket.send(JSON.stringify({
+                    type: msg.callbackType,
+                    payload: res
+                }))
             )
+
 
         }
 

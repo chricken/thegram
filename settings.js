@@ -37,9 +37,9 @@ const settings = {
     // Key ist die User-ID
     // Alle Interaktion findet über dieses Objekt statt. Damit werden Seiteneffekte vermieden
     agents: {},
-    agentsPosts: {},
+    agentsPost: {},
 }
 
 export default settings;
 export let agents = settings.agents;
-export let agentsPosts = settings.agentsPosts;
+export let agentsPost = settings.agentsPost;

@@ -51,7 +51,7 @@ const postComment = ({
         legend: ln.send,
         parent: container,
         onClick() {
-            console.log(settings.user._id);
+            // console.log('comment user ID', settings.user._id);
 
             const myComment = new Comment({
                 title: taTitle.value,
@@ -61,14 +61,29 @@ const postComment = ({
                 comment,
             })
 
+            // Zum Elternelement durchreichen
+            console.log('Dies wird der neue Kommentar', myComment);
+
+            let myEvent = new CustomEvent('saved', {
+                detail:{
+                    comment:myComment
+                }
+            });
+            container.dispatchEvent(myEvent);
+            
+
+            /* 
             ws.saveComment(myComment).then(
-                () => {
+                payload => {
+                    console.log('Neuer Post: ', payload);
+
                     let myEvent = new CustomEvent('saved');
                     container.dispatchEvent(myEvent);
                 }
             ).catch(
                 console.warn
             )
+            */
         }
     })
     return container

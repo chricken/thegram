@@ -130,6 +130,15 @@ const ws = {
         )
     },
 
+    getPost(postID) {
+        return createWSCall({
+            type: 'getPost',
+            payload: {
+                postID
+            }
+        })
+    },
+
     getTimeline() {
         // Return to call
         // console.log('get Timeline');
@@ -181,7 +190,10 @@ const ws = {
                 userID: userID
             }
         }).then(
-            payload => payload.user
+            payload => {
+                // console.log('loaded from comment', payload);
+                return payload.user
+            }
         )
     },
 
@@ -219,7 +231,7 @@ const ws = {
     },
 
     saveComment(comment) {
-        console.log('Neuer Kommentar', comment);
+        // console.log('Neuer Kommentar', comment);
 
         return createWSCall({
             type: 'saveComment',
@@ -232,7 +244,7 @@ const ws = {
 
     },
 
-    addLike({ postID, commentID, userID }) {
+    addLike({ postID, commentID }) {
         console.log(postID, commentID);
 
         return createWSCall({
@@ -243,8 +255,8 @@ const ws = {
             }
         }).then(
             payload => {
-                if(this.post.likes.some(like => like.userID == userID))
-                settings.user = payload.user;
+                // if (this.post.likes.some(like => like.userID == userID))
+                return payload;
             }
         )
 

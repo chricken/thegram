@@ -1,10 +1,11 @@
 'use strict';
 
 import database from '../database.js';
-import settings, { agentsPosts } from '../settings.js'
+import settings, { agentsPost } from '../settings.js'
 import nano from 'nano';
 import media from '../media.js';
 import Post from './Post.js';
+import Like from './Like.js';
 
 const cr = settings.credentials.db;
 
@@ -42,28 +43,60 @@ class AgentPost {
     addComment(payload) {
     }
 
+    savePost() {
+        return this.dbPosts.insert(this.post).then(
+            res => {
+                this.post._rev = res.rev;
+                return this.post;
+            }
+        )
+    }
+
     addLike({ userID }) {
         return new Promise((resolve) => {
-
-            if (!this.post.likes.some(like => like.userID == userID)) {
-                this.post.likes.push({
-                    userID,
-                    crDate: Date.now()
-                })
-                resolve({ status: 'success', payload: this.post })
-            } else {
-                resolve({ status: 'err', err: 'User already liked' })
+            console.log();
+            let storedLikeIDs = this.post.likes.map(like => like.userID);
+            console.log('Stored Likes: ', userID, storedLikeIDs);
+            
+            if (!storedLikeIDs.includes(userID)) {
+                this.post.likes.push(
+                    new Like(userID)
+                )
             }
+            resolve();
+        }).then(
+            () => this.savePost()
+        ).then(
+            () => this.post
+        )
+    }
 
+    static addAgent(postID) {
+
+        return new Promise((resolve, reject) => {
+            const agentPost = new AgentPost({
+                id: postID
+            })
+            agentsPost[postID] = agentPost;
+            console.log('addAgend', Object.keys(agentsPost));
+            
+            resolve(agentPost.init());
         })
     }
 
-    static checkAgentExists(postID){
+    static getAgent(postID) {
+
         return new Promise((resolve, reject) => {
             // Agenten suchen
             // Falls nicht vorhanden, Anlegen
             // Timer zum Entfernen des Agents starten
+            console.log('getAgent', postID, !!agentsPost[postID]);
             
+            if (agentsPost[postID]) {
+                resolve(agentsPost[postID]);
+            } else {
+                resolve(AgentPost.addAgent(postID));
+            }
         })
     }
 }

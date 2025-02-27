@@ -11,6 +11,8 @@
 @import './inputs.css';
 @import './foldable.css';
 @import './userBadge.css';
+@import './comments.css';
+@import './likes.css';
 
 * {
     font-family: 'allerregular';

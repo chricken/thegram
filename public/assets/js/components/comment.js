@@ -18,10 +18,12 @@ const comment = ({
 
     let ln = languages[settings.lang];
 
+    // console.log('Kommentar', payload);
+
     const containerComment = dom.create({
         cssClassName: 'containerComment',
         parent,
-       
+
     })
 
     const headerContainer = dom.create({
@@ -29,12 +31,35 @@ const comment = ({
         parent: containerComment
     })
 
+    const elUser = dom.create({
+        parent: containerComment,
+        cssClassName: 'commentUserName'
+    })
+
+    ws.getUser({ userID: payload.userID }).then(
+        res => {
+            // console.log(res);
+            elUser.innerHTML = res.username;
+        }
+    )
+
+    /* 
+    // ID
+    dom.create({
+        type: 'p',
+        content: payload._id,
+        parent: headerContainer,
+    })
+    */
+
+    // Header
     dom.create({
         type: 'span',
         content: payload.title,
         parent: headerContainer,
         cssClassName: 'header'
     })
+
 
     dom.create({
         type: 'span',
@@ -49,6 +74,7 @@ const comment = ({
         parent: containerComment
     })
 
+    // Für jeden Kind-Kommentar die Komponente erneut aufrufen
     Promise.all(
         payload.comments.map(commentID => ws.getComment(commentID))
     ).then(
@@ -56,7 +82,7 @@ const comment = ({
             comments
                 .toSorted((a, b) => b.crDate - a.crDate)
                 .forEach((comment, index) => {
-                    console.log(index, comment.comments);
+                    // console.log(index, comment.comments);
 
                     let elComment = compComment({
                         payload: comment,
@@ -64,11 +90,18 @@ const comment = ({
                         parent: containerComment
                     })
 
-                    elComment.addEventListener('saved', () => {
-                        // Event weiterleiten bis zu der Stelle, an der der Post neu gerendert werden kann
-                        console.log('Event triggered', containerComment);
+                    // Auf das speichern eines Kommentares reagieren
+                    elComment.addEventListener('saved', evt => {
 
-                        let myEvent = new CustomEvent('saved');
+                        // Event weiterleiten bis zu der Stelle, an der der Post neu gerendert werden kann
+                        console.log('In der Verschachtelung event weiterleiten', containerComment);
+
+                        // Den Kommentar entgegennehmen und an das Eltern-Element weiterreichen
+                        let myEvent = new CustomEvent('saved', {
+                            detail: {
+                                comment: evt.detail.comment
+                            }
+                        });
                         containerComment.dispatchEvent(myEvent);
                     })
 
@@ -88,11 +121,16 @@ const comment = ({
                 comment: payload
             })
 
-            elPostComment.addEventListener('saved', () => {
-                console.log('Event triggered', containerComment);
+            // Hier wird auf eine Nachricht vom Eingabefenster reagiert
+            elPostComment.addEventListener('saved', (evt) => {
+                console.log('Kommentar Layer n, Event triggered', evt.detail.comment);
 
-                // Event weiterleiten bis zu der Stelle, an der der Post neu gerendert werden kann
-                let myEvent = new CustomEvent('saved');
+                // Den Kommentar entgegennehmen und an das Eltern-Element weiterreichen
+                let myEvent = new CustomEvent('saved', {
+                    detail: {
+                        comment: evt.detail.comment
+                    }
+                });
                 containerComment.dispatchEvent(myEvent);
 
             })
