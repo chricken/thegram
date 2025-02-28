@@ -18,7 +18,8 @@ const settings = {
         '2': 'news'
     },
     avatarSize: 300,
-    postPreviewMaxLength:280,
+    postPreviewMaxLength: 280,
+    loginTime: null,
 }
 
 export default settings;

@@ -32,14 +32,15 @@ const comment = ({
     })
 
     const elUser = dom.create({
-        parent: containerComment,
+        type:'span',
+        parent: headerContainer,
         cssClassName: 'commentUserName'
     })
 
     ws.getUser({ userID: payload.userID }).then(
         res => {
             // console.log(res);
-            elUser.innerHTML = res.username;
+            elUser.innerHTML = res.username + ': ';
         }
     )
 
@@ -64,7 +65,7 @@ const comment = ({
     dom.create({
         type: 'span',
         cssClassName: 'info',
-        content: ' - created: ' + new Date(payload.crDate).toLocaleString(),
+        content: ' - ' + new Date(payload.crDate).toLocaleString(),
         parent: headerContainer
     })
 

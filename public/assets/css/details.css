@@ -19,6 +19,7 @@
      border: 1px solid #000;
      border-radius: 10px;
      padding: 20px;
+     padding-top: 0px;
      overflow-y: auto;
 
      .imgDetail {
@@ -80,18 +81,21 @@
      }
 
      .barTop {
-        position: absolute;
-        left:0;
-        right:0;
-        top:0px;
-        padding:10px;
-        background-color: #aaa;
-        border-bottom: 2px solid #000;
-        z-index: 1;
+         position: sticky;
+         left: 0;
+         right: 0;
+         top: 0;
+         margin-left: -20px;
+         margin-right: -20px;
+         margin-top: 0px;
+         padding: 10px;
+         background-color: #aaa;
+         border-bottom: 2px solid #000;
+         z-index: 1;
 
-        .btnClose {
-            top:5px;
-            right:5px;
-        }
+         .btnClose {
+             top: 5px;
+             right: 5px;
+         }
      }
  }

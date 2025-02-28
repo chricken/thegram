@@ -77,6 +77,8 @@ const de = {
     titleContent: 'Überschrift',
     like: 'Mag ich',
     dislike: 'Mag ich nicht',
+    imgLoaded: 'Bereits eingebundene Bilder',
+    imgNew: 'Neue Bilder',
 }
 
 export default de;

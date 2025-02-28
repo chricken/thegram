@@ -34,8 +34,8 @@
 
 @font-face {
     font-family: 'aller_displayregular';
-    src: url('/assets/fonts/allerdisplay-webfont.woff2') format('woff2'),
-         url('/assets/fonts/allerdisplay-webfont.woff') format('woff');
+    src: url('/assets/fonts/aller_rg-webfont.woff2') format('woff2'),
+         url('/assets/fonts/aller_rg-webfont.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }

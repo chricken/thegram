@@ -308,8 +308,8 @@ const database = {
 
     saveComment(comment) {
         let dbComments = dbConn.use(settings.dbNames.comments);
-
-        return dbComments.insert(comment)
+        
+        return dbComments.insert(comment);
 
     },
 }

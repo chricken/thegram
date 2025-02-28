@@ -77,6 +77,8 @@ const en = {
     titleContent: 'Title',
     like: 'I like',
     dislike: 'Don\'t like',
+    imgLoaded: 'Images (already included)',
+    imgNew: 'New Images',
 }
 
 export default en

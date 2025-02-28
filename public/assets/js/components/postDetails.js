@@ -10,10 +10,11 @@ import posts from '../views/posts.js';
 import postComment from './postComment.js';
 import compComment from './comment.js';
 import compLikes from './likes.js';
+import addMedia from '../views/addMedia.js';
 
 const postDetails = {
     init(post) {
-        // console.log('init', post);
+        console.log('init', post);
 
         ws.getPost(post._id).then(
             postDetails.render
@@ -36,7 +37,7 @@ const postDetails = {
                 scroll(evt) {
                     evt.stopPropagation();
                     // console.log(container.scrollTop);
-                    upperBar.style.transform = `translateY(${container.scrollTop}px)`
+                    // upperBar.style.transform = `translateY(${container.scrollTop}px)`
                 }
             },
         })
@@ -103,6 +104,9 @@ const postDetails = {
                     attr: {
                         src: path
                     },
+                    styles: {
+                        width: `calc(${~~(100 / post.imgNames.length)}% - 10px)`
+                    },
                     listeners: {
                         click() {
                             imgsOverview.forEach(img => {
@@ -160,7 +164,8 @@ const postDetails = {
                 parent: containerUI,
                 isEncapsuled: false,
                 onClick() {
-
+                    addMedia(post);
+                    bg.remove();
                 }
             })
         }

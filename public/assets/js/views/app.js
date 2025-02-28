@@ -9,9 +9,13 @@ import compLogoutBtn from '../components/logoutBtn.js';
 import compBtnUserSettings from '../components/buttonUserSettings.js';
 import viewTimeline from './timeline.js';
 import compNav from '../components/nav.js';
+import currentUser from '../components/currentUser.js';
 
 const app = {
     handleLogin() {
+
+        settings.loginTime = Date.now();
+
         elements.main.innerHTML = '';
         settings.viewMode = viewTimeline;
 
@@ -19,8 +23,10 @@ const app = {
         compAddMediaBtn({ parent: elements.nav });
         settings.viewMode.init();
 
-        compLogoutBtn({parent:elements.navAdditional});
-        compBtnUserSettings({parent:elements.navAdditional});
+        // compLogoutBtn({ parent: elements.navAdditional });
+        compBtnUserSettings({ parent: elements.navAdditional });
+
+        elements.currentUser = currentUser();
     }
 }
 

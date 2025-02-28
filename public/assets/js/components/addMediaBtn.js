@@ -19,7 +19,10 @@ const addMediaBtn = ({
         parent,
         content: '➕' + ln.addMedia,
         listeners: {
-            click: addMedia,
+            click() {
+                addMedia()
+
+            },
         }
     })
 

@@ -13,8 +13,6 @@ const posts = {
     postsToRender: [],
 
     reset() {
-        // console.log('Reset Posts');
-
         // Setzt alle lokalen Einstellungen zurück
         settings.firstLoad = true;
         posts.postsToRender = [];
@@ -22,8 +20,6 @@ const posts = {
         posts.init();
     },
     init() {
-        // console.log('post init');
-
         // Bereitet den Render-Prozess vor, ...
         // ... indem die nächsten Datensätze geladen werden
         if (settings.user) {
@@ -38,7 +34,7 @@ const posts = {
 
             ws.getPosts(postsToLoad).then(
                 payload => {
-                    // console.log('posts to render', payload);
+                    console.log('posts to render', payload);
 
                     posts.postsToRender.push(...payload);
                     posts.render();

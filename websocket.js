@@ -28,20 +28,36 @@ wsServer.on('connection', socket => {
 
         if (msg.type == 'uploadMedia') {
 
-            msg.payload.timestamp = Date.now();
-            // console.log('Hochgeladene Daten', msg.payload);
+            console.log();
+            console.log('Upload Media');
 
-            agents[msg.payload.userID].init().then(
-                agent =>
-                    agent.addPost(msg.payload)
+            msg.payload.timestamp = Date.now();
+
+            AgentPost.createPost(msg.payload).then(
+                agentPost => agentPost.post
+            ).then(
+                post => {
+                    console.log('Durch postAgent engelegter Post', post);
+
+                    return agents[post.userID].init().then(
+                        agent => {
+                            
+                            return agent.addPost(post);
+                        }
+                    )
+                }
             ).then(
                 user => {
+                    // User zurücksenden
+                    console.log('Posts im user', user.posts);
+
                     socket.send(JSON.stringify({
                         type: msg.callbackType,
                         payload: user
                     }))
                 }
             )
+
         } else if (msg.type == 'login') {
             database.checkLogin(msg.payload).then(
                 res => {
@@ -239,7 +255,7 @@ wsServer.on('connection', socket => {
             )
 
         } else if (msg.type == 'saveComment') {
-            console.log('Kommentar speichern', msg.payload);
+            // console.log('Kommentar speichern', msg.payload);
 
             database.saveComment(msg.payload).then(
                 // Kommentar im User ablegen
@@ -253,7 +269,10 @@ wsServer.on('connection', socket => {
                 // Kommentar im Post / Kommentar ablegen
                 user => {
                     if (msg.payload.postID) {
-                        return database.addCommentToPost(msg.payload)
+                        return AgentPost.getAgent(msg.payload.postID).then(
+                            agent => agent.addComment(msg.payload)
+                        )
+                        // database.addCommentToPost(msg.payload)
                     } else if (msg.payload.commentID) {
                         return database.addCommentToComment(msg.payload)
                     }
@@ -274,19 +293,18 @@ wsServer.on('connection', socket => {
             )
 
         } else if (msg.type == 'getPost') {
-            console.log('get Post', msg.payload);
+            // console.log('get Post', msg.payload);
+            AgentPost.getAgent(msg.payload.postID).then(
+                agent => {
 
-            database.getPost(msg.payload.postID).then(
-                res => socket.send(JSON.stringify({
-                    type: msg.callbackType,
-                    payload: res
-                }))
-            ).catch(
-                err => console.warn(err)
+                    socket.send(JSON.stringify({
+                        type: msg.callbackType,
+                        payload: agent.post
+                    }))
+                }
             )
-
         } else if (msg.type == 'addLike') {
-            console.log('Add Like: ', msg.payload);
+            // console.log('Add Like: ', msg.payload);
 
             // Hier muss zunächst gecheckt werden, ob der Agent in der Sammlung exostiert, ggf angelegt werden und mit einem Timer wieder entfernt werden
             // Vielleicht mit einer Static Methode?

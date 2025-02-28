@@ -4,6 +4,7 @@ import dom from '../dom.js';
 import lang from '../languages/all.js';
 import settings from '../settings.js';
 import loginout from '../loginout.js';
+import elements from '../elements.js';
 
 const addMediaBtn = ({
     parent = null
@@ -19,6 +20,7 @@ const addMediaBtn = ({
         listeners: {
             click(){
                 loginout.logout();
+                elements.currentUser.remove();
             }
         }
     })

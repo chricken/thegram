@@ -67,28 +67,9 @@ const media = {
             )
             results.push(result);
         }
-        payload.imgNames = results;
+        payload.imgNames = [...payload.imgNames, ...results];
         return payload;
 
-        /*
-         return Promise.all(
-             // Array mit Promises 
-             payload.imgs.map((file, index) => {
-                 return media.handleUploadedImage(
-                     uploadPath,
-                     payload.userID,
-                     file,
-                     index
-                 )
-             })
-         ).then(
-             (res) => {
-                 // Datensatz um den Pfad erweitern
-                 payload.imgNames = res;
-                 return payload;
-             }
-         )
-         */
     },
     removeFiles(uploadPath, post) {
         return Promise.all(post.imgNames.map(imgName => {

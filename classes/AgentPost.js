@@ -6,6 +6,7 @@ import nano from 'nano';
 import media from '../media.js';
 import Post from './Post.js';
 import Like from './Like.js';
+// import CommentInPost from './CommentInPost.js'
 
 const cr = settings.credentials.db;
 
@@ -41,6 +42,9 @@ class AgentPost {
     }
 
     addComment(payload) {
+        // console.log('comment added Agent', payload);
+        this.post.comments.push(payload._id);
+        return this.savePost()
     }
 
     savePost() {
@@ -57,7 +61,7 @@ class AgentPost {
             console.log();
             let storedLikeIDs = this.post.likes.map(like => like.userID);
             console.log('Stored Likes: ', userID, storedLikeIDs);
-            
+
             if (!storedLikeIDs.includes(userID)) {
                 this.post.likes.push(
                     new Like(userID)
@@ -79,7 +83,7 @@ class AgentPost {
             })
             agentsPost[postID] = agentPost;
             console.log('addAgend', Object.keys(agentsPost));
-            
+
             resolve(agentPost.init());
         })
     }
@@ -91,13 +95,38 @@ class AgentPost {
             // Falls nicht vorhanden, Anlegen
             // Timer zum Entfernen des Agents starten
             console.log('getAgent', postID, !!agentsPost[postID]);
-            
+
             if (agentsPost[postID]) {
                 resolve(agentsPost[postID]);
             } else {
                 resolve(AgentPost.addAgent(postID));
             }
         })
+    }
+
+    static createPost(payload) {
+        // Falls der Post schon eine ID hat, gib den passenden Agent zurück
+        if (payload._id) return AgentPost.getAgent(payload._id);
+        // Falls der Post keine ID hat, lege den Datensatz an und gibt den Agent zurück
+        else {
+            return media.handleUploaded(settings.uploadPath, payload).then(
+                payload => {
+                    console.log('msg nach der Verarbeitung der Bilder', payload);
+
+                    // Bilder entfernen
+                    delete payload.imgs;
+
+                    // Zur Datenbank hinzufügen
+                    return database.addMedia(payload);
+                }
+            ).then(
+                res =>{
+                    console.log('Eingetragener Datensatz', res);
+                    return AgentPost.getAgent(res.id)
+                } 
+            )
+        }
+
     }
 }
 

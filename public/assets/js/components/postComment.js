@@ -70,20 +70,7 @@ const postComment = ({
                 }
             });
             container.dispatchEvent(myEvent);
-            
-
-            /* 
-            ws.saveComment(myComment).then(
-                payload => {
-                    console.log('Neuer Post: ', payload);
-
-                    let myEvent = new CustomEvent('saved');
-                    container.dispatchEvent(myEvent);
-                }
-            ).catch(
-                console.warn
-            )
-            */
+        
         }
     })
     return container

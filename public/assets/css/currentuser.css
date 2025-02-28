@@ -1,0 +1,36 @@
+.currentUser {
+    position: fixed;
+    display: block;
+    left: 10px;
+    bottom: 0px;
+    width: 150px;
+    padding: 10px;
+    background-color: #000;
+    border-radius: 5px;
+    color: #fff;
+    border: 1px solid #555;
+
+
+    h4 {
+        font-size: 14px;
+        font-weight: normal;
+        font-family: aller_displayregular;
+    }
+
+    .link,
+    .navLink {
+        position: relative;
+        display: block;
+        cursor: pointer;
+        margin-top:5px;
+        padding: 5px;
+        border: 1px solid rgba(255, 255, 255, .3);
+        border-radius: 5px;
+    }
+
+    .link:hover,
+    .navLink:hover {
+        background: rgba(255, 255, 255, .3);
+    }
+
+}

@@ -1,5 +1,5 @@
 'use strict';
-
+// Dies ist der Kommentar, wie er im Frontend verwendet wird
 import settings from "../settings.js";
 
 class Comment {

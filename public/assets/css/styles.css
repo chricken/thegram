@@ -13,23 +13,30 @@
 @import './userBadge.css';
 @import './comments.css';
 @import './likes.css';
+@import './currentuser.css';
 
 * {
     font-family: 'allerregular';
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     position: relative;
     display: block;
     font-weight: normal;
     font-family: 'allerbold';
-    margin:0;
+    margin: 0;
 }
 
 .containerElement {
     position: relative;
     display: block;
-    margin-bottom:5px;
+    margin-bottom: 5px;
+
     * {
         vertical-align: middle;
     }

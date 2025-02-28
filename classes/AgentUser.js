@@ -5,6 +5,7 @@ import settings, { agents } from '../settings.js'
 import nano from 'nano';
 import media from '../media.js';
 import Post from './Post.js';
+import AgentPost from './AgentPost.js';
 
 const cr = settings.credentials.db;
 
@@ -84,25 +85,27 @@ class AgentUser {
         )
     }
 
-    addPost(payload) {
-        return media.handleUploaded(settings.uploadPath, payload).then(
-            payload => {
-                // Bilder entfernen
-                delete payload.imgs;
+    addPost(post) {
+        console.log('add post to user', post);
 
-                // Zur Datenbank hinzufügen
-                return database.addMedia(payload);
+        return new Promise(resolve => {
+
+            if (!post.isDraft) {
+                this.user.latestPost = post._id;
+                this.user.chDate = Date.now();
             }
-        ).then(
-            res => {
-                // Daten erweitern
-                if (!payload.isDraft) {
-                    this.user.latestPost = res.id;
-                    this.user.chDate = Date.now();
-                }
-                this.user.posts.push(new Post({ id: res.id }));
-            }
-        ).then(
+
+            let ids = this.user.posts.map(post => post.media);
+
+            if (!ids.includes(res.media))
+                // Wenn es nicht existiert, einhängen
+                this.user.posts.push(new Post({ id: res.media }));
+            else
+                // Wenn es existiert, changeDate ändern
+                this.user.posts.find(post => post.media == res.media).chDate = Date.now();
+
+            resolve();
+        }).then(
             () => this.saveUser()
         ).then(
             () => this.user

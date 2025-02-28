@@ -1,11 +1,39 @@
 .parentImagePreview {
+    .containerSingleImage {
+        position: relative;
+        display: inline-block;
+        margin: 5px;
+    }
+
     .imagePreview {
         position: relative;
         display: inline-block;
         height: 100px;
-        width: auto;    
+        width: auto;
+        /*
         margin-left: 10px;
         margin-bottom: 10px;
+        */
         vertical-align: top;
     }
+
+}
+
+.btnRemoveImg {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    background-color: #888;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    font-size: 15px;
+    border-radius: 50%;
+    border: 1px solid #000;
+    cursor: pointer;
+}
+
+.btnRemoveImg:hover {
+    background-color: #fff;
+    color: #000;
 }
